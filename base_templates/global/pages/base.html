@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    {% include 'global/partials/_head.html' %}
+  {% include 'global/partials/_head.html' %}
+  <title>
     {% block title %}{% endblock title %}
+  </title>
 </head>
 <body>
-    <!-- header -->
-    <header></header>
+  <!-- header -->
+  <header></header>
 
-    <!-- main -->
-    <main>
-        {% block content %}{% endblock content %}
-    </main>
+  <!-- main -->
+  <main>
+      {% block content %}{% endblock content %}
+  </main>
 
-    <!-- footer -->
-    <footer></footer>
+  <!-- footer -->
+  <footer></footer>
     
 </body>
 </html>
