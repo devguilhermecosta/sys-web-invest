@@ -1,0 +1,144 @@
+:root {
+  --turquoise_1: #CAFCFC;
+  --turquoise_2: #99ECEA;
+  --turquoise_3: #6BDBD9;
+  --turquoise_4: #3ACBC6;
+  --turquoise_5: #31BBB5;
+  --blue_1: #2E95B4;
+  --blue_2: #1D7791;
+  --blue_3: #23807E;
+  --blue_4: #03045E;
+  --white: #FFFFFF;
+  --black: #000000;
+  --gray_1: #CCCCCC;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 16px;
+}
+
+/* start utils */
+.center_x_y_flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* end utils */
+
+/* start home */
+.C-login {
+  width: 100%;
+  height: 100vh;
+  padding: 5px;
+}
+
+.C-login_form {
+  width: 100%;
+  max-width: 280px;;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  row-gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--turquoise_4);
+  border-radius: 10px;
+  position: relative;
+}
+
+.C-login_div_input {
+  position: relative;
+  width: 100%;
+}
+
+.C-login_label {
+  text-transform: capitalize;
+  color: var(--gray_1);
+  width: fit-content;
+  padding: 0 5px;
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 300ms ease;
+}
+
+.C-login_input {
+  width: 100%;
+  height: 35px;
+  padding: 0 5px;
+  background-color: var(--turquoise_1);
+  color: var(--blue_2);
+  border: none;
+  outline: none;
+  overflow: auto;
+  transition: all 300ms ease;
+}
+
+.C-login_input:focus, .C-login_input:required:valid {
+  background-color: var(--white);
+  border: 1px solid var(--blue_4);
+}
+
+
+.C-login_input:focus + .C-login_label, .C-login_input:required:valid + .C-login_label {
+  top: -9px;
+  transform: none;
+  font-size: 12px;
+  color: var(--blue_4);
+  background-color: var(--white);
+}
+
+.C-login_form > a {
+  text-decoration: none;
+}
+
+.C-login_forgot_password {
+  align-self: flex-end;
+  text-transform: capitalize;
+  font-size: 10px;
+  color: var(--blue_3);
+}
+
+.C-login_button {
+  width: 85px;
+  padding: 5px 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.C-login_sign_in {
+  border: 1px solid var(--turquoise_4);
+  color: var(--blue_3);
+}
+
+.C-login_sing_up {
+  background-color: var(--turquoise_5);
+  color: var(--white);
+}
+/* end home */
+
+
+@media screen and (min-width: 800px) {
+  .C-login_form {
+    max-width: 380px;
+  }
+
+  .C-login_input {
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .C-login_button {
+    font-size: 20px;
+    width: 105px
+  }
+}
