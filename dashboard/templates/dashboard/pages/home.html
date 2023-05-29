@@ -1,0 +1,24 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Login
+{% endblock title %}
+
+{% block content %}
+<section class="C-login center_x_y_flex">
+  <form method="POST" action="" class="C-login_form">
+    <div class="C-login_div_input" >
+      <input class="C-login_input" type="text" name="user" id="user" required>
+      <label class="C-login_label" for="user">usuário</label>
+    </div>
+    <div class="C-login_div_input" >
+      <input class="C-login_input" type="password" name="password" id="password" required>
+      <label class="C-login_label" for="password">senha</label>
+    </div>
+    <a href="" class="C-login_forgot_password">esqueci minha senha</a>
+    <a href="" class="C-login_button C-login_sign_in">entrar</a>
+    <p>ou</p>
+    <a href="" class="C-login_button C-login_sing_up">registrar</a>
+  </form>
+</section>
+{% endblock content %}
