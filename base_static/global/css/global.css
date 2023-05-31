@@ -11,6 +11,7 @@
   --white: #FFFFFF;
   --black: #000000;
   --gray_1: #CCCCCC;
+  --dark_red: #ca0d0d;
 }
 
 * {
@@ -125,6 +126,44 @@ html, body {
   color: var(--white);
 }
 /* end home */
+
+/* user register */
+.C-form_register {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.C-form_register_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  row-gap: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.C-form_register_form > input {
+  width: 100%;
+}
+
+.errorlist {
+  color: var(--dark_red);
+  list-style: none;
+}
+
+.C-form_button {
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  font-size: 18px;
+}
+
+/* end user register */
 
 
 @media screen and (min-width: 800px) {
