@@ -6,16 +6,14 @@
 
 {% block content %}
 <section class="C-form_register">
-    <form action="{{ form_action }}" method="POST" class="C-form_register_form">
+    <form method="post" action="{{ form_action }}" class="C-form_register_form">
         {% csrf_token %}
         {% for field in form %}
             <div class="C-login_div_input" >
                 {{ field }}
                 <label class="C-login_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
             </div>
-            {% if field.errors %}
                 {{ field.errors }}
-            {% endif %}
         {% endfor %}
         <input class="C-login_sing_up C-login_button C-form_button" type="submit" value="registrar">
     </form>
