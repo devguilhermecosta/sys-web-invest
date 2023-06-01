@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpRequest
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from user.forms.user_register_form import UserFormRegister
+from utils.password.generate_password import create_password
 
 
 class UserRegister(View):
@@ -29,10 +30,10 @@ class UserRegister(View):
         form: ModelForm = UserFormRegister(post)
 
         if form.is_valid():
-            # criar um password temporário
             # enviar o e-mail de recuperação de senha
+            password: str = create_password()
             user: User = form.save(commit=False)
-            user.set_password(user.password)
+            user.set_password(password)
             user.save()
 
             # retornar para uma página de confirmação
@@ -42,6 +43,7 @@ class UserRegister(View):
 
     @staticmethod
     def user_register_confirmation(request: HttpRequest):
+        template_name: str = 'user/pages/register_confirmation.html'
         session = request.session.get('register_form_data', None)
 
         if session:
@@ -50,7 +52,7 @@ class UserRegister(View):
 
             return render(
                 request,
-                'user/pages/register_confirmation.html',
+                template_name,
                 context={
                     'message': (
                         f'Um e-mail de confirmação foi enviado para {email}.\n'
@@ -61,7 +63,7 @@ class UserRegister(View):
 
         return render(
             request,
-            'user/pages/register_confirmation.html',
+            template_name,
             context={
                 'message': 'Página não encontrada',
             }
