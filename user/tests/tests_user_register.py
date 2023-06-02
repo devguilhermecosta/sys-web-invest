@@ -21,3 +21,16 @@ class UserRegisterTests(TestCase):
         url: str = reverse('user:register')
         response: HttpResponse = self.client.get(url)
         self.assertTemplateUsed(response, 'user/pages/register.html')
+
+
+"""
+se for bem sucedido, a primeira senha do usuário será gerada
+de forma aleatória
+e um e-mail com recuperação de senha será enviado para o usuário
+definiruma senha.
+No primeiro acesso o usuário deverá criar o perfil.
+modificar o CSS da animação do form para um JS.
+Talvez ao invés de modificar o css, mudar o min_lenght
+e max_length para ser validado no clean_field, e não
+nos atributos na declaração de cada field.
+"""
