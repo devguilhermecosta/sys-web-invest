@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -17,6 +19,14 @@
 
   <!-- footer -->
   <footer></footer>
+
+  <!-- script js -->
+  <script>
+    let script = window.document.createElement('script');
+    let body = window.document.body;
+    script.setAttribute('src', '{% static "global/js/script.js" %}');
+    body.appendChild(script);
+  </script>
     
 </body>
 </html>
