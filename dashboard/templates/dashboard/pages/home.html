@@ -15,7 +15,9 @@
       <input class="C-login_input" type="password" name="password" id="password" required>
       <label class="C-login_label" for="password">senha</label>
     </div>
-    <a href="" class="C-login_forgot_password">esqueci minha senha</a>
+    <a href="{% url 'password_reset' %}" class="C-login_forgot_password">
+      esqueci minha senha
+    </a>
     <a href="" class="C-login_button C-login_sign_in">entrar</a>
     <p>ou</p>
     <a href="{% url 'user:register' %}" class="C-login_button C-login_sing_up">registrar</a>
