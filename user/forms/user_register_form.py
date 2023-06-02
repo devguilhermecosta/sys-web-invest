@@ -15,9 +15,11 @@ def add_css_class(field, class_name):
 
 
 class UserFormRegister(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     first_name = forms.CharField(
-        min_length=3,
-        max_length=128,
+        required=False,
         label='nome',
         error_messages={
             'required': 'Campo obrigatório',
@@ -26,40 +28,28 @@ class UserFormRegister(forms.ModelForm):
     add_css_class(first_name, 'C-login_input')
 
     last_name = forms.CharField(
-        min_length=3,
-        max_length=128,
+        required=False,
         label='sobrenome',
-        error_messages={
-            'required': 'Campo obrigatório',
-        },
         )
     add_css_class(last_name, 'C-login_input')
 
     username = forms.CharField(
-        min_length=4,
-        max_length=128,
+        required=False,
         label='usuário',
-        error_messages={
-            'required': 'Campo obrigatório',
-        },
         )
     add_css_class(username, 'C-login_input')
 
     email = forms.CharField(
+        required=False,
         label='email',
         widget=forms.EmailInput(),
-        error_messages={
-            'required': 'Campo obrigatório',
-        },
         )
     add_css_class(email, 'C-login_input')
 
     email_repeat = forms.CharField(
+        required=False,
         label='repita seu email',
         widget=forms.EmailInput(),
-        error_messages={
-            'required': 'Campo obrigatório',
-        },
         )
     add_css_class(email_repeat, 'C-login_input')
 
@@ -75,6 +65,12 @@ class UserFormRegister(forms.ModelForm):
     def clean_first_name(self):
         f_name = self.cleaned_data["first_name"]
 
+        if not f_name:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+
         if len(f_name) < 3 or len(f_name) > 128:
             raise ValidationError(
                 ('O nome deve ter entre 3 e 128 caracteres'),
@@ -84,6 +80,12 @@ class UserFormRegister(forms.ModelForm):
 
     def clean_last_name(self):
         l_name = self.cleaned_data["last_name"]
+
+        if not l_name:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
 
         if len(l_name) < 3 or len(l_name) > 128:
             raise ValidationError(
@@ -95,6 +97,12 @@ class UserFormRegister(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data["username"]
         username_exists = User.objects.filter(username=username).exists()
+
+        if not username:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
 
         if len(username) < 4 or len(username) > 128:
             raise ValidationError(
@@ -113,12 +121,28 @@ class UserFormRegister(forms.ModelForm):
         email = self.cleaned_data["email"]
         email_exists = User.objects.filter(email=email).exists()
 
+        if not email:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+
         if email_exists:
             raise ValidationError(
                 ('Este e-mail já está em uso'),
                 code='invalid',
             )
         return email
+
+    def clean_email_repeat(self):
+        email_repeat = self.cleaned_data["email_repeat"]
+
+        if not email_repeat:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+        return email_repeat
 
     def clean(self, **kwargs) -> Dict[str, Any]:
         super_clean = super().clean()
