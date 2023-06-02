@@ -76,9 +76,8 @@ html, body {
   width: 100%;
   height: 35px;
   padding: 0 5px;
-  background-color: var(--turquoise_1);
   color: var(--blue_2);
-  border: none;
+  border: 1.5px solid var(--turquoise_4);
   outline: none;
   overflow: auto;
   transition: all 300ms ease;
@@ -90,7 +89,7 @@ html, body {
 }
 
 
-.C-login_input:focus + .C-login_label, .C-login_input:required:valid + .C-login_label {
+.C-login_input:focus + .C-login_label, .C-login_input_active {
   top: -9px;
   transform: none;
   font-size: 12px;
