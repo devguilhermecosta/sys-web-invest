@@ -2,6 +2,22 @@ from typing import Any, Dict
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from re import compile
+
+
+def strong_password(password: str) -> None:
+    regex = compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+
+    if not regex.match(password):
+        raise ValidationError(
+            [
+                'A senha precisa ter pelo menos 8 catacteres.',
+                'Pelo menos uma letra maíscula.',
+                'Pelo menos uma letra minúscula.',
+                'Pelo menos um número.',
+            ],
+            code='invalid',
+        )
 
 
 def add_placeholder(field, placeholder):
@@ -52,6 +68,21 @@ class UserFormRegister(forms.ModelForm):
         widget=forms.EmailInput(),
         )
     add_css_class(email_repeat, 'C-login_input')
+
+    password = forms.CharField(
+        required=False,
+        label='senha',
+        widget=forms.PasswordInput(),
+        validators=[strong_password, ],
+        )
+    add_css_class(password, 'C-login_input')
+
+    password_repeat = forms.CharField(
+        required=False,
+        label='repita senha',
+        widget=forms.PasswordInput(),
+        )
+    add_css_class(password_repeat, 'C-login_input')
 
     class Meta:
         model = User
@@ -144,10 +175,22 @@ class UserFormRegister(forms.ModelForm):
             )
         return email_repeat
 
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+
+        if not password:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+        return password
+
     def clean(self, **kwargs) -> Dict[str, Any]:
         super_clean = super().clean()
         email = self.cleaned_data.get('email')
         email_repeat = self.cleaned_data.get('email_repeat')
+        password = self.cleaned_data.get('password')
+        password_repeat = self.cleaned_data.get('password_repeat')
 
         if email is not None and email != email_repeat:
             message = 'Os e-mails precisam ser iguais'
@@ -155,6 +198,16 @@ class UserFormRegister(forms.ModelForm):
                 {
                     'email': message,
                     'email_repeat': message,
+                },
+                code='invalid',
+            )
+
+        if password != password_repeat:
+            message = 'As senhas precisam ser iguais'
+            raise ValidationError(
+                {
+                    'password': message,
+                    'password_repeat': message,
                 },
                 code='invalid',
             )
