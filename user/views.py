@@ -4,8 +4,81 @@ from django.urls import reverse
 from django.http import HttpResponse, HttpRequest
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from django.contrib import messages
+
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+from utils.tokens.token_generate import account_activation_token
+
 from user.forms.user_register_form import UserFormRegister
-from utils.password.generate_password import create_password
+
+
+def email_activation(request, user, to_email):
+    mail_subject = 'Ativação de conta'
+    message = render_to_string(
+        'user/pages/template_activate_account.html',
+        {
+            'user': str(user.first_name).capitalize(),
+            'domain': get_current_site(request).domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+            'protocol': 'https' if request.is_secure() else 'http',
+        },
+        )
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    if email.send():
+        messages.success(
+            request,
+            (
+                f'Prezado(a) {str(user.first_name).capitalize()}. '
+                f'Um email de confirmação foi enviado para '
+                f'{to_email}. '
+                'Acesse o link para ativar sua conta. Caso não tenha recebido '
+                'o email, verifique sua caixa de spam.'
+            )
+        )
+    else:
+        messages.error(
+            request,
+            (
+                'Houve um problema ao enviar o email de ativação '
+                f'para {to_email}. '
+                'Verifique se digitou o email corretamente.')
+        )
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except Exception:
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+
+        messages.success(
+            request,
+            (
+                'Obrigado por confirmar seu e-mail. '
+                'Agora você pode fazer login em sua conta.'
+                )
+        )
+        return redirect(
+            reverse('dashboard:login')
+        )
+    else:
+        messages.error(
+            request,
+            'Este link de ativação é inválido'
+        )
+        return redirect(
+            reverse('dashboard:home')
+        )
 
 
 class UserRegister(View):
@@ -30,41 +103,23 @@ class UserRegister(View):
         form: ModelForm = UserFormRegister(post)
 
         if form.is_valid():
-            # enviar o e-mail de recuperação de senha
-            password: str = create_password()
             user: User = form.save(commit=False)
+            password = form.cleaned_data.get('password')
             user.set_password(password)
+            user.is_active = False
             user.save()
+            email_activation(
+                self.request, user, form.cleaned_data.get('email')
+                )
 
-            # retornar para uma página de confirmação
+            del self.request.session['register_form_data']
             return redirect('user:register_confirmation')
 
         return redirect('user:register')
 
     @staticmethod
     def user_register_confirmation(request: HttpRequest):
-        template_name: str = 'user/pages/register_confirmation.html'
-        session = request.session.get('register_form_data', None)
-
-        if session:
-            email = request.session['register_form_data'].get('email')
-            del request.session['register_form_data']
-
-            return render(
-                request,
-                template_name,
-                context={
-                    'message': (
-                        f'Um e-mail de confirmação foi enviado para {email}.\n'
-                        f'Acesso o link para finalizar seu cadastro.'
-                        )
-                }
-            )
-
         return render(
             request,
-            template_name,
-            context={
-                'message': 'Página não encontrada',
-            }
+            'user/pages/register_confirmation.html'
         )
