@@ -14,6 +14,8 @@ class UserRegisterFormTests(TestCase):
             'username': 'username',
             'email': 'email@email.com',
             'email_repeat': 'email@email.com',
+            'password': 'Password123',
+            'password_repeat': 'Password123',
         }
         return super().setUp(*args, **kwargs)
 
@@ -53,6 +55,8 @@ class UserRegisterFormTests(TestCase):
         ('username', 'Campo obrigatório'),
         ('email', 'Campo obrigatório'),
         ('email_repeat', 'Campo obrigatório'),
+        ('password', 'Campo obrigatório'),
+        ('password_repeat', 'Campo obrigatório'),
     ])
     def test_user_form_register_required_all_fields(self, field, message):
         self.user_register_data[field] = ''
@@ -132,3 +136,8 @@ class UserRegisterFormTests(TestCase):
         content: str = request.content.decode('utf-8')
 
         self.assertIn('Este e-mail já está em uso', content)
+        self.fail(
+            'testar o field senha do form',
+            'testar a recuperação de senha',
+            'testar o envio de email para confirmar o cadastro'
+        )
