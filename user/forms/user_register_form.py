@@ -185,6 +185,16 @@ class UserFormRegister(forms.ModelForm):
             )
         return password
 
+    def clean_password_repeat(self):
+        password_repeat = self.cleaned_data["password_repeat"]
+
+        if not password_repeat:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+        return password_repeat
+
     def clean(self, **kwargs) -> Dict[str, Any]:
         super_clean = super().clean()
         email = self.cleaned_data.get('email')
@@ -202,7 +212,7 @@ class UserFormRegister(forms.ModelForm):
                 code='invalid',
             )
 
-        if password != password_repeat:
+        if password is not None and password != password_repeat:
             message = 'As senhas precisam ser iguais'
             raise ValidationError(
                 {
