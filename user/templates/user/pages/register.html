@@ -6,16 +6,17 @@
 
 {% block content %}
 <section class="C-form_register">
-  <form method="post" action="{{ form_action }}" class="C-form_register_form">
+  <form method="post" action="{{ form_action }}" class="C-form_register_form C-login_form">
+    <h1 class="C-login_title">Cadastro</h1>
     {% csrf_token %}
     {% for field in form %}
+    {{ field.errors|linebreaksbr }}
     <div class="C-login_div_input" >
       {{ field }}
       <label class="C-login_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
     </div>
-    {{ field.errors|linebreaksbr }}
     {% endfor %}
-    <input class="C-login_sing_up C-login_button C-form_button" type="submit" value="registrar">
+    <input class="C-login_button C-login_sing_up C-form_button" type="submit" value="registrar">
   </form>
 </section>
 {% endblock content %}
