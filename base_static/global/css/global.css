@@ -4,6 +4,7 @@
   --turquoise_3: #6BDBD9;
   --turquoise_4: #3ACBC6;
   --turquoise_5: #31BBB5;
+  --turquoise_6: #0f6e6a;
   --blue_1: #2E95B4;
   --blue_2: #1D7791;
   --blue_3: #23807E;
@@ -11,7 +12,8 @@
   --white: #FFFFFF;
   --black: #000000;
   --gray_1: #CCCCCC;
-  --dark_red: #ca0d0d;
+  --gray_2: #e4dcdc;
+  --dark_red: #a82626;
 }
 
 * {
@@ -36,6 +38,8 @@ html, body {
 
 /* start home */
 .C-login {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100vh;
   padding: 5px;
@@ -49,10 +53,16 @@ html, body {
   justify-content: space-around;
   align-items: center;
   row-gap: 10px;
-  padding: 10px;
-  border: 1px solid var(--turquoise_4);
+  padding: 25px;
+  border: 1px solid var(--turquoise_3);
   border-radius: 10px;
   position: relative;
+}
+
+.C-login_title {
+  align-self: flex-start;
+  text-align: left;
+  font-size: 30px;
 }
 
 .C-login_div_input {
@@ -106,13 +116,17 @@ html, body {
   text-transform: capitalize;
   font-size: 10px;
   color: var(--blue_3);
+  margin-bottom: 20px;
 }
 
 .C-login_button {
-  width: 85px;
-  padding: 5px 0;
+  width: 100%;
+  padding: 10px 0;
   text-align: center;
   text-transform: capitalize;
+  border-radius: 30px;
+  transition: background 150ms linear,
+              border 200ms linear;
 }
 
 .C-login_sign_in {
@@ -120,9 +134,19 @@ html, body {
   color: var(--blue_3);
 }
 
+.C-login_sign_in:hover {
+  background-color: var(--gray_2);
+  border-color: var(--gray_2);
+  color: var(--black);
+}
+
 .C-login_sing_up {
   background-color: var(--turquoise_5);
   color: var(--white);
+}
+
+.C-login_sing_up:hover {
+  background-color: var(--turquoise_6);
 }
 /* end home */
 
@@ -157,12 +181,51 @@ html, body {
 
 .C-form_button {
   border: none;
+  outline: none;
   cursor: pointer;
-  height: 40px;
-  font-size: 18px;
+}
+/* end user register */
+.C-pasword_reset {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+  align-items: center;
+}
+.C-button_reset_password {
+  padding-left: 10px;
+  padding-right: 10px;
+  text-decoration: none;
+  text-transform: none;
+}
+/* password reset */
+
+
+/* password reset */
+
+/* flash messages */
+.messages {
+  width: 100%;
+  max-width: 450px;
+  margin: 20px auto;
+  padding: 20px;
+  color: var(--white);
+  text-align: center;
+  line-height: 1.8;
+  border-radius: 10px;
 }
 
-/* end user register */
+.message_error {
+  background-color: var(--dark_red);
+  max-width: 380px;
+}
+
+.message_success {
+  background-color: var(--turquoise_5);
+}
+/* end flash messages */
 
 
 @media screen and (min-width: 800px) {
@@ -177,6 +240,5 @@ html, body {
 
   .C-login_button {
     font-size: 20px;
-    width: 105px
   }
 }
