@@ -6,7 +6,9 @@
 
 {% block content %}
 <section class="C-login center_x_y_flex">
+  {% include 'global/partials/_messages.html' %}
   <form method="POST" action="" class="C-login_form">
+    <h1 class="C-login_title">Log in</h1>
     <div class="C-login_div_input" >
       <input class="C-login_input" type="text" name="user" id="user" required>
       <label class="C-login_label" for="user">usuário</label>
