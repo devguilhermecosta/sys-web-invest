@@ -8,8 +8,10 @@ from . import (
 )
 from utils.browser.selenium import make_chrome_browser
 from selenium.webdriver.common.by import By
+import pytest
 
 
+@pytest.mark.functional_test
 class PasswordResetFuncionalTests(StaticLiveServerTestCase):
     """
         This test entire set of views required for
