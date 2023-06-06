@@ -12,7 +12,7 @@ class PasswordReset(views.PasswordResetView):
 
 
 class PasswordResetDone(views.PasswordResetDoneView):
-    template_name = 'resetpassword/pages/password_reset_done.html'
+    template_name = 'resetpassword/pages/password_reset.html'
 
     def get(self, *args, **kwargs):
         super_get = super().get(*args, **kwargs)
@@ -33,7 +33,7 @@ class PasswordResetConfirm(views.PasswordResetConfirmView):
 
 
 class PasswordResetComplete(views.PasswordResetCompleteView):
-    template_name = 'resetpassword/pages/password_reset_complet.html'
+    template_name = 'resetpassword/pages/password_reset_confirm.html'
 
     def get(self, *args, **kwargs):
         super_get = super().get(*args, **kwargs)
