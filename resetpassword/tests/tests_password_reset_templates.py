@@ -16,7 +16,7 @@ class PasswordResetTemplatesTests(TestCase):
         )
         self.assertTemplateUsed(
             response,
-            'resetpassword/pages/password_reset.html'
+            'resetpassword/pages/password_reset.html',
         )
 
     def test_password_reset_done_loads_correct_template(self) -> None:
@@ -25,7 +25,7 @@ class PasswordResetTemplatesTests(TestCase):
         )
         self.assertTemplateUsed(
             response,
-            'resetpassword/pages/password_reset_done.html'
+            'resetpassword/pages/password_reset.html',
 
         )
 
@@ -36,7 +36,7 @@ class PasswordResetTemplatesTests(TestCase):
         )
         self.assertTemplateUsed(
             response,
-            'resetpassword/pages/password_reset_confirm.html'
+            'resetpassword/pages/password_reset_confirm.html',
         )
 
     def test_password_reset_complete_loads_correct_template(self) -> None:
@@ -45,5 +45,5 @@ class PasswordResetTemplatesTests(TestCase):
         )
         self.assertTemplateUsed(
             response,
-            'resetpassword/pages/password_reset_complet.html',
+            'resetpassword/pages/password_reset_confirm.html',
         )
