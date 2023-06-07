@@ -6,6 +6,18 @@ from parameterized import parameterized
 from user.views import UserRegister
 
 
+def make_new_user(**kwargs) -> User:
+    user_data: dict = {
+        'first_name': kwargs.pop('first_name', 'jhon'),
+        'last_name': kwargs.pop('last_name', 'dhoe'),
+        'username': kwargs.pop('username', 'jhondoe'),
+        'email': kwargs.pop('email', 'jhon@email.com'),
+    }
+    user: User = User.objects.create(**user_data)
+    user.save()
+    return user
+
+
 class UserRegisterFormTests(TestCase):
     def setUp(self, *args, **kwargs):
         self.user_register_data: dict = {
@@ -100,44 +112,48 @@ class UserRegisterFormTests(TestCase):
     def test_user_form_register_returns_email_should_be_equal_if_email_and_email_repeat_are_diferents(self) -> None:  # noqa: E501
         self.user_register_data['email'] = 'email@email.com'
         self.user_register_data['email_repeat'] = 'anotheremail@email.com'
-
         request: HttpResponse = self.make_post_request()
         content: str = request.content.decode('utf-8')
 
         self.assertIn('Os e-mails precisam ser iguais', content)
 
     def test_user_form_register_returns_username_exists_if_this_exists(self) -> None:  # noqa: E501
-        user_data: dict = {
-            'first_name': 'another jhon',
-            'last_name': 'another doe',
-            'username': 'jhondoe',
-        }
-        user: User = User.objects.create(**user_data)
-        user.save()
-
-        # same user that above
-        request: HttpResponse = self.make_post_request(data=user_data)
+        make_new_user(username=self.user_register_data['username'])
+        request: HttpResponse = self.make_post_request()
         content: str = request.content.decode('utf-8')
 
         self.assertIn('Usuário já cadastrado', content)
 
     def test_user_form_register_returns_email_exists_if_this_exists(self) -> None:  # noqa: E501
-        user_data: dict = {
-            'first_name': 'jhon',
-            'last_name': 'dhoe',
-            'username': 'jhondoe',
-            'email': 'jhon@email.com'
-        }
-        user: User = User.objects.create(**user_data)
-        user.save()
-
-        # same email and user that above
-        request: HttpResponse = self.make_post_request(data=user_data)
+        make_new_user(email=self.user_register_data['email'])
+        request: HttpResponse = self.make_post_request()
         content: str = request.content.decode('utf-8')
 
         self.assertIn('Este e-mail já está em uso', content)
-        self.fail(
-            'testar o field senha do form',
-            'testar a recuperação de senha',
-            'testar o envio de email para confirmar o cadastro'
+
+    def test_user_form_register_returns_password_guidelines_if_incorrect_password(self) -> None:  # noqa: E501
+        self.user_register_data.update(
+            {
+                'password': '123',
+                'password_repeat': '123',
+            }
+            )
+        request: HttpResponse = self.make_post_request()
+        content: str = request.content.decode('utf-8')
+
+        self.assertIn('A senha precisa ter pelo menos 8 catacteres', content)
+        self.assertIn('Pelo menos uma letra maíscula.', content)
+        self.assertIn('Pelo menos uma letra minúscula.', content)
+        self.assertIn('Pelo menos um número.', content)
+
+    def test_user_form_register_returns_message_error_if_password1_different_from_password2(self) -> None:  # noqa: E501
+        self.user_register_data.update(
+            {
+                'password': 'ABc12345678',
+                'password_repeat': 'ABc12345',
+            }
         )
+        request: HttpResponse = self.make_post_request()
+        content: str = request.content.decode('utf-8')
+
+        self.assertIn('As senhas precisam ser iguais', content)
