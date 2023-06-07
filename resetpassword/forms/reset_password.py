@@ -13,17 +13,15 @@ class PasswordResetCustomForm(PasswordResetForm):
             attrs={
                 'class': 'C-login_input',
             }
-        )
+        ),
+        error_messages={
+            'required': 'Campo obrigatório',
+        }
     )
 
     def clean_email(self):
         email = self.cleaned_data["email"]
         user = User.objects.filter(email=email).exists()
-        if not email:
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='invalid'
-            )
 
         if not user:
             raise ValidationError(
