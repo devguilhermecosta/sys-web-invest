@@ -9,9 +9,8 @@ from . import (
 
 
 '''
-Testing the password reset was not easy.
-I decided to keep the code repeating
-in tests to keep them more readable.
+It's not possible to abstract the get and post requests into
+separate methods, as the tests did not work.
 '''
 
 
@@ -97,9 +96,7 @@ class PasswordResetCompletTests(TestCase):
             content,
         )
 
-    def test_password_reset_password_recovery_url_is_correct(self) -> None:
-        '''This test check the url that was sent in
-        the email. The url hides the token'''
+    def make_uid_and_token(self) -> str:
         response = self.c.post(
             reverse(password_reset_url_name),
             {
@@ -108,15 +105,21 @@ class PasswordResetCompletTests(TestCase):
         )
         uid = response.context['uid']
         token = response.context['token']
+        return uid, token
 
-        response_url_get = self.client.get(
+    def test_password_reset_password_recovery_url_is_correct(self) -> None:
+        '''This test check the url that was sent in
+        the email. The url hides the token'''
+        uid, token = self.make_uid_and_token()
+        response_url_get = self.c.get(
             reverse(
                 password_reset_confirm_url_name,
                 kwargs={
                     'uidb64': uid,
                     'token': token,
                 }),
-        )
+            )
+
         self.assertEqual(
             response_url_get.url,
             '/password/reset/MQ/set-password/',
@@ -131,16 +134,9 @@ class PasswordResetCompletTests(TestCase):
         - password length is less then 8 chars,
         - password doesn't have at least an uppercase letter,
         a lowercase letter, and a number'''
-        response = self.c.post(
-            reverse(password_reset_url_name),
-            {
-                'email': self.user.email,
-            },
-        )
-        uid = response.context['uid']
-        token = response.context['token']
+        uid, token = self.make_uid_and_token()
 
-        response_url_post = self.client.get(
+        response_url_get = self.client.get(
             reverse(
                 password_reset_confirm_url_name,
                 kwargs={
@@ -149,14 +145,14 @@ class PasswordResetCompletTests(TestCase):
                 }),
         )
         response_url_post = self.client.post(
-                response_url_post.url,
+                response_url_get.url,
                 {
                     'new_password1': 'abc',
                     'new_password2': 'abdd',
                 }
-                ),
+                )
 
-        content = response_url_post[0].content.decode('utf-8')
+        content = response_url_post.content.decode('utf-8')
         self.assertIn('A senha precisa ter pelo menos 8 catacteres',
                       content
                       )
@@ -169,14 +165,7 @@ class PasswordResetCompletTests(TestCase):
         You need to use the url generated in the get request with
         argument (path) for the post request because of the token.
         Returns "The passwords must be equal." '''
-        response = self.c.post(
-            reverse(password_reset_url_name),
-            {
-                'email': self.user.email,
-            },
-        )
-        uid = response.context['uid']
-        token = response.context['token']
+        uid, token = self.make_uid_and_token()
 
         response_url_post = self.client.get(
             reverse(
@@ -204,14 +193,7 @@ class PasswordResetCompletTests(TestCase):
         argument (path) for the post request because of the token.
         It's necessary to uses follow=True for message success test.
         '''
-        response = self.c.post(
-            reverse(password_reset_url_name),
-            {
-                'email': self.user.email,
-            },
-        )
-        uid = response.context['uid']
-        token = response.context['token']
+        uid, token = self.make_uid_and_token()
 
         response_url_post = self.client.get(
             reverse(
