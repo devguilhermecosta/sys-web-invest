@@ -4,8 +4,12 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from pathlib import Path
+from dotenv import load_dotenv
 import sys
 import os
+
+
+load_dotenv()
 
 
 ROOT_PATH = Path(__file__).parent.parent.parent
