@@ -1,0 +1,12 @@
+<form method="POST" action="{{ form_action }}" class="C-login_form">
+  {% csrf_token %}
+  <h1 class="C-login_title">{{ form_title }}</h1>
+  {% for field in form %}
+    {{ field.errors }}
+    <div class="C-login_div_input" >
+      {{ field }}
+      <label class="C-login_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
+  {% endfor %}
+  <input class="C-login_button C-login_sign_in" type="submit" value="{{ button_submit_value }}">
+</form>
