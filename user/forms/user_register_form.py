@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from re import compile
+from utils.forms.style import add_css_class
 
 
 def strong_password(password: str) -> None:
@@ -18,16 +19,6 @@ def strong_password(password: str) -> None:
             ],
             code='invalid',
         )
-
-
-def add_placeholder(field, placeholder):
-    f = field.widget.attrs['placeholder'] = placeholder
-    return f
-
-
-def add_css_class(field, class_name):
-    f = field.widget.attrs['class'] = class_name
-    return f
 
 
 class UserFormRegister(forms.ModelForm):
