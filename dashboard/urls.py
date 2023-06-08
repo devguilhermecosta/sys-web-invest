@@ -7,7 +7,7 @@ app_name: str = 'dashboard'
 
 urlpatterns: list = [
     path('', views.HomeView.as_view(), name='home'),
-    path('login/', views.LoginView.as_view(),
+    path('dashboard/', views.LoginView.as_view(),
          name='login',
          ),
 ]
