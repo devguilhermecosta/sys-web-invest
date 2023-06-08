@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from dashboard.forms.login_form import LoginForm
+from dashboard.forms.profile_form import ProfileForm
 
 
 class HomeView(View):
@@ -36,11 +37,18 @@ class HomeView(View):
             if user is not None:
                 del self.request.session['login']
 
-                if user.last_login is None:
-                    # criar perfil
-                    ...
-
                 login(self.request, user)
+
+                if user.last_login is None:
+                    messages.success(
+                        self.request,
+                        ('Este é seu primeiro acesso.'
+                         'Antes de continuar, vamos configurar seu perfil.')
+                    )
+                    return redirect(
+                        reverse('dashboard:create_profile')
+                    )
+
                 messages.success(
                     self.request,
                     'login realizado com sucesso'
@@ -59,6 +67,22 @@ class HomeView(View):
 
         return redirect(
             reverse('dashboard:home')
+        )
+
+
+# marcar como login_required
+class CreateProfile(View):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        form = ProfileForm()
+
+        return render(
+            self.request,
+            'dashboard/pages/profile.html',
+            context={
+                'form': form,
+                'form_title': 'configurar perfil',
+                'button_submit_value': 'finalizar'
+            }
         )
 
 
