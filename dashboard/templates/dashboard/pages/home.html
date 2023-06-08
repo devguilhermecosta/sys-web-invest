@@ -7,22 +7,26 @@
 {% block content %}
 <section class="C-login center_x_y_flex">
   {% include 'global/partials/_messages.html' %}
-  <form method="POST" action="" class="C-login_form">
-    <h1 class="C-login_title">Log in</h1>
-    <div class="C-login_div_input" >
-      <input class="C-login_input" type="text" name="user" id="user" required>
-      <label class="C-login_label" for="user">usuário</label>
-    </div>
-    <div class="C-login_div_input" >
-      <input class="C-login_input" type="password" name="password" id="password" required>
-      <label class="C-login_label" for="password">senha</label>
-    </div>
-    <a href="{% url 'password_reset' %}" class="C-login_forgot_password">
-      esqueci minha senha
-    </a>
-    <a href="" class="C-login_button C-login_sign_in">entrar</a>
-    <p>ou</p>
-    <a href="{% url 'user:register' %}" class="C-login_button C-login_sing_up">registrar</a>
-  </form>
+  {% if user.is_authenticated %}
+    <p>Você está logado como {{ user }}</p>
+  {% else %}
+    <form method="POST" action="" class="C-login_form">
+      {% csrf_token %}
+      <h1 class="C-login_title">Log in</h1>
+      {% for field in form %}
+        {{ field.errors }}
+        <div class="C-login_div_input" >
+          {{ field }}
+          <label class="C-login_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        </div>
+      {% endfor %}
+      <a href="{% url 'password_reset' %}" class="C-login_forgot_password">
+        esqueci minha senha
+      </a>
+      <input class="C-login_button C-login_sign_in" type="submit" value="entrar">
+      <p>ou</p>
+      <a href="{% url 'user:register' %}" class="C-login_button C-login_sing_up">registrar</a>
+    </form>
+  {% endif %}
 </section>
 {% endblock content %}
