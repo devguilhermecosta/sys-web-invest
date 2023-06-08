@@ -204,14 +204,18 @@ class PasswordResetCompletTests(TestCase):
                 }),
         )
 
+        new_password = 'Abcd123456'
         response_url_post = self.client.post(
                 response_url_post.url,
                 {
-                    'new_password1': 'Abcd123456',
-                    'new_password2': 'Abcd123456',
+                    'new_password1': new_password,
+                    'new_password2': new_password,
                 },
                 follow=True,
                 )
 
+        user = User.objects.first()
+
         content = response_url_post.content.decode('utf-8')
         self.assertIn('Sua senha foi alterada com sucesso.', content)
+        self.assertTrue(user.check_password(new_password))
