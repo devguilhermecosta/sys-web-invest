@@ -41,7 +41,7 @@ class UserRegisterTests(TestCase):
         response: HttpResponse = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
-    def test_user_register_create_a_new_user_if_form_data_is_created(self) -> None:  # noqa: E501
+    def test_user_register_create_a_new_user_if_form_data_is_valid(self) -> None:  # noqa: E501
         response: HttpResponse = self.c.post(
             self.url,
             {**self.user_data},
@@ -68,11 +68,14 @@ class UserRegisterTests(TestCase):
         self.assertEqual(status_code_redirect, 302)
 
     def test_user_register_sends_a_confirmation_mail_if_user_is_created(self) -> None:  # noqa: E501
+        # 1) Create a new user
         self.c.post(
             self.url,
             {**self.user_data},
             follow=True,
         )
+
+        # 2) Get the mail confirmation
         mail_confirmation = mail.outbox
         mail_body = mail_confirmation[0].body
 
@@ -113,4 +116,93 @@ class UserRegisterTests(TestCase):
         user = User.objects.first()
 
         self.assertFalse(user.is_active)
-        self.fail('agora testar todo o processo de ativação e fazer um teste com Selenium')
+
+    def test_user_register_is_activate_after_click_on_the_actvation_link(self) -> None:  # noqa: E501
+        '''
+        This tests the entire account creation and activation process.
+        '''
+
+        # 1) Create the account and send the activation email
+        self.c.post(
+            self.url,
+            {**self.user_data},
+            follow=True,
+        )
+
+        # 2) Get the uid and token sent in the email
+        send_email = mail.outbox
+        uid = send_email[0].body[104:106]
+        token = send_email[0].body[107:-2]
+
+        # 3) At this momento the user is inactive
+        user_before_activation = User.objects.first()
+        self.assertFalse(user_before_activation.is_active)
+
+        # 4) Make get request for 'user:activate' using uid and token
+        request_user_activation = self.c.get(
+            reverse(
+                'user:activate',
+                kwargs={
+                    'uidb64': uid,
+                    'token': token
+                }),
+            follow=True,
+        )
+
+        # 5) Now the user is active
+        user_after_activation = User.objects.first()
+        self.assertTrue(user_after_activation.is_active)
+
+        # 6) An activation message is rendered
+        self.assertIn(
+            ('Obrigado por confirmar seu e-mail. '
+             'Agora você pode fazer login em sua conta.'),
+            request_user_activation.content.decode('utf-8')
+        )
+
+    def test_user_register_returns_an_error_message_if_the_activation_link_has_already_been_used(self) -> None:  # noqa: E501
+        # 1) Create the account and send the activation email
+        self.c.post(
+            self.url,
+            {**self.user_data},
+            follow=True,
+        )
+
+        # 2) Get the uid and token sent in the email
+        send_email = mail.outbox
+        uid = send_email[0].body[104:106]
+        token = send_email[0].body[107:-2]
+
+        # 3) Make get request for 'user:activate' using uid and token
+        self.c.get(
+            reverse(
+                'user:activate',
+                kwargs={
+                    'uidb64': uid,
+                    'token': token
+                }),
+            follow=True,
+        )
+
+        # 4) Make get request again for 'user:activate'
+        new_request_with_same_url = self.c.get(
+            reverse(
+                'user:activate',
+                kwargs={
+                    'uidb64': uid,
+                    'token': token
+                }),
+            follow=True,
+        )
+
+        # 5) Now we have a error message
+        self.assertIn(
+            'Este link de ativação é inválido',
+            new_request_with_same_url.content.decode('utf-8')
+        )
+
+        # 6) The user is redirected to the home page
+        self.assertRedirects(new_request_with_same_url,
+                             expected_url='/',
+                             status_code=302,
+                             )
