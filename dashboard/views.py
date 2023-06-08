@@ -36,7 +36,9 @@ class HomeView(View):
             if user is not None:
                 del self.request.session['login']
 
-                # last_login = user.last_login
+                if user.last_login is None:
+                    # criar perfil
+                    ...
 
                 login(self.request, user)
                 messages.success(
