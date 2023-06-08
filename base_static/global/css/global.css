@@ -132,6 +132,7 @@ html, body {
 .C-login_sign_in {
   border: 1px solid var(--turquoise_4);
   color: var(--blue_3);
+  cursor: pointer;
 }
 
 .C-login_sign_in:hover {
@@ -178,6 +179,11 @@ html, body {
 .errorlist {
   color: var(--dark_red);
   list-style: none;
+}
+
+
+.C-login_form > .errorlist {
+  align-self: flex-start;
 }
 
 .C-form_button {
