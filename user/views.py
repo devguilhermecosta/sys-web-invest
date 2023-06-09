@@ -69,7 +69,7 @@ def activate(request, uidb64, token):
                 )
         )
         return redirect(
-            reverse('dashboard:login')
+            reverse('dashboard:user_dashboard')
         )
     else:
         messages.error(
