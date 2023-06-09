@@ -4,9 +4,13 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from dashboard.forms.login_form import LoginForm
 from dashboard.forms.profile_form import ProfileForm
+from dashboard.models import Profile
 
 
 class HomeView(View):
@@ -36,15 +40,10 @@ class HomeView(View):
 
             if user is not None:
                 del self.request.session['login']
-
+                profile = Profile.objects.filter(user=user).first()
                 login(self.request, user)
 
-                if user.last_login is None:
-                    messages.success(
-                        self.request,
-                        ('Este é seu primeiro acesso.'
-                         'Antes de continuar, vamos configurar seu perfil.')
-                    )
+                if profile is None:
                     return redirect(
                         reverse('dashboard:create_profile')
                     )
@@ -54,7 +53,7 @@ class HomeView(View):
                     'login realizado com sucesso'
                 )
                 return redirect(
-                    reverse('dashboard:login')
+                    reverse('dashboard:user_dashboard')
                 )
 
             messages.error(
@@ -70,19 +69,41 @@ class HomeView(View):
         )
 
 
-# marcar como login_required
+@method_decorator(login_required(
+    redirect_field_name='next',
+    login_url='/',
+        ),
+    name='dispatch'
+)
 class CreateProfile(View):
-    def get(self, *args, **kwargs) -> HttpResponse:
+    def get(self, **kwargs) -> HttpResponse:
         form = ProfileForm()
+        id = self.kwargs.get('user_id')
+        print('este é o id: ', id)
+        user = User.objects.filter(pk=id).first()
+        profile = Profile.objects.filter(user=user).first()
 
-        return render(
+        if profile is None:
+            messages.success(
+                self.request,
+                (
+                    'Antes de continuarmos, vamos configurar '
+                    'seu perfil de usuário.'
+                    )
+            )
+            return render(
+                self.request,
+                'dashboard/pages/profile.html',
+                context={
+                    'form': form,
+                    'form_title': 'configurar perfil',
+                    'button_submit_value': 'finalizar'
+                }
+            )
+
+        return redirect(
             self.request,
-            'dashboard/pages/profile.html',
-            context={
-                'form': form,
-                'form_title': 'configurar perfil',
-                'button_submit_value': 'finalizar'
-            }
+            reverse('dashboard:user_dashboard')
         )
 
 
