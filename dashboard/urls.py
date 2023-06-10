@@ -10,7 +10,7 @@ urlpatterns: list = [
     path('dashboard/', views.LoginView.as_view(),
          name='user_dashboard',
          ),
-    path('dashboard/criar_perfil/<int:user_id>/',
+    path('dashboard/criar_perfil/',
          views.CreateProfile.as_view(),
          name='create_profile',
          )
