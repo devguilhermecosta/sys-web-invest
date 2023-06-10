@@ -39,10 +39,10 @@ class HomeView(View):
 
             if user is not None:
                 del self.request.session['login']
-                profile = Profile.objects.filter(user=user).first()
+                profile = Profile.objects.filter(user=user).exists()
                 login(self.request, user)
 
-                if profile is None:
+                if not profile:
                     return redirect(
                         reverse('dashboard:create_profile')
                         )
@@ -77,10 +77,11 @@ class HomeView(View):
 class CreateProfile(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         user = self.request.user.is_authenticated or None
-        profile = Profile.objects.filter(user=user).first()
+        profile = Profile.objects.filter(user=user).exists()
 
         if not profile:
-            form = ProfileForm()
+            session = self.request.session.get('create_profile', None)
+            form = ProfileForm(session)
             messages.success(
                 self.request,
                 (
@@ -101,6 +102,31 @@ class CreateProfile(View):
 
         return redirect(
             reverse('dashboard:user_dashboard')
+        )
+
+    def post(self, *args, **kwargs):
+        post = self.request.POST
+        self.request.session['create_profile'] = post
+        form = ProfileForm(post)
+
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = self.request.user
+            profile.save()
+
+            messages.success(
+                self.request,
+                ('Perfil criado com sucesso.')
+            )
+
+            del self.request.session['create_profile']
+
+            return redirect(
+                reverse('dashboard:user_dashboard')
+            )
+
+        return redirect(
+            reverse('dashboard:create_profile')
         )
 
 
