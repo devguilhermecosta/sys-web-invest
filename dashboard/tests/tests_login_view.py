@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from django.contrib.auth.models import User
+from dashboard.models import Profile
 from parameterized import parameterized
 
 
@@ -50,12 +51,15 @@ class LoginViewTests(TestCase):
 
     def test_login_view_returns_login_succesfully_if_credentials_are_correct_and_user_i_activate(self) -> None:  # noqa: E501
         '''
-            This test create a new user and make login
+            This test create a new user and make login,
+            however, the user need have a profile.
         '''
 
-        User.objects.create_user(
+        user = User.objects.create_user(
             **self.user_data
         )
+
+        Profile.objects.create(user=user)
 
         response = self.c.post(
             reverse('dashboard:home'),
@@ -70,6 +74,6 @@ class LoginViewTests(TestCase):
                       response.content.decode('utf-8'),
                       )
         self.assertRedirects(response,
-                             reverse('dashboard:login'),
+                             reverse('dashboard:user_dashboard'),
                              302,
                              )

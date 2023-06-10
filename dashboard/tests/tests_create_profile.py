@@ -38,22 +38,40 @@ class CreateProfileTests(TestCase):
         response = resolve(self.url)
         self.assertEqual(response.func.view_class, views.CreateProfile)
 
-    def test_create_profile_load_correct_template(self) -> None:
-        # first we make the login
-        self.c.post(
+    def make_login(self):
+        response = self.c.post(
             reverse('dashboard:home'),
             {
-                'user': self.user_data['username'],
-                'password': self.user_data['password'],
+                'user': self.user_data.get('username'),
+                'password': self.user_data.get('password'),
             },
             follow=True,
         )
+        return response
+
+    def test_create_profile_redirect_to_login_page_if_user_is_not_logged_in(self) -> None:  # noqa: E501
+        response = self.c.get(
+            reverse('dashboard:create_profile'),
+            follow=True,
+        )
+
+        self.assertRedirects(
+            response,
+            '/?next=/dashboard/criar_perfil/',
+            302,
+        )
+
+    def test_create_profile_load_correct_template(self) -> None:
+        # first we make the login
+        self.make_login()
+
         response = self.c.get(self.url)
         self.assertTemplateUsed(response,
                                 'dashboard/pages/profile.html',
                                 )
 
     def test_create_profile_get_request_have_status_code_200(self) -> None:
+        self.make_login()
         response = self.c.get(self.url)
         self.assertEqual(response.status_code, 200)
 
@@ -66,6 +84,8 @@ class CreateProfileTests(TestCase):
         ('cep'),
     ])
     def test_create_profile_get_request_load_correct_content(self, label) -> None:  # noqa: E501
+        self.make_login()
+
         response = self.c.get(self.url)
         content = response.content.decode('utf-8')
 
@@ -79,6 +99,8 @@ class CreateProfileTests(TestCase):
         )
 
     def test_create_profile_loads_the_form_for_create_profile_if_user_does_not_have_a_profile(self) -> None:  # noqa: E501
+        self.make_login()
+
         response = self.c.post(
             reverse('dashboard:home'),
             {
@@ -100,6 +122,8 @@ class CreateProfileTests(TestCase):
         )
 
     def test_create_profile_does_not_loads_the_form_for_create_profile_if_user_have_a_profile(self) -> None:  # noqa: E501
+        self.make_login()
+
         Profile.objects.create(**self.profile_data)
 
         response = self.c.post(
@@ -121,18 +145,6 @@ class CreateProfileTests(TestCase):
             302,
         )
 
-    def test_create_profile_redirect_to_login_page_if_user_is_not_logged_in(self) -> None:  # noqa: E501
-        response = self.c.get(
-            reverse('dashboard:create_profile'),
-            follow=True,
-        )
-
-        self.assertRedirects(
-            response,
-            '/?next=/dashboard/criar_perfil/',
-            302,
-        )
-
     def test_create_profile_redirect_to_user_dashboard_if_user_have_a_profile(self) -> None:  # noqa: E501
         # create the user profile
         Profile.objects.create(**self.profile_data)
@@ -147,25 +159,14 @@ class CreateProfileTests(TestCase):
             follow=True,
         )
 
+        # make get request in create profile page
         response = self.c.get(
-            reverse('dashboard:create_profile', args=(self.user.id)),
+            reverse('dashboard:create_profile'),
+            follow=True,
         )
-        ...
 
-
-
-        # self.assertRedirects(
-        #     response,
-        #     reverse('dashboard:user_dashboard'),
-        #     302,
-        # )
-
-# self.fail(
-#     ('Continuar a partir daqui. '
-#      'de cadastro de perfil se o usuário não tiver '
-#      'um perfil cadastrado. '
-#      'Criar a validação do formulário de cadastro '
-#      'de perfil. '
-#      'Colocar todos os forms e um único template.',
-#      'Só pode acessar o form de perfil se estiver logado.')
-# )
+        self.assertRedirects(
+            response,
+            '/dashboard/',
+            302,
+        )
