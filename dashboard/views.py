@@ -4,7 +4,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -46,7 +45,7 @@ class HomeView(View):
                 if profile is None:
                     return redirect(
                         reverse('dashboard:create_profile')
-                    )
+                        )
 
                 messages.success(
                     self.request,
@@ -76,21 +75,20 @@ class HomeView(View):
     name='dispatch'
 )
 class CreateProfile(View):
-    def get(self, **kwargs) -> HttpResponse:
-        form = ProfileForm()
-        id = self.kwargs.get('user_id')
-        print('este é o id: ', id)
-        user = User.objects.filter(pk=id).first()
+    def get(self, *args, **kwargs) -> HttpResponse:
+        user = self.request.user.is_authenticated or None
         profile = Profile.objects.filter(user=user).first()
 
-        if profile is None:
+        if not profile:
+            form = ProfileForm()
             messages.success(
                 self.request,
                 (
                     'Antes de continuarmos, vamos configurar '
                     'seu perfil de usuário.'
-                    )
+                )
             )
+
             return render(
                 self.request,
                 'dashboard/pages/profile.html',
@@ -102,7 +100,6 @@ class CreateProfile(View):
             )
 
         return redirect(
-            self.request,
             reverse('dashboard:user_dashboard')
         )
 
