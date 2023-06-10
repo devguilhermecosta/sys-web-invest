@@ -170,3 +170,85 @@ class CreateProfileTests(TestCase):
             '/dashboard/',
             302,
         )
+
+    @parameterized.expand([
+        ('cpf', 'Campo obrigatório'),
+        ('adress', 'Campo obrigatório'),
+        ('number', 'Campo obrigatório'),
+        ('city', 'Campo obrigatório'),
+        ('uf', 'Campo obrigatório'),
+        ('cep', 'Campo obrigatório'),
+    ])
+    def test_create_profile_returns_required_field_if_field_length_less_then_igual_zero(self, field, message) -> None:  # noqa: E501:
+        # set field profile data
+        self.profile_data[field] = ''
+
+        # make login
+        self.make_login()
+
+        # try create profile
+        response = self.c.post(
+            reverse('dashboard:create_profile'),
+            data=self.profile_data,
+            follow=True,
+        )
+        self.assertIn(message, response.content.decode('utf-8'))
+
+    def test_create_profile_returns_error_message_if_cpf_is_invalid(self) -> None:  # noqa: E501
+        # make login
+        self.make_login()
+
+        # set profile_data
+        self.profile_data['cpf'] = '111.111.111-11'
+
+        # try create profile
+        response = self.c.post(
+            reverse('dashboard:create_profile'),
+            data=self.profile_data,
+            follow=True,
+        )
+
+        self.assertIn('CPF inválido', response.content.decode('utf-8'))
+
+    def test_create_profile_returns_error_message_if_cpf_length_less_then_11(self) -> None:  # noqa: E501
+        # make login
+        self.make_login()
+
+        # set profile_data
+        self.profile_data['cpf'] = '111.111.111'
+
+        # try create profile
+        response = self.c.post(
+            reverse('dashboard:create_profile'),
+            data=self.profile_data,
+            follow=True,
+        )
+
+        self.assertIn('CPF inválido', response.content.decode('utf-8'))
+
+    def test_create_profile_returns_a_new_profile_if_all_ok(self) -> None:  # noqa: E501
+        # make login
+        self.make_login()
+
+        # set profile_data with a valid cpf
+        self.profile_data['cpf'] = '616.451.320-05'
+
+        # try create profile
+        response = self.c.post(
+            reverse('dashboard:create_profile'),
+            data=self.profile_data,
+            follow=True,
+        )
+
+        self.assertIn(
+            'Perfil criado com sucesso',
+            response.content.decode('utf-8'),
+            )
+        self.assertRedirects(
+            response,
+            reverse('dashboard:user_dashboard'),
+            302,
+        )
+
+    def test_create_profile_returns_error_message_if_cpf_is_already_in_use(self) -> None:  # noqa: E501
+        self.fail('O código está funcionando, mas o teste não')
