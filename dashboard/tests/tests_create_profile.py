@@ -69,7 +69,7 @@ class CreateProfileTests(TestCase):
 
         response = self.c.get(self.url_create_profile)
         self.assertTemplateUsed(response,
-                                'dashboard/pages/profile.html',
+                                'dashboard/pages/create_profile.html',
                                 )
 
     def test_create_profile_get_request_have_status_code_200(self) -> None:
@@ -169,7 +169,7 @@ class CreateProfileTests(TestCase):
 
         self.assertRedirects(
             response,
-            '/dashboard/',
+            reverse('dashboard:user_dashboard'),
             302,
         )
 

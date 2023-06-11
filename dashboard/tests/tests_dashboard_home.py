@@ -12,7 +12,7 @@ class DashboardTests(TestCase):
     def test_home_view_is_correct(self) -> None:
         url: str = reverse('dashboard:home')
         response: ResolverMatch = resolve(url)
-        self.assertEqual(response.func.view_class, views.HomeView)
+        self.assertEqual(response.func.view_class, views.LoginView)
 
     def test_home_load_correct_template(self) -> None:
         url: str = reverse('dashboard:home')
