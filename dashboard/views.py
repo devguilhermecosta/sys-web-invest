@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -62,6 +62,20 @@ class HomeView(View):
             return redirect(
                 reverse('dashboard:home')
             )
+
+        return redirect(
+            reverse('dashboard:home')
+        )
+
+
+class LogoutView(View):
+    def post(self, *args, **kwargs):
+        logout(self.request)
+
+        messages.success(
+            self.request,
+            'Logout realizado com sucesso'
+        )
 
         return redirect(
             reverse('dashboard:home')
