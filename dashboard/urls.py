@@ -6,13 +6,13 @@ app_name: str = 'dashboard'
 
 
 urlpatterns: list = [
-    path('', views.HomeView.as_view(), name='home'),
-    path('dashboard/', views.LoginView.as_view(),
-         name='user_dashboard',
-         ),
+    path('', views.LoginView.as_view(), name='home'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('dashboard/criar_perfil/',
          views.CreateProfile.as_view(),
          name='create_profile',
-         )
+         ),
+    path('dashboard/painel-do-usuario/', views.DashboardView.as_view(),
+         name='user_dashboard',
+         ),
 ]
