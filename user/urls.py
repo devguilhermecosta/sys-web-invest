@@ -15,5 +15,9 @@ urlpatterns: list = [
     path('registrar/register_confirmation/',
          views.UserRegister.user_register_confirmation,
          name='register_confirmation'),
-    path('activate/<uidb64>/<token>', views.activate, name='activate')
+    path('activate/<uidb64>/<token>', views.activate, name='activate'),
+    path('registrar/criar_perfil/',
+         views.CreateProfile.as_view(),
+         name='create_profile',
+         ),
 ]

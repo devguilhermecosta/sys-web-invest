@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from dashboard.models import Profile
+from user.models import Profile
 from utils.forms.style import add_css_class
 from utils.validators.cpf_and_cnpj import ValidateCPForCNPJ
 from utils.validators.fields import length_validate

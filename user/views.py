@@ -5,7 +5,8 @@ from django.http import HttpResponse, HttpRequest
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -13,7 +14,9 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from utils.tokens.token_generate import account_activation_token
 
+from user.forms.profile_form import ProfileForm
 from user.forms.user_register_form import UserFormRegister
+from user.models import Profile
 
 
 def email_activation(request, user, to_email):
@@ -122,4 +125,66 @@ class UserRegister(View):
         return render(
             request,
             'user/pages/register_confirmation.html'
+        )
+
+
+@method_decorator(login_required(
+    redirect_field_name='next',
+    login_url='/',
+        ),
+    name='dispatch'
+)
+class CreateProfile(View):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        user = self.request.user
+        profile = Profile.objects.filter(user=user).exists()
+
+        if not profile:
+            session = self.request.session.get('create_profile', None)
+            form = ProfileForm(session)
+            messages.success(
+                self.request,
+                (
+                    'Antes de continuarmos, vamos configurar '
+                    'seu perfil de usuário.'
+                )
+            )
+
+            return render(
+                self.request,
+                'user/pages/create_profile.html',
+                context={
+                    'form': form,
+                    'form_title': 'Configurar perfil',
+                    'button_submit_value': 'finalizar'
+                }
+            )
+
+        return redirect(
+            reverse('dashboard:user_dashboard')
+        )
+
+    def post(self, *args, **kwargs):
+        post = self.request.POST
+        self.request.session['create_profile'] = post
+        form = ProfileForm(post)
+
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = self.request.user
+            profile.save()
+
+            messages.success(
+                self.request,
+                ('Perfil criado com sucesso.')
+            )
+
+            del self.request.session['create_profile']
+
+            return redirect(
+                reverse('dashboard:user_dashboard')
+            )
+
+        return redirect(
+            reverse('user:create_profile')
         )

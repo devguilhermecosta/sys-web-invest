@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse, resolve
-from dashboard import views
+from user import views
 from django.contrib.auth.models import User
 from parameterized import parameterized
-from dashboard.models import Profile
+from user.models import Profile
 
 
 class CreateProfileTests(TestCase):
@@ -17,7 +17,7 @@ class CreateProfileTests(TestCase):
             'email': 'jhon@email.com',
         }
         self.user = User.objects.create_user(**self.user_data)
-        self.url_create_profile = reverse('dashboard:create_profile')
+        self.url_create_profile = reverse('user:create_profile')
         self.c = Client()
 
         self.profile_data = {
@@ -32,7 +32,9 @@ class CreateProfileTests(TestCase):
         return super().setUp()
 
     def test_create_profile_url_is_correct(self) -> None:
-        self.assertEqual(self.url_create_profile, '/dashboard/criar_perfil/')
+        self.assertEqual(self.url_create_profile,
+                         '/usuario/registrar/criar_perfil/',
+                         )
 
     def test_create_profile_view_is_correct(self) -> None:
         response = resolve(self.url_create_profile)
@@ -59,7 +61,7 @@ class CreateProfileTests(TestCase):
 
         self.assertRedirects(
             response,
-            '/?next=/dashboard/criar_perfil/',
+            '/?next=/usuario/registrar/criar_perfil/',
             302,
         )
 
@@ -69,7 +71,7 @@ class CreateProfileTests(TestCase):
 
         response = self.c.get(self.url_create_profile)
         self.assertTemplateUsed(response,
-                                'dashboard/pages/create_profile.html',
+                                'user/pages/create_profile.html',
                                 )
 
     def test_create_profile_get_request_have_status_code_200(self) -> None:
@@ -190,7 +192,7 @@ class CreateProfileTests(TestCase):
 
         # try create profile
         response = self.c.post(
-            reverse('dashboard:create_profile'),
+            self.url_create_profile,
             data=self.profile_data,
             follow=True,
         )
@@ -311,3 +313,4 @@ class CreateProfileTests(TestCase):
                              self.url_create_profile,
                              302,
                              )
+        self.fail('criar expressão regular para validar o CEP')

@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from dashboard.models import Profile
+from user.models import Profile
 from parameterized import parameterized
 
 

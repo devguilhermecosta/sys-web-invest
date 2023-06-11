@@ -5,11 +5,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from dashboard.forms.login_form import LoginForm
-from dashboard.forms.profile_form import ProfileForm
-from dashboard.models import Profile
+from user.models import Profile
 
 
 class LoginView(View):
@@ -44,7 +41,7 @@ class LoginView(View):
 
                 if not profile:
                     return redirect(
-                        reverse('dashboard:create_profile')
+                        reverse('user:create_profile')
                         )
 
                 messages.success(
@@ -72,75 +69,13 @@ class LogoutView(View):
     def post(self, *args, **kwargs):
         logout(self.request)
 
-        messages.success(
+        messages.warning(
             self.request,
             'Logout realizado com sucesso'
         )
 
         return redirect(
             reverse('dashboard:home')
-        )
-
-
-@method_decorator(login_required(
-    redirect_field_name='next',
-    login_url='/',
-        ),
-    name='dispatch'
-)
-class CreateProfile(View):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        user = self.request.user.is_authenticated or None
-        profile = Profile.objects.filter(user=user).exists()
-
-        if not profile:
-            session = self.request.session.get('create_profile', None)
-            form = ProfileForm(session)
-            messages.success(
-                self.request,
-                (
-                    'Antes de continuarmos, vamos configurar '
-                    'seu perfil de usuário.'
-                )
-            )
-
-            return render(
-                self.request,
-                'dashboard/pages/create_profile.html',
-                context={
-                    'form': form,
-                    'form_title': 'configurar perfil',
-                    'button_submit_value': 'finalizar'
-                }
-            )
-
-        return redirect(
-            reverse('dashboard:user_dashboard')
-        )
-
-    def post(self, *args, **kwargs):
-        post = self.request.POST
-        self.request.session['create_profile'] = post
-        form = ProfileForm(post)
-
-        if form.is_valid():
-            profile = form.save(commit=False)
-            profile.user = self.request.user
-            profile.save()
-
-            messages.success(
-                self.request,
-                ('Perfil criado com sucesso.')
-            )
-
-            del self.request.session['create_profile']
-
-            return redirect(
-                reverse('dashboard:user_dashboard')
-            )
-
-        return redirect(
-            reverse('dashboard:create_profile')
         )
 
 

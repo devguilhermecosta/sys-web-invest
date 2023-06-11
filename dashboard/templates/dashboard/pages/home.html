@@ -8,7 +8,11 @@
 <section class="C-login center_x_y_flex">
   {% include 'global/partials/_messages.html' %}
   {% if user.is_authenticated %}
-    <p>Você está logado como {{ user }}</p>
+    <form class="C-login_form" method="POST" action="{% url 'dashboard:logout' %}">
+      {% csrf_token %}
+      <p>Você está logado como <strong>{{ user|title }}</strong>.</p>
+      <input class="C-login_button C-login_sign_in" type="submit" value="sair">
+    </form>
   {% else %}
     <form method="POST" action="" class="C-login_form">
       {% csrf_token %}
