@@ -12,7 +12,7 @@ from dashboard.forms.profile_form import ProfileForm
 from dashboard.models import Profile
 
 
-class HomeView(View):
+class LoginView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('login', None)
         form = LoginForm(session)
@@ -106,7 +106,7 @@ class CreateProfile(View):
 
             return render(
                 self.request,
-                'dashboard/pages/profile.html',
+                'dashboard/pages/create_profile.html',
                 context={
                     'form': form,
                     'form_title': 'configurar perfil',
@@ -144,5 +144,5 @@ class CreateProfile(View):
         )
 
 
-class LoginView(TemplateView):
-    template_name = 'dashboard/pages/login.html'
+class DashboardView(TemplateView):
+    template_name = 'dashboard/pages/dashboard.html'
