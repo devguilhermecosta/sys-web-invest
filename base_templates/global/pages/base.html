@@ -10,10 +10,12 @@
 </head>
 <body>
   <!-- header -->
-  <header></header>
+  <header class="C-header">
+    {% block menu %} {% endblock menu %}
+  </header>
 
   <!-- main -->
-  <main>
+  <main class="C-main">
       {% block content %}{% endblock content %}
   </main>
 
