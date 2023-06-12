@@ -1,8 +1,44 @@
 {% extends 'global/pages/base.html' %}
+{%load static  %}
 
 {% block title %}
-    Login
+  Painel do usuário
 {% endblock title %}
+
+<!-- menu -->
+{% block menu %}
+  <!-- menu mobile -->
+  <input type="checkbox" name="manue-mobile" id="menu-mobile">
+  <label class="C-menu_label" for="menu-mobile">
+    <div class="C-menu_mobile">
+      <div class="C-menu_mobile_line"></div>
+      <div class="C-menu_mobile_line"></div>
+      <div class="C-menu_mobile_line"></div>
+    </div>
+  </label>
+  <nav class="C-menu">
+    <ul class="C-menu_ul">
+      <li class="C-menu_li">
+        <a href="">item 1</a>
+      </li>
+      <li class="C-menu_li">
+        <a href="">item 1</a>
+      </li>
+      <li class="C-menu_li">
+        <a href="">item 1</a>
+      </li>
+      <li class="C-menu_li">
+        <a href="">item 1</a>
+      </li>
+    </ul>
+  </nav>
+  <!-- logo -->
+  <a href="" class="C-logo">
+    <figure class="C-logo_figure">
+      <img class="C-logo_image" src="{% static 'global/images/favicon.ico' %}" alt="Logo">
+    </figure>
+  </a>
+{% endblock menu %}
 
 {% block content %}
   {% include 'global/partials/_messages.html' %}
