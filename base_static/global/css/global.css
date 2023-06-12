@@ -37,7 +37,119 @@ html, body {
 }
 /* end utils */
 
+/* start menu */
+.C-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+#menu-mobile {
+  display: none;
+}
+
+.C-menu_mobile {
+  width: 30px;
+  height: 30px;
+  padding: 0 2px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.C-menu_label {
+  display: block;
+  width: fit-content;
+  height: 32px;
+}
+
+.C-menu {
+  display: None;
+  padding: 5px;
+}
+
+.C-menu a {
+  text-decoration: none;
+  text-transform: capitalize;
+  color: var(--white);
+}
+
+.C-menu_li {
+  margin: 15px 0 ;
+}
+
+.C-menu_mobile_line {
+  width: 100%;
+  height: 4px;
+  border-radius: 25px;
+  background-color: var(--turquoise_6);
+}
+
+#menu-mobile:checked ~ .C-menu_label {
+  position: fixed;
+  animation: open-menu-label 200ms linear 1 forwards;
+}
+
+#menu-mobile:checked ~ .C-menu_label .C-menu_mobile_line:nth-child(1) {
+  position: absolute;
+  top: 50%;
+  width: 26px;
+  animation: translate-line-45-p 200ms linear 1 forwards;
+}
+
+#menu-mobile:checked ~ .C-menu_label .C-menu_mobile_line:nth-child(2) {
+  position: absolute;
+  top: 50%;
+  width: 26px;
+  animation: translate-line-45-n 200ms linear 1 forwards;
+}
+
+#menu-mobile:checked ~ .C-menu_label .C-menu_mobile_line:nth-child(3) {
+  display: none;
+}
+
+#menu-mobile:checked ~ .C-menu {
+  display: block;
+  position: fixed;
+  animation: open-menu 200ms linear 1 forwards;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--turquoise_5);
+}
+
+.C-menu_ul {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.C-logo {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.C-logo_figure {
+  width: 40px;
+  height: 40px;
+}
+
+.C-logo_image {
+  width: 100%;
+}
+/* end menu */
+
 /* start home */
+.C-main {
+  padding: 10px;
+}
+
 .C-login {
   display: flex;
   flex-direction: column;
@@ -239,7 +351,49 @@ html, body {
 }
 /* end flash messages */
 
+/* start animation */
+@keyframes translate-line-45-p {
+  from {
+    transform: none;
+  }
 
+  to {
+    transform: translateY(-50%) rotate(45deg);
+  }
+}
+
+@keyframes translate-line-45-n {
+  from {
+    transform: none;
+  }
+
+  to {
+    transform: translateY(-50%) rotate(-45deg);
+  }
+}
+
+@keyframes open-menu-label {
+  from {
+    left: 0;
+  }
+
+  to {
+    left: 50%;
+  }
+}
+
+@keyframes open-menu {
+  from {
+    width: 0
+  }
+
+  to {
+    width: 50%
+  } 
+}
+/* end animation */
+
+/* start media queries */
 @media screen and (min-width: 800px) {
   .C-login_form {
     max-width: 380px;
@@ -254,3 +408,4 @@ html, body {
     font-size: 20px;
   }
 }
+/* end media queries */
