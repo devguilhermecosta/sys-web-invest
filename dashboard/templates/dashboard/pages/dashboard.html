@@ -33,13 +33,51 @@
     </ul>
   </nav>
   <!-- logo -->
-  <a href="" class="C-logo">
-    <figure class="C-logo_figure">
+  <figure class="C-logo_figure">
+    <a href="" class="C-logo">
       <img class="C-logo_image" src="{% static 'global/images/favicon.ico' %}" alt="Logo">
-    </figure>
-  </a>
+    </a>
+  </figure>
 {% endblock menu %}
 
 {% block content %}
-  {% include 'global/partials/_messages.html' %}
+<!-- messages -->
+{% include 'global/partials/_messages.html' %}
+
+<!-- summary -->
+<section class="C-dashboard_intro">
+  <input type="checkbox" name="show-invest" id="show-invest" checked>
+  <div class="C-dashboard_box_title">
+    <h1 class="C-dashboard_intro_title">meus investimentos</h1>
+    <label for="show-invest" class="show-invest_label">
+      <span class="material-symbols-outlined eye-icon">visibility_off</span>
+    </label>
+  </div>
+  <section class="C-dashboard_summary">
+    <div>
+      <div class="C-dashboard_summary_title">ações</div>
+      <div class="C-dashboard_summary_title">renda fixa</div>
+      <div class="C-dashboard_summary_title">tesouro direto</div>
+      <div class="C-dashboard_summary_title">FIIs</div>
+      <div class="C-dashboard_summary_title total">total</div>
+    </div>
+    <div>
+      <div class="C-dashboard_summary_item">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_hidden">R$ --------</div>
+      <div class="C-dashboard_summary_item">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_hidden">R$ --------</div>
+      <div class="C-dashboard_summary_item">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_hidden">R$ --------</div>
+      <div class="C-dashboard_summary_item">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_hidden">R$ --------</div>
+      <div class="C-dashboard_summary_item total">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_hidden">R$ --------</div>
+    </div>
+  </section>
+</section>
+
+<!-- upgrade box -->
+<div class="C-upgrade_box">
+  <p>Sugestão de melhoria / Reportar bug</p>
+</div>
 {% endblock content %}

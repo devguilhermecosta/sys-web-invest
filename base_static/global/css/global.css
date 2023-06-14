@@ -29,7 +29,7 @@ html, body {
   font-size: 16px;
 }
 
-/* start utils */
+/* utils */
 .center_x_y_flex {
   display: flex;
   justify-content: center;
@@ -37,7 +37,7 @@ html, body {
 }
 /* end utils */
 
-/* start menu */
+/* menu */
 .C-header {
   display: flex;
   justify-content: space-between;
@@ -129,15 +129,15 @@ html, body {
 }
 
 .C-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.C-logo_figure {
   display: flex;
   width: 100%;
   justify-content: flex-end;
   align-items: center;
-}
-
-.C-logo_figure {
-  width: 40px;
-  height: 40px;
 }
 
 .C-logo_image {
@@ -145,7 +145,7 @@ html, body {
 }
 /* end menu */
 
-/* start home */
+/* home */
 .C-main {
   padding: 10px;
 }
@@ -211,7 +211,6 @@ html, body {
   background-color: var(--white);
   border: 1px solid var(--blue_4);
 }
-
 
 .C-login_input:focus + .C-login_label, .C-login_input_active {
   top: -9px;
@@ -305,6 +304,8 @@ html, body {
   cursor: pointer;
 }
 /* end user register */
+
+/* password reset */
 .C-pasword_reset {
   margin: 0 auto;
   display: flex;
@@ -320,10 +321,7 @@ html, body {
   text-decoration: none;
   text-transform: none;
 }
-/* password reset */
-
-
-/* password reset */
+/* end password reset */
 
 /* flash messages */
 .messages {
@@ -350,6 +348,98 @@ html, body {
   background-color: var(--yallow_1);
 }
 /* end flash messages */
+
+/* dashboard intro */
+.C-dashboard_intro {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.C-dashboard_intro_title {
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: capitalize;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.C-dashboard_box_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.C-dashboard_summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#show-invest {
+  display: none;
+}
+
+.eye-icon {
+  cursor: pointer;
+  color: var(--gray_1);
+}
+
+.C-dashboard_summary_title,
+.C-dashboard_summary_item, 
+.C-dashboard_summary_hidden {
+  font-weight: 200;
+  text-transform: capitalize;
+  line-height: 2;
+}
+
+.C-dashboard_summary_title::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: var(--gray_1);
+  border-radius: 50%;
+  margin-right: 3px;
+}
+
+.total {
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.total::before {
+  display: none;
+}
+
+.C-dashboard_summary_item {
+  line-height: 2;
+}
+
+#show-invest:checked ~ .C-dashboard_summary .C-dashboard_summary_item {
+  display: none;
+}
+
+#show-invest:not(:checked) ~ .C-dashboard_summary .C-dashboard_summary_hidden {
+  display: none;
+}
+/* end dashboard intro */
+
+/* upgrade box */
+.C-upgrade_box {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.C-upgrade_box p {
+  font-size: 9px;
+  background-color: var(--turquoise_3);
+  color: var(--white);
+  width: fit-content;
+  padding: 10px 5px;
+}
+/* end upgrade box */
 
 /* start animation */
 @keyframes translate-line-45-p {
@@ -388,12 +478,12 @@ html, body {
   }
 
   to {
-    width: 50%
-  } 
+    width: 50%;
+  }
 }
 /* end animation */
 
-/* start media queries */
+/* media queries */
 @media screen and (min-width: 800px) {
   .C-login_form {
     max-width: 380px;
@@ -406,6 +496,30 @@ html, body {
 
   .C-login_button {
     font-size: 20px;
+  }
+
+  .C-upgrade_box p {
+    font-size: 12px;
+  }
+
+  @keyframes open-menu-label {
+    from {
+      left: 0;
+    }
+  
+    to {
+      left: 300px;
+    }
+  }
+  
+  @keyframes open-menu {
+    from {
+      width: 0
+    }
+  
+    to {
+      width: 300px;
+    }
   }
 }
 /* end media queries */

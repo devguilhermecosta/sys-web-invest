@@ -20,3 +20,17 @@
     })
   })
 })();
+
+// change eye from dashboard intro
+(() => {
+  const eyeInput = document.querySelector('#show-invest');
+  const eyeIcon = document.querySelector('.eye-icon');
+
+  eyeInput.addEventListener('change', function() {
+    if (eyeInput.checked) {
+      eyeIcon.innerHTML = 'visibility_off';
+    } else if (!eyeInput.checked) {
+      eyeIcon.innerHTML = 'visibility';
+    }
+  })
+})();
