@@ -11,6 +11,7 @@
     <form class="C-login_form" method="POST" action="{% url 'dashboard:logout' %}">
       {% csrf_token %}
       <p>Você está logado como <strong>{{ user|title }}</strong>.</p>
+      <a href="{% url 'dashboard:user_dashboard' %}" class="C-login_button C-login_sign_in">painel</a>
       <input class="C-login_button C-login_sign_in" type="submit" value="sair">
     </form>
   {% else %}
