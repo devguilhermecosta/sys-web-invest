@@ -51,3 +51,4 @@ class ValidateCpfOrCnpjTests(TestCase):
     def test_function_return_false_if_cnpj_is_fully_formed_by_number_zero(self) -> None:
         cpf = ValidateCPForCNPJ('00.000.000/0000-00')
         self.assertFalse(cpf.is_valid())
+        self.fail('criar mais testes e enviar o pacote para o PyPi')
