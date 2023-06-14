@@ -1,1 +1,1 @@
-from .cpf_and_cnpj import ValidateCPForCNPJ  # noqa: F401
+from .cpf_and_cnpj import ValidateOrCreateCPForCNPJ  # noqa: F401

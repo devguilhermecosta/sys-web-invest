@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from user.models import Profile
 from utils.forms.style import add_css_class
-from utils.validators.cpf_and_cnpj import ValidateCPForCNPJ
+from utils.validators.cpf_and_cnpj import ValidateOrCreateCPForCNPJ
 from utils.validators.fields import length_validate
 
 
@@ -56,7 +56,7 @@ class ProfileForm(forms.ModelForm):
 
     def clean_cpf(self):
         cpf = self.cleaned_data["cpf"]
-        f_cpf = ValidateCPForCNPJ(cpf)
+        f_cpf = ValidateOrCreateCPForCNPJ(cpf)
 
         if len(cpf) <= 0 or cpf == '':
             raise ValidationError(
