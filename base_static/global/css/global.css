@@ -84,14 +84,23 @@ body {
   z-index: 1000;
 }
 
-.C-menu a {
+.C-menu_li {
+  margin: 15px 0 ;
+}
+
+.C-menu__link, label[for="C-menu_ativos_checkox"] {
   text-decoration: none;
   text-transform: capitalize;
   color: var(--white);
+  display: block;
+  padding: 5px;
+  width: 100%;
+  cursor: pointer;
+  transition: background 150ms linear;
 }
 
-.C-menu_li {
-  margin: 15px 0 ;
+.C-menu__link:hover, label[for="C-menu_ativos_checkox"]:hover {
+  background-color: var(--turquoise_6);
 }
 
 .C-menu_mobile_line {
@@ -137,6 +146,22 @@ body {
 .C-menu_ul {
   white-space: nowrap;
   overflow: hidden;
+}
+
+#C-menu_ativos_checkox {
+  display: none;
+}
+
+.C-menu_submenu {
+  display: none;
+}
+
+.C-menu_submenu_li {
+  padding-left: 25px;
+}
+
+#C-menu_ativos_checkox:checked ~ .C-menu_submenu {
+  display: block;
 }
 
 .C-logo {
@@ -288,6 +313,12 @@ body {
 
 .C-login_sing_up:focus {
   outline: none;
+}
+
+.C-menu_logout {
+  font-size: 12px !important;
+  width: fit-content;
+  padding: 5px 10px;
 }
 /* end home */
 
