@@ -29,6 +29,15 @@ html, body {
   font-size: 16px;
 }
 
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+  'header'
+  'main';
+}
+
 /* utils */
 .center_x_y_flex {
   display: flex;
@@ -39,6 +48,7 @@ html, body {
 
 /* menu */
 .C-header {
+  grid-area: header;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -71,6 +81,7 @@ html, body {
 .C-menu {
   display: None;
   padding: 5px;
+  z-index: 1000;
 }
 
 .C-menu a {
@@ -147,16 +158,16 @@ html, body {
 
 /* home */
 .C-main {
+  grid-area: main;
   padding: 10px;
 }
 
 .C-login {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  padding: 5px;
-  margin-bottom: 10px;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  place-items: center;
+  height: 100%;
 }
 
 .C-login_form {
@@ -232,6 +243,10 @@ html, body {
   margin-bottom: 20px;
 }
 
+.C-login_forgot_password:focus {
+  outline: none;
+}
+
 .C-login_button {
   width: 100%;
   padding: 10px 0;
@@ -246,21 +261,33 @@ html, body {
   border: 1px solid var(--turquoise_4);
   color: var(--blue_3);
   cursor: pointer;
+  outline: none;
 }
 
 .C-login_sign_in:hover {
   background-color: var(--gray_2);
   border-color: var(--gray_2);
   color: var(--black);
+  outline: none;
+}
+
+.C-login_sign_in:focus {
+  outline: none;
 }
 
 .C-login_sing_up {
   background-color: var(--turquoise_5);
   color: var(--white);
+  outline: none;
 }
 
 .C-login_sing_up:hover {
   background-color: var(--turquoise_6);
+  outline: none;
+}
+
+.C-login_sing_up:focus {
+  outline: none;
 }
 /* end home */
 
