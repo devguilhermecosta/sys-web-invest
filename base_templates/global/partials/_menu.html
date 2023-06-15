@@ -12,16 +12,7 @@
 <nav class="C-menu">
 <ul class="C-menu_ul">
   <li class="C-menu_li">
-    <a class="C-menu__link" href="">item 1</a>
-  </li>
-  <li class="C-menu_li">
-    <a class="C-menu__link" href="">item 1</a>
-  </li>
-  <li class="C-menu_li">
-    <a class="C-menu__link" href="">item 1</a>
-  </li>
-  <li class="C-menu_li">
-    <a class="C-menu__link" href="">item 1</a>
+    <a class="C-menu__link" href="{% url 'dashboard:user_dashboard' %}">início</a>
   </li>
   {% if user.is_authenticated %}
     <li class="C-menu_li">
@@ -29,21 +20,21 @@
       <label for="C-menu_ativos_checkox">ativos</label>
       <ul class="C-menu_submenu">
         <li class="C-menu_submenu_li">
-          <a class="C-menu__link" href="">ações</a>
+          <a class="C-menu__link" href="{% url 'product:actions' %}">ações</a>
+        </li> 
+        <li class="C-menu_submenu_li">
+          <a class="C-menu__link" href="{% url 'product:fixed_income' %}">renda fixa</a>
         </li>
         <li class="C-menu_submenu_li">
-          <a class="C-menu__link" href="">renda fixa</a>
+          <a class="C-menu__link" href="{% url 'product:direct_treasure' %}">tesouro direto</a>
         </li>
         <li class="C-menu_submenu_li">
-          <a class="C-menu__link" href="">tesouro direto</a>
-        </li>
-        <li class="C-menu_submenu_li">
-          <a class="C-menu__link" href="">fundos imobiliários</a>
+          <a class="C-menu__link" href="{% url 'product:fiis' %}">fundos imobiliários</a>
         </li>
       </ul>
     </li>
     <li class="C-menu_li">
-      <a class="C-menu__link" href="">configurações da conta</a>
+      <a class="C-menu__link" href="">configurações</a>
     </li>
     <li class="C-menu_li">
       <form action="{% url 'dashboard:logout' %}" method="POST">
