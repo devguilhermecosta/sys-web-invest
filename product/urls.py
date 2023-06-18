@@ -8,6 +8,7 @@ app_name: str = 'product'
 
 urlpatterns = [
     path('acoes/', views.ActionsView.as_view(), name='actions'),
+    path('acoes/comprar/', views.ActionsBuyView.as_view(), name='actions_buy'),
     path('fiis/', TemplateView.as_view(
         template_name='product/pages/fiis.html',
         ), name='fiis'),

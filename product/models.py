@@ -25,3 +25,28 @@ renda fixa - cnpj da corretora, descrição,
 tesouro ditero - cnpj da corretora, descrição, rentabilidade,
 pagamento de proventos (periodicidade), categoria.
 '''
+
+
+class Action(models.Model):
+    code = models.CharField(max_length=5, unique=True)
+    description = models.CharField(max_length=50)
+    cnpj = models.CharField(max_length=18, unique=True)
+
+    def __str__(self) -> str:
+        return self.description
+
+
+class FIIS(models.Model):
+    code = models.CharField(max_length=5, unique=True)
+    description = models.CharField(max_length=50)
+    cnpj = models.CharField(max_length=18, unique=True)
+
+
+class UserAction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    action = models.ForeignKey(Action, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    unit_price = models.FloatField()
+
+    def get_total_price(self) -> float:
+        return round(self.quantity * float(self.unit_price), 2)
