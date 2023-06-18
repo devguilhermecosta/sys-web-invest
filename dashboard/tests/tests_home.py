@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from dashboard import views
 
 
-class DashboardTests(TestCase):
+class HomedTests(TestCase):
     def test_url_home_is_correct(self) -> None:
         url: str = reverse('dashboard:home')
         self.assertEqual(url, '/')

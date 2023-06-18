@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib import messages
 from dashboard.forms.login_form import LoginForm
 from user.models import Profile
@@ -79,5 +81,12 @@ class LogoutView(View):
         )
 
 
+@method_decorator(
+    login_required(
+        redirect_field_name='next',
+        login_url='/',
+    ),
+    name='dispatch'
+)
 class DashboardView(TemplateView):
     template_name = 'dashboard/pages/dashboard.html'
