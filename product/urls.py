@@ -9,9 +9,8 @@ app_name: str = 'product'
 urlpatterns = [
     path('acoes/', views.ActionsView.as_view(), name='actions'),
     path('acoes/comprar/', views.ActionsBuyView.as_view(), name='actions_buy'),
-    path('fiis/', TemplateView.as_view(
-        template_name='product/pages/fiis.html',
-        ), name='fiis'),
+    path('fiis/', views.FIIsView.as_view(), name='fiis'),
+    path('fiis/comprar/', views.FIISBuyView.as_view(), name='fiis_buy'),
     path('renda-fixa/', TemplateView.as_view(
         template_name='product/pages/fixed_income.html',
         ), name='fixed_income'),

@@ -1,7 +1,7 @@
 from django import forms
 from utils.forms.style import add_css_class
 from django.core.exceptions import ValidationError
-from product.models import Action
+from product.models import Action, FIIS
 
 
 class ActionForm(forms.Form):
@@ -44,7 +44,7 @@ class ActionForm(forms.Form):
                 code='invalid',
             )
 
-        if len(code) < 5 or len(code) > 5:
+        if len(code) != 5:
             raise ValidationError(
                 ('O código deve ter 5 caracteres'),
                 code='invalid',
@@ -56,7 +56,7 @@ class ActionForm(forms.Form):
                 code='invalid',
             )
 
-        return code
+        return str(code).lower()
 
     def clean_quantity(self):
         quantity = self.cleaned_data["quantity"]
@@ -78,16 +78,44 @@ class ActionForm(forms.Form):
     def clean_unit_price(self):
         unit_price = self.cleaned_data["unit_price"]
 
-        if unit_price == '':
+        if not unit_price or unit_price == '':
             raise ValidationError(
                 ('Campo obrigatório'),
                 code='required'
             )
 
-        if unit_price <= 0:
+        if float(unit_price) <= 0:
             raise ValidationError(
                 ('O valor deve ser maior que zero'),
                 code='invallid',
             )
 
-        return str(unit_price).replace(',', '.')
+        str(unit_price).replace(',', '.')
+
+        return float(unit_price)
+
+
+class FIIForm(ActionForm):
+    def clean_code(self):
+        code = self.cleaned_data["code"]
+        fii = FIIS.objects.filter(code=code).exists()
+
+        if not code or code == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required'
+            )
+
+        if len(code) != 6:
+            raise ValidationError(
+                ('O código deve ter 6 caracteres'),
+                code='invalid',
+            )
+
+        if not fii:
+            raise ValidationError(
+                (f'Código {code.upper()} não encontrado'),
+                code='invalid',
+            )
+
+        return str(code).lower()

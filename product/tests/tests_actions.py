@@ -1,19 +1,9 @@
-from django.test import TestCase
 from django.urls import reverse, resolve
-from django.contrib.auth.models import User
 from product import views
+from utils.mixins.auth import TestCaseWithLogin
 
 
-class ProductActionsTests(TestCase):
-    def setUp(self) -> None:
-        # create the user
-        User.objects.create_user(
-            username='user',
-            email='email@email.com',
-            password='password',
-        )
-        return super().setUp()
-
+class ProductActionsTests(TestCaseWithLogin):
     def test_actions_url_is_correct(self) -> None:
         url = reverse('product:actions')
         self.assertEqual(url,
@@ -30,9 +20,13 @@ class ProductActionsTests(TestCase):
         )
 
     def test_actions_loads_correct_template(self) -> None:
+        # make login
+        self.make_login()
+
         response = self.client.get(
             reverse('product:actions')
         )
+
         self.assertTemplateUsed(
             response,
             'product/pages/actions.html',
@@ -50,14 +44,7 @@ class ProductActionsTests(TestCase):
 
     def test_actions_status_code_200_if_user_is_logged_in(self) -> None:
         # make login
-        self.client.post(
-            reverse('dashboard:home'),
-            {
-                'user': 'user',
-                'password': 'password',
-            },
-            follow=True,
-        )
+        self.make_login()
 
         # access the dashboard actions
         response = self.client.get(
@@ -68,14 +55,7 @@ class ProductActionsTests(TestCase):
 
     def test_actions_loads_correct_content(self) -> None:
         # make login
-        self.client.post(
-            reverse('dashboard:home'),
-            {
-                'user': 'user',
-                'password': 'password',
-            },
-            follow=True,
-        )
+        self.make_login()
 
         # access the dashboard actions
         response = self.client.get(

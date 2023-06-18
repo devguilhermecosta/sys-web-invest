@@ -50,3 +50,13 @@ class UserAction(models.Model):
 
     def get_total_price(self) -> float:
         return round(self.quantity * float(self.unit_price), 2)
+
+
+class UserFII(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fii = models.ForeignKey(FIIS, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    unit_price = models.FloatField()
+
+    def get_total_price(self) -> float:
+        return round(self.quantity * float(self.unit_price), 2)

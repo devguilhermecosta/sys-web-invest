@@ -55,9 +55,10 @@ class ActionsBuyView(View):
         form = product_forms.ActionForm(post)
 
         if form.is_valid():
-            code = self.request.POST.get('code', None)
-            qty = int(self.request.POST.get('quantity', None))
-            up = self.request.POST.get('unit_price', None)
+            data = form.cleaned_data
+            code = data['code']
+            qty = int(data['quantity'])
+            up = float(data['unit_price'])
             user = self.request.user
             action = Action.objects.filter(code=code).first()
 
