@@ -1,14 +1,13 @@
 from django.urls import path
 from django.views.generic import TemplateView
+from . import views
 
 
 app_name: str = 'product'
 
 
 urlpatterns = [
-    path('acoes/', TemplateView.as_view(
-        template_name='product/pages/acoes.html',
-        ), name='actions'),
+    path('acoes/', views.ActionsView.as_view(), name='actions'),
     path('fiis/', TemplateView.as_view(
         template_name='product/pages/fiis.html',
         ), name='fiis'),
