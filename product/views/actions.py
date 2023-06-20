@@ -20,7 +20,7 @@ class ActionsView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         return render(
             self.request,
-            'product/pages/actions.html',
+            'product/pages/actions/actions.html',
         )
 
 
@@ -42,7 +42,7 @@ class ActionsBuyView(View):
 
         return render(
             self.request,
-            'product/pages/actions_buy.html',
+            'product/pages/actions/actions_buy.html',
             context={
                 'form': form,
                 'button_submit_value': 'comprar',
