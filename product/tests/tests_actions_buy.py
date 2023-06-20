@@ -57,7 +57,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         )
         self.assertTemplateUsed(
             response,
-            'product/pages/actions/actions_buy.html'
+            'product/pages/actions_buy.html'
         )
 
     def test_actions_loads_correct_content(self) -> None:
@@ -224,3 +224,6 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.assertEqual(user_action.first().quantity, 11)
         self.assertEqual(user_action.first().unit_price, 30)
         self.assertEqual(user_action.first().get_total_price(), 330)
+        self.fail('refatorar toda a view'
+                  'testar: cada usuário deverá ver somente suas ações'
+                  )

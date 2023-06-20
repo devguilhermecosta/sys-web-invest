@@ -9,10 +9,12 @@
   <h1 class="C-dashboard_title">ações</h1>
   <ul clas="C-dashboard_list">
     <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="">minhas ações</a>
+      <a class="C-dashboard_link"
+      href="{% url 'product:actions_list' %}">minhas ações</a>
     </li>
     <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="{% url 'product:actions_buy' %}">comprar</a>
+      <a class="C-dashboard_link"
+      href="{% url 'product:actions_buy' %}">comprar</a>
     </li>
     <li class="C-dashboard_list_li">
       <a class="C-dashboard_link" href="">vender</a>

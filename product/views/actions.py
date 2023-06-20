@@ -1,4 +1,5 @@
 from django.views import View
+from django.views.generic import ListView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -24,8 +25,18 @@ class ActionsView(View):
         )
 
 
-class AllActionsView(View):
-    ...
+class AllActionsView(ListView):
+    model = UserAction
+    template_name = 'product/pages/actions/actions_list.html'
+    ordering = ['-id']
+    context_object_name = 'actions'
+
+    def get_queryset(self, *args, **kwargs):
+        query_set = super().get_queryset(*args, **kwargs)
+        user = self.request.user
+        query_set = query_set.filter(user=user)
+
+        return query_set
 
 
 @method_decorator(
@@ -72,6 +83,20 @@ class ActionsBuyView(View):
                 actual_user_action.quantity += qty
                 actual_user_action.unit_price = up
                 actual_user_action.save()
+
+                messages.success(
+                    self.request,
+                    (
+                        f'compra de {qty} unidade(s) de {code.upper()} '
+                        'realizada com sucesso'
+                    )
+                )
+
+                del self.request.session['action-buy']
+
+                return redirect(
+                    reverse('product:actions')
+                )
 
             new_action = UserAction.objects.create(
                 user=user,

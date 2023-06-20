@@ -24,7 +24,7 @@ class FIIsView(View):
         )
 
 
-class AllActionsView(View):
+class AllFIIsView():
     ...
 
 

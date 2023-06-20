@@ -1,0 +1,13 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Todas as ações
+{% endblock title %}
+
+{% block content %}
+  {% for action in actions %}
+    <p>código: {{ action.action.code }}</p>
+    <p>quantidade: {{ action.quantity }}</p>
+    <p>valor: {{ action.unit_price }}</p>
+  {% endfor %}
+{% endblock content %}

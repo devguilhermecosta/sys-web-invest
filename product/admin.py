@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import UserAction
 
-# Register your models here.
+
+@admin.register(UserAction)
+class UserAction(admin.ModelAdmin):
+    ...
