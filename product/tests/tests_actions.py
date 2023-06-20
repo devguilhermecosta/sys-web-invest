@@ -29,7 +29,7 @@ class ProductActionsTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/actions.html',
+            'product/pages/actions/actions.html',
             )
 
     def test_actions_is_redirected_if_user_not_logged_in(self) -> None:

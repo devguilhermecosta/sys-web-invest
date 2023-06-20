@@ -57,7 +57,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         )
         self.assertTemplateUsed(
             response,
-            'product/pages/actions_buy.html'
+            'product/pages/actions/actions_buy.html'
         )
 
     def test_actions_loads_correct_content(self) -> None:
@@ -224,8 +224,3 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.assertEqual(user_action.first().quantity, 11)
         self.assertEqual(user_action.first().unit_price, 30)
         self.assertEqual(user_action.first().get_total_price(), 330)
-        self.fail('testar todo o FIIs buy. '
-                  'refatorar a view de compra de actions e fiis. '
-                  'as classes que precisam de login devem herdar da class TestCaseWithLogin. '
-                  'modificar a arquitetura dos templates para novas pastas'
-                  )
