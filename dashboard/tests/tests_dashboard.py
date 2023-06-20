@@ -1,20 +1,10 @@
-from django.test import TestCase
 from django.urls import reverse, resolve, ResolverMatch
 from django.http import HttpResponse
-from django.contrib.auth.models import User
 from dashboard import views
+from utils.mixins.auth import TestCaseWithLogin
 
 
-class DashboardTests(TestCase):
-    def setUp(self) -> None:
-        # create user
-        User.objects.create_user(
-            username='user',
-            email='email@email.com',
-            password='password',
-        )
-        return super().setUp()
-
+class DashboardTests(TestCaseWithLogin):
     def test_url_dashboard_is_correct(self) -> None:
         url: str = reverse('dashboard:user_dashboard')
         self.assertEqual(url, '/dashboard/painel-do-usuario/')
@@ -36,14 +26,7 @@ class DashboardTests(TestCase):
 
     def test_dashboard_status_code_200_if_user_logged_in(self) -> None:
         # make login
-        self.client.post(
-            reverse('dashboard:home'),
-            {
-                'user': 'user',
-                'password': 'password',
-            },
-            follow=True,
-        )
+        self.make_login()
 
         response = self.client.get(
             reverse('dashboard:user_dashboard')
@@ -53,14 +36,7 @@ class DashboardTests(TestCase):
 
     def test_dashboard_loads_correct_template(self) -> None:
         # make login
-        self.client.post(
-            reverse('dashboard:home'),
-            {
-                'user': 'user',
-                'password': 'password',
-            },
-            follow=True,
-        )
+        self.make_login()
 
         response: HttpResponse = self.client.get(
             reverse('dashboard:user_dashboard')
@@ -70,14 +46,7 @@ class DashboardTests(TestCase):
 
     def test_dashboard_loads_correct_content(self) -> None:
         # make login
-        self.client.post(
-            reverse('dashboard:home'),
-            {
-                'user': 'user',
-                'password': 'password',
-            },
-            follow=True,
-        )
+        self.make_login()
 
         response: HttpResponse = self.client.get(
             reverse('dashboard:user_dashboard')
