@@ -9,5 +9,7 @@
     <p>código: {{ action.action.code }}</p>
     <p>quantidade: {{ action.quantity }}</p>
     <p>valor: {{ action.unit_price }}</p>
+  {% empty %}
+    <p>nenhuma ação até o momento</p>
   {% endfor %}
 {% endblock content %}
