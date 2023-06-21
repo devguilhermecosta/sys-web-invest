@@ -11,6 +11,7 @@
   --blue_4: #03045E;
   --white: #FFFFFF;
   --black: #000000;
+  --gray_0: #3b3b3b;
   --gray_1: #CCCCCC;
   --gray_2: #e4dcdc;
   --dark_red: #a82626;
@@ -503,6 +504,9 @@ body {
 /* end upgrade box */
 
 /* dashboard - actions */
+.C-actions {
+  text-align: center;
+}
 .C-dashboard_title {
   margin: 0 auto;
   margin-bottom: 10px;
@@ -530,6 +534,28 @@ body {
   background-color: var(--gray_1);
   display: inline-block;
   vertical-align: middle;
+}
+
+.C-dashboard_table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.C-dashboard_table th {
+  text-transform: capitalize;
+  padding: 0 10px;
+  color: var(--white);
+  background-color: var(--gray_0);
+}
+
+.C-dashboard_table td {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.C-dashboard_table tr:nth-of-type(odd) {
+  background-color: var(--gray_2);
 }
 /* end dashboard - actions */
 
