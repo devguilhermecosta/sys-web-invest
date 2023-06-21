@@ -61,17 +61,18 @@ class UserMixin:
 
 
 class TestCaseWithLogin(UserMixin, TestCase):
-    def make_login(self) -> HttpResponse:
+    def make_login(self, create_user: bool = True, **kwargs) -> HttpResponse:
         ''' We will create the new user and make login '''
         # create the user
-        self.create_user(with_profile=True)
+        if create_user:
+            self.create_user(with_profile=True)
 
         # make login
         response = self.client.post(
             reverse('dashboard:home'),
             {
-                'user': 'user',
-                'password': 'password',
+                'user': kwargs.get('username', 'user'),
+                'password': kwargs.get('password', 'password'),
             },
             follow=True,
         )
