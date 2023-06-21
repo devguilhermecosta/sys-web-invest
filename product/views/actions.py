@@ -88,7 +88,8 @@ class ActionsBuyView(View):
             if user_action.exists():
                 actual_user_action = user_action.first()
                 actual_user_action.quantity += qty
-                actual_user_action.unit_price = up
+                actual_up = actual_user_action.unit_price
+                actual_user_action.unit_price = (actual_up + up) / 2
                 actual_user_action.save()
 
                 messages.success(
