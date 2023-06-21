@@ -25,6 +25,13 @@ class ActionsView(View):
         )
 
 
+@method_decorator(
+    login_required(
+        redirect_field_name='next',
+        login_url='/',
+    ),
+    name='dispatch',
+)
 class AllActionsView(ListView):
     model = UserAction
     template_name = 'product/pages/actions/actions_list.html'
