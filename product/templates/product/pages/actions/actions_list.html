@@ -1,15 +1,28 @@
 {% extends 'global/pages/base.html' %}
+{% load money %}
 
 {% block title %}
   Todas as ações
 {% endblock title %}
 
 {% block content %}
+  <h1 class="C-dashboard_title">ações em carteira</h1>
+  <table class="C-dashboard_table">
+    <tr>
+      <th>código</th>
+      <th>quant.</th>
+      <th>valor med.</th>
+      <th>total</th>
+    </tr>
   {% for action in actions %}
-    <p>código: {{ action.action.code }}</p>
-    <p>quantidade: {{ action.quantity }}</p>
-    <p>valor: {{ action.unit_price }}</p>
+    <tr>
+      <td>{{ action.action.code }}</td>
+      <td>{{ action.quantity }}</td>
+      <td>{{ action.unit_price|real_brl }}</td>
+      <td>{{ action.get_total_price|real_brl }}</td>
+    </tr>
   {% empty %}
     <p>nenhuma ação até o momento</p>
   {% endfor %}
+  </table>
 {% endblock content %}
