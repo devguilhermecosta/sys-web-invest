@@ -48,6 +48,11 @@ class UserAction(models.Model):
     quantity = models.IntegerField()
     unit_price = models.FloatField()
 
+    def buy(self, quantity: int, unit_price: float) -> None:
+        self.quantity += quantity
+        self.unit_price = (self.unit_price + unit_price) / 2
+        self.save()
+
     def get_total_price(self) -> float:
         return round(self.quantity * float(self.unit_price), 2)
 
