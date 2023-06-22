@@ -8,12 +8,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import product_forms
 from product.models import Action, UserAction
+from django.core.exceptions import ValidationError
+
+
+login_url = '/'
 
 
 @method_decorator(
     login_required(
         redirect_field_name='next',
-        login_url='/',
+        login_url=login_url,
     ),
     name='dispatch',
 )
@@ -28,7 +32,7 @@ class ActionsView(View):
 @method_decorator(
     login_required(
         redirect_field_name='next',
-        login_url='/',
+        login_url=login_url,
     ),
     name='dispatch',
 )
@@ -49,7 +53,7 @@ class AllActionsView(ListView):
 @method_decorator(
     login_required(
         redirect_field_name='next',
-        login_url='/',
+        login_url=login_url,
     ),
     name='dispatch',
 )
@@ -118,4 +122,93 @@ class ActionsBuyView(View):
 
         return redirect(
             reverse('product:actions_buy')
+        )
+
+
+@method_decorator(
+    login_required(
+        redirect_field_name='next',
+        login_url=login_url,
+    ),
+    name='dispatch',
+)
+class ActionsSellView(View):
+    def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
+        messages.success(
+            self.request,
+            (
+                f'venda de {qty} unidade(s) de {code.upper()} '
+                'realizada com sucesso'
+            )
+        )
+
+        del self.request.session['action-sell']
+
+        return redirect(
+            reverse('product:actions')
+        )
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        session = self.request.session.get('action-sell', None)
+        form = product_forms.ActionSellForm(session)
+
+        return render(
+            self.request,
+            'product/pages/actions/actions_sell.html',
+            context={
+                'form': form,
+                'button_submit_value': 'vender',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        post = self.request.POST
+        self.request.session['action-sell'] = post
+        form = product_forms.ActionSellForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = self.request.user
+            params = {
+                'code': data['code'],
+                'quantity': int(data['quantity']),
+            }
+            action = Action.objects.filter(
+                code=params['code'],
+            ).first()
+
+            user_action_exists = UserAction.objects.filter(
+                user=user,
+                action=action
+            ).first()
+
+            if user_action_exists:
+                try:
+                    user_action_exists.sell(params['quantity'])
+                except ValidationError:
+                    messages.error(
+                        self.request,
+                        (
+                            'quantidade insuficiente para venda. '
+                            f'Você possui {user_action_exists.quantity} '
+                            'unidade(s) em seu portifólio e está tentando '
+                            f'vender {params["quantity"]}.'
+                            )
+                    )
+
+                return self.success_response(
+                    params['quantity'], params['code'],
+                )
+
+            messages.error(
+                self.request,
+                'Você não possui esta ação em seu portifólio',
+            )
+
+            return redirect(
+                reverse('product:actions_sell')
+            )
+
+        return redirect(
+            reverse('product:actions_sell')
         )

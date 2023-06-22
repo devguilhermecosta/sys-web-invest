@@ -4,15 +4,16 @@ from utils.mixins.auth import TestCaseWithLogin
 
 
 class ProductActionsTests(TestCaseWithLogin):
+    url = reverse('product:actions')
+
     def test_actions_url_is_correct(self) -> None:
-        url = reverse('product:actions')
-        self.assertEqual(url,
+        self.assertEqual(self.url,
                          '/ativos/acoes/',
                          )
 
     def test_actions_class_view_is_correct(self) -> None:
         response = resolve(
-            reverse('product:actions')
+            self.url
         )
         self.assertEqual(
             response.func.view_class,
@@ -24,7 +25,7 @@ class ProductActionsTests(TestCaseWithLogin):
         self.make_login()
 
         response = self.client.get(
-            reverse('product:actions')
+            self.url
         )
 
         self.assertTemplateUsed(
@@ -34,7 +35,7 @@ class ProductActionsTests(TestCaseWithLogin):
 
     def test_actions_is_redirected_if_user_not_logged_in(self) -> None:
         response = self.client.get(
-            reverse('product:actions')
+            self.url
         )
         self.assertRedirects(
             response,
@@ -48,7 +49,7 @@ class ProductActionsTests(TestCaseWithLogin):
 
         # access the dashboard actions
         response = self.client.get(
-            reverse('product:actions')
+            self.url
         )
 
         self.assertEqual(response.status_code, 200)
@@ -59,7 +60,7 @@ class ProductActionsTests(TestCaseWithLogin):
 
         # access the dashboard actions
         response = self.client.get(
-            reverse('product:actions')
+            self.url
         )
 
         content = response.content.decode('utf-8')

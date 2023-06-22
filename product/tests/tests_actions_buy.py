@@ -7,6 +7,8 @@ from product.tests.action_base import make_action
 
 
 class ActionsBuyTests(TestCaseWithLogin):
+    url = reverse('product:actions_buy')
+
     def setUp(self) -> None:
         self.action_data = {
             'code': 'bbas3',
@@ -16,13 +18,10 @@ class ActionsBuyTests(TestCaseWithLogin):
         return super().setUp()
 
     def test_actions_get_request_url_is_correct(self) -> None:
-        url = reverse('product:actions_buy')
-        self.assertEqual(url, '/ativos/acoes/comprar/')
+        self.assertEqual(self.url, '/ativos/acoes/comprar/')
 
     def test_actions_get_request_is_redirected_if_user_not_logget_in(self) -> None:  # noqa: E501
-        response = self.client.get(
-            reverse('product:actions_buy')
-        )
+        response = self.client.get(self.url)
 
         self.assertRedirects(
             response,
@@ -35,16 +34,12 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.make_login()
 
         # access actions buy with get request
-        response = self.client.get(
-            reverse('product:actions_buy')
-        )
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
 
     def test_actions_uses_correct_view(self) -> None:
-        response = resolve(
-            reverse('product:actions_buy')
-        )
+        response = resolve(self.url)
         self.assertIs(response.func.view_class, views.ActionsBuyView)
 
     def test_actions_loads_correct_template(self) -> None:
@@ -52,9 +47,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.make_login()
 
         # access actions buy with get request
-        response = self.client.get(
-            reverse('product:actions_buy')
-        )
+        response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
             'product/pages/actions/actions_buy.html'
@@ -65,9 +58,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.make_login()
 
         # access actions buy with get request
-        response = self.client.get(
-            reverse('product:actions_buy')
-        )
+        response = self.client.get(self.url)
 
         content = response.content.decode('utf-8')
 
@@ -87,7 +78,7 @@ class ActionsBuyTests(TestCaseWithLogin):
 
         # try buy the action
         response = self.client.post(
-            reverse('product:actions_buy'),
+            self.url,
             {
                 f'{field}': '',
             },
@@ -102,7 +93,7 @@ class ActionsBuyTests(TestCaseWithLogin):
 
         # try buy the action
         response = self.client.post(
-            reverse('product:actions_buy'),
+            self.url,
             self.action_data,
             follow=True
         )
@@ -124,7 +115,7 @@ class ActionsBuyTests(TestCaseWithLogin):
 
         # try buy the action
         response = self.client.post(
-            reverse('product:actions_buy'),
+            self.url,
             self.action_data,
             follow=True
         )
@@ -178,7 +169,7 @@ class ActionsBuyTests(TestCaseWithLogin):
 
         # buy the action for the first time
         self.client.post(
-            reverse('product:actions_buy'),
+            self.url,
             self.action_data,
             follow=True
         )
@@ -210,7 +201,7 @@ class ActionsBuyTests(TestCaseWithLogin):
 
         # buy the action for the second time
         self.client.post(
-            reverse('product:actions_buy'),
+            self.url,
             self.action_data,
             follow=True
         )

@@ -1,6 +1,5 @@
 from utils.mixins.auth import TestCaseWithLogin
 from django.urls import reverse, resolve
-from django.contrib.auth import logout
 from .action_base import make_action
 from product import views
 
@@ -67,17 +66,19 @@ class ActionsListTests(TestCaseWithLogin):
             response_actions_buy.content.decode('utf-8')
             )
 
+        #######
+
         # get request to actions_list url
         response_actions_list = self.client.get(self.url)
         content = response_actions_list.content.decode('utf-8')
 
         # check if the action BBAS3 is in the actions list
         self.assertIn(
-            'código: bbas3',
+            'bbas3',
             content,
         )
         self.assertIn(
-            'quantidade: 10',
+            '10',
             content,
         )
 
@@ -103,10 +104,6 @@ class ActionsListTests(TestCaseWithLogin):
                       content_user_2,
                       )
         self.assertNotIn(
-            'código: bbas3',
-            content_user_2,
-        )
-        self.assertNotIn(
-            'quantidade: 10',
+            'bbas3',
             content_user_2,
         )

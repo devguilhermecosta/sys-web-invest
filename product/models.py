@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 
 '''
+- permitir anexar nota de compra e venda;
 - cada ativo terá um usuário;
 - o mesmo ativo pode ser cadastrado por diferentes usuários;
 - mas o ativo não pode ser registrado duas vezes pelo
@@ -51,6 +53,24 @@ class UserAction(models.Model):
     def buy(self, quantity: int, unit_price: float) -> None:
         self.quantity += quantity
         self.unit_price = (self.unit_price + unit_price) / 2
+        self.save()
+
+    def sell(self, quantity) -> None:
+        if quantity > self.quantity:
+            raise ValidationError(
+                {
+                    'quantity': 'quantidade insuficiente para venda',
+                },
+                code='invalid'
+            )
+
+        if quantity <= 0:
+            raise ValidationError(
+                ('informe uma quantidade maior que zero'),
+                code='invalid'
+            )
+
+        self.quantity -= quantity
         self.save()
 
     def get_total_price(self) -> float:
