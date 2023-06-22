@@ -141,9 +141,7 @@ class ActionsSellView(View):
                 'realizada com sucesso'
             )
         )
-
         del self.request.session['action-sell']
-
         return redirect(
             reverse('product:actions')
         )
@@ -184,7 +182,10 @@ class ActionsSellView(View):
 
             if user_action_exists:
                 try:
-                    user_action_exists.sell(params['quantity'])
+                    user_action_exists.sell(quantity=params['quantity'])
+                    return self.success_response(
+                        params['quantity'], params['code'],
+                    )
                 except ValidationError:
                     messages.error(
                         self.request,
@@ -195,18 +196,13 @@ class ActionsSellView(View):
                             f'vender {params["quantity"]}.'
                             )
                     )
-
-                return self.success_response(
-                    params['quantity'], params['code'],
-                )
+                    return redirect(
+                        reverse('product:actions_sell')
+                    )
 
             messages.error(
                 self.request,
                 'Você não possui esta ação em seu portifólio',
-            )
-
-            return redirect(
-                reverse('product:actions_sell')
             )
 
         return redirect(
