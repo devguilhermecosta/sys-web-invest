@@ -54,7 +54,7 @@ class AllActionsView(ListView):
     name='dispatch',
 )
 class ActionsBuyView(View):
-    def response(self, qty: int, code: str) -> HttpResponseRedirect:
+    def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
         messages.success(
             self.request,
             (
@@ -103,12 +103,18 @@ class ActionsBuyView(View):
             ).first()
 
             if user_action_exists:
-                user_action_exists.buy(params['quantity'], params['unit_price'])  # noqa: E501
-                return self.response(params['quantity'], params['action'].code)  # noqa: E501
+                user_action_exists.buy(
+                    params['quantity'], params['unit_price'],
+                    )
+                return self.success_response(
+                    params['quantity'], params['action'].code,
+                    )
 
             new_action = UserAction.objects.create(**params)
             new_action.save()
-            return self.response(params['quantity'], params['action'].code)
+            return self.success_response(
+                params['quantity'], params['action'].code,
+                )
 
         return redirect(
             reverse('product:actions_buy')
