@@ -99,6 +99,6 @@ class ActionsSellTests(TestCaseWithLogin):
         )
         content_r_sell = response_sell.content.decode('utf-8')
         self.assertIn(
-            'quantidade insuficiente para venda',
+            'Quantidade insuficiente para venda',
             content_r_sell,
         )
