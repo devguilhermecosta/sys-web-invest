@@ -1,7 +1,9 @@
 from utils.mixins.auth import TestCaseWithLogin
 from django.urls import reverse, resolve
 from product import views
+from product.models import UserAction
 from .action_base import make_action
+from parameterized import parameterized
 
 
 class ActionsSellTests(TestCaseWithLogin):
@@ -39,24 +41,20 @@ class ActionsSellTests(TestCaseWithLogin):
             302,
         )
 
-    def test_actions_sell_load_correct_content(self) -> None:
+    @parameterized.expand([
+        ('código'),
+        ('quantidade'),
+        ('vender'),
+    ])
+    def test_actions_sell_load_correct_content(self, content) -> None:
         # make login
         self.make_login()
 
         response = self.client.get(self.url)
-        content = response.content.decode('utf-8')
 
         self.assertIn(
-            'código',
             content,
-        )
-        self.assertIn(
-            'quantidade',
-            content,
-        )
-        self.assertIn(
-            'vender',
-            content,
+            response.content.decode('utf-8'),
         )
 
     def test_actions_sell_is_not_allowed_if_quantity_of_action_is_less_then_or_iqual_0(self) -> None:  # noqa: E501
@@ -102,3 +100,60 @@ class ActionsSellTests(TestCaseWithLogin):
             'Quantidade insuficiente para venda',
             content_r_sell,
         )
+
+    def test_actions_sell_is_allowed_if_the_user_has_the_action_and_quantity_is_biger_then_zero(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # make new action
+        action = make_action('bbas3', 'banco do brasil')
+
+        # try buy the action
+        self.client.post(
+            reverse('product:actions_buy'),
+            {
+                'code': 'bbas3',
+                'quantity': 5,
+                'unit_price': '10',
+                },
+            follow=True
+        )
+
+        # Try sell 5 units of bbas3
+        response = self.client.post(
+            self.url,
+            {
+                'code': 'bbas3',
+                'quantity': 5,
+            },
+            follow=True,
+        )
+
+        self.assertIn(
+            'venda de 5 unidade(s) de BBAS3 realizada com sucesso',
+            response.content.decode('utf-8'),
+        )
+
+        # checks if the action's quantity has decreased
+        response_after_sale = self.client.get(
+            reverse('product:actions_list')
+        )
+        self.assertIn(
+            'bbas3',
+            response_after_sale.content.decode('utf-8'),
+        )
+        self.assertIn(
+            'R$ 0',
+            response_after_sale.content.decode('utf-8'),
+        )
+        # the quantity should be zero
+        self.assertEqual(
+            UserAction.objects.filter(user=user,
+                                      action=action,
+                                      ).first().quantity,
+            0,
+        )
+        self.fail('adicionar o campo de valor, criar um método para o '
+                  'valor total da venda, e adicionar a opção de anexar '
+                  'a nota de negociação',
+                  )

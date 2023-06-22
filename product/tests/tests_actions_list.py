@@ -66,8 +66,6 @@ class ActionsListTests(TestCaseWithLogin):
             response_actions_buy.content.decode('utf-8')
             )
 
-        #######
-
         # get request to actions_list url
         response_actions_list = self.client.get(self.url)
         content = response_actions_list.content.decode('utf-8')
