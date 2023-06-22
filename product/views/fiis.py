@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from product.forms import product_forms
+from product.forms import FIIBuyForm
 from product.models import FIIS, UserFII
 
 
@@ -38,7 +38,7 @@ class AllFIIsView():
 class FIISBuyView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('fiis-buy', None)
-        form = product_forms.FIIForm(session)
+        form = FIIBuyForm(session)
 
         return render(
             self.request,
@@ -52,7 +52,7 @@ class FIISBuyView(View):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['fiis-buy'] = post
-        form = product_forms.FIIForm(post)
+        form = FIIBuyForm(post)
 
         if form.is_valid():
             data = form.cleaned_data

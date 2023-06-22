@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from product.forms import product_forms
+from product.forms import ActionSellForm, ActionBuyForm
 from product.models import Action, UserAction
 from django.core.exceptions import ValidationError
 
@@ -75,7 +75,7 @@ class ActionsBuyView(View):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('action-buy', None)
-        form = product_forms.ActionForm(session)
+        form = ActionBuyForm(session)
 
         return render(
             self.request,
@@ -89,7 +89,7 @@ class ActionsBuyView(View):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['action-buy'] = post
-        form = product_forms.ActionForm(post)
+        form = ActionBuyForm(post)
 
         if form.is_valid():
             data = form.cleaned_data
@@ -148,7 +148,7 @@ class ActionsSellView(View):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('action-sell', None)
-        form = product_forms.ActionSellForm(session)
+        form = ActionSellForm(session)
 
         return render(
             self.request,
@@ -162,7 +162,7 @@ class ActionsSellView(View):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['action-sell'] = post
-        form = product_forms.ActionSellForm(post)
+        form = ActionSellForm(post)
 
         if form.is_valid():
             data = form.cleaned_data
@@ -171,9 +171,7 @@ class ActionsSellView(View):
                 'code': data['code'],
                 'quantity': int(data['quantity']),
             }
-            action = Action.objects.filter(
-                code=params['code'],
-            ).first()
+            action = Action.objects.filter(code=params['code']).first()
 
             user_action_exists = UserAction.objects.filter(
                 user=user,
@@ -190,7 +188,7 @@ class ActionsSellView(View):
                     messages.error(
                         self.request,
                         (
-                            'quantidade insuficiente para venda. '
+                            'Quantidade insuficiente para venda. '
                             f'Você possui {user_action_exists.quantity} '
                             'unidade(s) em seu portifólio e está tentando '
                             f'vender {params["quantity"]}.'
