@@ -50,14 +50,7 @@ class AllActionsView(ListView):
         return query_set
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url=login_url,
-    ),
-    name='dispatch',
-)
-class ActionsBuyView(View):
+class ActionsBuyView(ActionsView):
     def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
         messages.success(
             self.request,
@@ -125,14 +118,7 @@ class ActionsBuyView(View):
         )
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url=login_url,
-    ),
-    name='dispatch',
-)
-class ActionsSellView(View):
+class ActionsSellView(ActionsView):
     def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
         messages.success(
             self.request,
@@ -166,13 +152,11 @@ class ActionsSellView(View):
 
         if form.is_valid():
             data = form.cleaned_data
+            code = data['code']
+            quantity = int(data['quantity'])
             user = self.request.user
-            params = {
-                'code': data['code'],
-                'quantity': int(data['quantity']),
-            }
-            action = Action.objects.filter(code=params['code']).first()
 
+            action = Action.objects.filter(code=code).first()
             user_action_exists = UserAction.objects.filter(
                 user=user,
                 action=action
@@ -180,10 +164,8 @@ class ActionsSellView(View):
 
             if user_action_exists:
                 try:
-                    user_action_exists.sell(quantity=params['quantity'])
-                    return self.success_response(
-                        params['quantity'], params['code'],
-                    )
+                    user_action_exists.sell(quantity=quantity)
+                    return self.success_response(quantity, code)
                 except ValidationError:
                     messages.error(
                         self.request,
@@ -191,13 +173,14 @@ class ActionsSellView(View):
                             'Quantidade insuficiente para venda. '
                             f'Você possui {user_action_exists.quantity} '
                             'unidade(s) em seu portifólio e está tentando '
-                            f'vender {params["quantity"]}.'
-                            )
+                            f'vender {quantity}.'
+                        ),
                     )
                     return redirect(
                         reverse('product:actions_sell')
-                    )
+                        )
 
+            del self.request.session['action-sell']
             messages.error(
                 self.request,
                 'Você não possui esta ação em seu portifólio',
@@ -205,4 +188,4 @@ class ActionsSellView(View):
 
         return redirect(
             reverse('product:actions_sell')
-        )
+            )
