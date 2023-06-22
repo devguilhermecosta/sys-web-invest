@@ -64,12 +64,6 @@ class UserAction(models.Model):
                 code='invalid'
             )
 
-        if quantity <= 0:
-            raise ValidationError(
-                ('informe uma quantidade maior que zero'),
-                code='invalid'
-            )
-
         self.quantity -= quantity
         self.save()
 
