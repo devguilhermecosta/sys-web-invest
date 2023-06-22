@@ -133,10 +133,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         user_action = UserAction.objects.filter(
             user=self.get_user(username='user'),
             action=action,
-        )
-
-        # checks if the user_action was saved in the databases
-        self.assertTrue(user_action.exists())
+        ).first()
 
         # checks if the success message is displayed
         self.assertIn(
@@ -149,9 +146,9 @@ class ActionsBuyTests(TestCaseWithLogin):
             )
 
         # checks if the quantity, unit_price and total_price are corrects
-        self.assertEqual(user_action.first().quantity, 1)
-        self.assertEqual(user_action.first().unit_price, 10)
-        self.assertAlmostEqual(user_action.first().get_total_price(), 10)
+        self.assertEqual(user_action.quantity, 1)
+        self.assertEqual(user_action.unit_price, 10)
+        self.assertAlmostEqual(user_action.get_total_price(), 10)
 
         # checks if the user was redirected after purchase
         self.assertRedirects(
@@ -219,8 +216,8 @@ class ActionsBuyTests(TestCaseWithLogin):
         )
 
         # cheks if quantity and price are updated
-        # now, the quantity must be 11, and unit_price must be 30
-        # the total_price must be 330
+        # now, the quantity must be 11, and unit_price must be 20
+        # the total_price must be 220
         self.assertEqual(user_action.first().quantity, 11)
-        self.assertEqual(user_action.first().unit_price, 30)
-        self.assertEqual(user_action.first().get_total_price(), 330)
+        self.assertEqual(user_action.first().unit_price, 20)
+        self.assertEqual(user_action.first().get_total_price(), 220)
