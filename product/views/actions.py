@@ -1,6 +1,6 @@
 from django.views import View
 from django.views.generic import ListView
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -54,6 +54,21 @@ class AllActionsView(ListView):
     name='dispatch',
 )
 class ActionsBuyView(View):
+    def response(self, qty: int, code: str) -> HttpResponseRedirect:
+        messages.success(
+            self.request,
+            (
+                f'compra de {qty} unidade(s) de {code.upper()} '
+                'realizada com sucesso'
+            )
+        )
+
+        del self.request.session['action-buy']
+
+        return redirect(
+            reverse('product:actions')
+        )
+
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('action-buy', None)
         form = product_forms.ActionForm(session)
@@ -74,59 +89,26 @@ class ActionsBuyView(View):
 
         if form.is_valid():
             data = form.cleaned_data
-            code = data['code']
-            qty = int(data['quantity'])
-            up = float(data['unit_price'])
-            user = self.request.user
-            action = Action.objects.filter(code=code).first()
+            action = Action.objects.filter(code=data['code']).first()
+            params = {
+                'action': action,
+                'quantity': int(data['quantity']),
+                'unit_price': float(data['unit_price']),
+                'user': self.request.user,
+            }
 
-            user_action = UserAction.objects.filter(
-                action=action,
-                user=user,
-            )
+            user_action_exists = UserAction.objects.filter(
+                action=params['action'],
+                user=params['user'],
+            ).first()
 
-            if user_action.exists():
-                actual_user_action = user_action.first()
-                actual_user_action.quantity += qty
-                actual_up = actual_user_action.unit_price
-                actual_user_action.unit_price = (actual_up + up) / 2
-                actual_user_action.save()
+            if user_action_exists:
+                user_action_exists.buy(params['quantity'], params['unit_price'])  # noqa: E501
+                return self.response(params['quantity'], params['action'].code)  # noqa: E501
 
-                messages.success(
-                    self.request,
-                    (
-                        f'compra de {qty} unidade(s) de {code.upper()} '
-                        'realizada com sucesso'
-                    )
-                )
-
-                del self.request.session['action-buy']
-
-                return redirect(
-                    reverse('product:actions')
-                )
-
-            new_action = UserAction.objects.create(
-                user=user,
-                action=action,
-                quantity=qty,
-                unit_price=up,
-            )
+            new_action = UserAction.objects.create(**params)
             new_action.save()
-
-            messages.success(
-                self.request,
-                (
-                    f'compra de {qty} unidade(s) de {code.upper()} '
-                    'realizada com sucesso'
-                )
-            )
-
-            del self.request.session['action-buy']
-
-            return redirect(
-                reverse('product:actions')
-            )
+            return self.response(params['quantity'], params['action'].code)
 
         return redirect(
             reverse('product:actions_buy')
