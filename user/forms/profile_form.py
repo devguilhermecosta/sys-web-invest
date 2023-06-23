@@ -47,11 +47,11 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = [
             'cpf',
+            'cep',
             'adress',
             'number',
             'city',
             'uf',
-            'cep',
         ]
 
     def clean_cpf(self):
