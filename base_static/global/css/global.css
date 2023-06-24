@@ -568,6 +568,11 @@ body {
 .C-dashboard_table tr:nth-of-type(odd) {
   background-color: var(--gray_2);
 }
+
+.C-product_message {
+  text-align: center;
+  margin-bottom: 15px;
+}
 /* end dashboard - actions */
 
 /* start animation */
