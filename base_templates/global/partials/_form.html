@@ -1,4 +1,7 @@
-<form method="POST" action="{{ form_action }}" class="C-login_form">
+<form method="POST"
+action="{{ form_action }}"
+class="C-login_form"
+enctype="multipart/form-data">
   {% csrf_token %}
   <h1 class="C-login_title">{{ form_title }}</h1>
   {% for field in form %}
