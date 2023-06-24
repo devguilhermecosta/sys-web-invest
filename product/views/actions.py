@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import ActionSellForm, ActionBuyForm
-from product.models import Action, UserAction
+from product.models import Action, UserAction, ActionHistory
 from django.core.exceptions import ValidationError
 
 
@@ -82,33 +82,44 @@ class ActionsBuyView(ActionsView):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['action-buy'] = post
-        form = ActionBuyForm(post)
+        form = ActionBuyForm(
+            data=post or None,
+            files=self.request.FILES or None,
+            )
 
         if form.is_valid():
             data = form.cleaned_data
             action = Action.objects.filter(code=data['code']).first()
+            user = self.request.user
             params = {
-                'action': action,
                 'quantity': int(data['quantity']),
                 'unit_price': float(data['unit_price']),
-                'user': self.request.user,
+                'date': data['date'],
+                'trading_note': data.get('trading_note', None),
             }
 
             user_action_exists = UserAction.objects.filter(
-                action=params['action'],
-                user=params['user'],
+                action=action,
+                user=user,
             ).first()
 
             if user_action_exists:
-                user_action_exists.buy(
-                    params['quantity'], params['unit_price'],
-                    )
+                user_action_exists.buy(**params)
                 return self.success_response(
-                    params['quantity'], params['action'].code,
+                    params['quantity'], action.code,
                     )
 
-            new_action = UserAction.objects.create(**params)
+            new_action = UserAction.objects.create(
+                **params,
+            )
             new_action.save()
+            action_history = ActionHistory.objects.create(
+                useraction=new_action,
+                handler='buy',
+                total_price=params['quantity']*params['unit_price'],
+                **params,
+            )
+            action_history.save()
             return self.success_response(
                 params['quantity'], params['action'].code,
                 )
