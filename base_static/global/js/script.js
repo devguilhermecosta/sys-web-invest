@@ -47,38 +47,86 @@
 (() => {
 try {
   const inputCep = document.getElementById('id_cep');
-  inputCep.addEventListener('change', searchCep);
+  const adress = document.querySelector('#id_adress');
+  const city = document.querySelector('#id_city');
+  const uf = document.querySelector('#id_uf');
+  inputCep.addEventListener('keyup', searchCep);
   
   function searchCep() {
     let cep = inputCep.value.replace('-', '');
-    const adress = document.querySelector('#id_adress');
-    const city = document.querySelector('#id_city');
-    const uf = document.querySelector('#id_uf');
-  
+
     let url = `http://viacep.com.br/ws/${cep}/json`;
-    let request = new XMLHttpRequest();
+
+    const request = new XMLHttpRequest();
   
-    request.open('GET', url, true);
-    
     request.onreadystatechange = function() {
-        if (request.readyState === 4) {
-          if (request.status === 200) {
-            const json = JSON.parse(request.responseText);
-    
-            adress.innerHTML = `${json.logradouro}`;
-            adress.value = `${json.logradouro}`;
-    
-            city.parentNode.classList.toggle('C-input_xhr');
-            city.value = json.localidade;
-            city.innerHTML = json.localidade;
-    
-            uf.parentNode.classList.toggle('C-input_xhr');
-            uf.value = json.uf;
-            uf.innerHTML = json.uf;
-          }
-        }
+      const defaulClass = 'C-input_xhr';
+      if (request.readyState !== 4 && request.status !== 200) {
+        adress.value = adress.innerHTML = '';
+        city.value = city.innerHTML = '';
+        uf.value = uf.innerHTML = '';
+        
+        adress.classList.remove(defaulClass);
+        city.classList.remove(defaulClass);
+        uf.classList.remove(defaulClass);
+        return;
+      } else {
+        const json = JSON.parse(request.responseText);
+        
+        adress.innerHTML = adress.value = json.logradouro || '';
+        city.value = city.innerHTML = json.localidade || '';
+        uf.value = uf.innerHTML = json.uf || '';
+        
+        city.classList.add(defaulClass);
+        adress.classList.add(defaulClass);
+        uf.classList.add(defaulClass);
       }
-      request.send();
+    }
+    request.open('GET', url, true);
+    request.send();
   }
 } catch(e) {};
+})();
+
+
+// Function for change btn value into login page
+(() => {
+  try {
+    const loginForm = document.querySelector('.C-login_form');
+    let btnLogin = document.querySelector('#btn-login');
+    btnLogin.addEventListener('click', function(event) {
+      event.preventDefault();
+    
+      btnLogin.value = 'entrando...';
+      loginForm.submit();
+    })
+  } catch(e){};
+})();
+
+// Function for change btn value into register page
+(() => {
+  try {
+    const registerForm = document.querySelector('.C-form_register_form');
+    let btnRegister = document.querySelector('#btn-register');
+    btnRegister.addEventListener('click', function(event) {
+      event.preventDefault();
+    
+      btnRegister.value = 'registrando...';
+      registerForm.submit();
+    })
+  } catch(e){};
+})();
+
+// Function for change btn value into register page
+(() => {
+  try {
+    const registerProfileForm = document.querySelector('.C-login_form');
+    let btnCreateProfile = document.querySelector('.C-login_button[value=finalizar]');
+    btnCreateProfile.addEventListener('click', function(event) {
+      event.preventDefault();
+    
+      btnCreateProfile.value = 'criando perfil...';
+      registerProfileForm.submit();
+    })
+  } catch(e){};
 })();

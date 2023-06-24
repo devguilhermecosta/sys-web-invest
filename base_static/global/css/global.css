@@ -253,9 +253,7 @@ body {
   border: 1px solid var(--blue_4);
 }
 
-.C-login_input:focus + .C-login_label, .C-login_input_active,
-.C-login_input:not(:empty) + .C-login_label, .C-login_input_active,
-.C-input_xhr
+.C-login_input:focus + .C-login_label, .C-login_input_active
  {
   top: -9px;
   transform: none;
@@ -264,8 +262,13 @@ body {
   background-color: var(--white);
 }
 
-.C-input_xhr {
-  margin-top: 10px;
+.C-input_xhr:not(:empty) + .C-login_label
+ {
+  top: -9px;
+  transform: none;
+  font-size: 12px;
+  color: var(--blue_4);
+  background-color: var(--white);
 }
 
 .C-login_form > a {
