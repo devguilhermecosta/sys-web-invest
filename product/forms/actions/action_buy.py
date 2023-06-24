@@ -28,6 +28,27 @@ class ActionBuyForm(forms.Form):
     )
     add_css_class(unit_price, default_input_class)
 
+    date = forms.DateField(
+        required=False,
+        label='data',
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',
+            }
+        )
+    )
+    add_css_class(date, default_input_class)
+
+    trading_note = forms.FileField(
+        label='',
+        required=False,
+        widget=forms.FileInput(
+            {
+                'accept': 'application/pdf',
+            }
+        )
+    )
+
     def clean_code(self):
         code = self.cleaned_data["code"]
         action = Action.objects.filter(code=code).exists()
@@ -94,5 +115,15 @@ class ActionBuyForm(forms.Form):
             )
 
         str(unit_price).replace(',', '.')
-
         return float(unit_price)
+
+    def clean_date(self):
+        date = self.cleaned_data["date"]
+
+        if not date or date == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required'
+            )
+
+        return date
