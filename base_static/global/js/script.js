@@ -1,3 +1,4 @@
+// animate input field
 (() => {
   const formInput = document.querySelectorAll('.C-login_input');
   
@@ -24,6 +25,7 @@
   })
 })();
 
+
 // change eye from dashboard intro
 (() => {
   try{
@@ -40,26 +42,43 @@
   }catch(e){};
 })();
 
-//
 
-const inputCep = document.getElementById('id_cep');
-inputCep.addEventListener('change', searchCep);
-
-function searchCep() {
-  let cep = inputCep.value.replace('-', '');
-  let url = 'http://viacep.com.br/ws/' + cep + '/json';
-  let xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
+// AJAX for Profile CEP
+(() => {
+try {
+  const inputCep = document.getElementById('id_cep');
+  inputCep.addEventListener('change', searchCep);
   
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        json = JSON.parse(xhr.responseText)
-        console.log(json);
+  function searchCep() {
+    let cep = inputCep.value.replace('-', '');
+    const adress = document.querySelector('#id_adress');
+    const city = document.querySelector('#id_city');
+    const uf = document.querySelector('#id_uf');
+  
+    let url = `http://viacep.com.br/ws/${cep}/json`;
+    let request = new XMLHttpRequest();
+  
+    request.open('GET', url, true);
+    
+    request.onreadystatechange = function() {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            const json = JSON.parse(request.responseText);
+    
+            adress.innerHTML = `${json.logradouro}`;
+            adress.value = `${json.logradouro}`;
+    
+            city.parentNode.classList.toggle('C-input_xhr');
+            city.value = json.localidade;
+            city.innerHTML = json.localidade;
+    
+            uf.parentNode.classList.toggle('C-input_xhr');
+            uf.value = json.uf;
+            uf.innerHTML = json.uf;
+          }
+        }
       }
-    }
+      request.send();
   }
-  xhr.send();
-}
-
-// https://blog.matheuscastiglioni.com.br/requisicoes-ajax-com-javascript/#:~:text=O%20Javascript%20nativo%20possui%20um,protoc%C3%B3los%20HTTP%2C%20FILE%20e%20FTP.
+} catch(e) {};
+})();
