@@ -1,12 +1,21 @@
 from django.urls import reverse, resolve
+from django.test import override_settings
 from parameterized import parameterized
 from utils.mixins.auth import TestCaseWithLogin
 from product import views
 from product.models import UserAction
 from product.tests.action_base import make_action
+from product.models import ActionHistory
+from .test_base import make_simple_file
 from datetime import date
+import shutil
+import contextlib
 
 
+TEST_DIR = 'test_data'
+
+
+@override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
 class ActionsBuyTests(TestCaseWithLogin):
     url = reverse('product:actions_buy')
     date = date.today().strftime('%Y-%m-%d')
@@ -19,6 +28,11 @@ class ActionsBuyTests(TestCaseWithLogin):
             'date': self.date,
         }
         return super().setUp()
+
+    def tearDown(self) -> None:
+        with contextlib.suppress(OSError):
+            shutil.rmtree(TEST_DIR)
+        return super().tearDown()
 
     def test_actions_get_request_url_is_correct(self) -> None:
         self.assertEqual(self.url, '/ativos/acoes/comprar/')
@@ -74,6 +88,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         ('code', 'Campo obrigatório'),
         ('quantity', 'Campo obrigatório'),
         ('unit_price', 'Campo obrigatório'),
+        ('date', 'Campo obrigatório'),
     ])
     def test_actions_buy_returns_error_messages_if_any_field_is_empty(self, field, message) -> None:  # noqa: E501
         # make login
@@ -212,9 +227,51 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.assertEqual(user_action.first().quantity, 11)
         self.assertEqual(user_action.first().unit_price, 20)
         self.assertEqual(user_action.first().get_total_price(), 220)
-        self.fail(
-            'testar a data como campo obrigatório de compra e venda. '
-            'testar o envio de arquivo PDF como opcional. '
-            'testar a criação do histórico de compra e venda. '
-            'comentar a view de compra e venda para melhorar o entendimento. '
+
+    def test_actions_buy_creates_a_action_history_after_purchase(self) -> None:  # noqa: E501
+        ''' after the each action purchase, automatically a new history
+            will be create with handler 'buy'.
+            the trading note is optional.
+        '''
+        # make login
+        self.make_login()
+
+        # make new action
+        action = make_action('bbas3', 'banco do brasil')
+
+        # insert the trading note into action data
+        self.action_data.update({
+            'trading_note': make_simple_file(),
+        })
+
+        # buy the action
+        self.client.post(
+            self.url,
+            self.action_data,
+            follow=True,
+        )
+
+        # get the new user_action into the databases
+        user_action = UserAction.objects.filter(
+            user=self.get_user(username='user'),
+            action=action,
+        ).first()
+
+        # get queryset from action history
+        action_history = ActionHistory.objects.filter(
+            useraction=user_action,
+        )
+
+        self.assertEqual(len(action_history), 1)
+
+        # checks action history buy
+        self.assertIn(
+            'compra de 1 unidade(s) de bbas3 do usuário user realizada no dia',
+            str(action_history[0]),
+        )
+
+        # checks is the trading note has been uploaded
+        self.assertIn(
+            '/trading-notes/actions/file_test',
+            action_history[0].trading_note.url,
         )
