@@ -27,7 +27,7 @@ class CreateProfileTests(TestCase):
             'number': '10',
             'city': 'New York City',
             'uf': 'NY',
-            'cep': '0000000',
+            'cep': '00000000',
         }
         return super().setUp()
 
@@ -202,6 +202,24 @@ class CreateProfileTests(TestCase):
                              302,
                              )
 
+    def test_create_profile_returns_error_message_if_cep_is_invalid(self) -> None:  # noqa: E501
+        # make login
+        self.make_login()
+
+        # set profile_data
+        self.profile_data['cep'] = '00.000-000'
+
+        # try create profile
+        response = self.c.post(
+            self.url_create_profile,
+            data=self.profile_data,
+            follow=True,
+        )
+
+        self.assertIn(
+            'O cep deve ser composto somente por números e ter 8 catacteres.',
+            response.content.decode('utf-8'))
+
     def test_create_profile_returns_error_message_if_cpf_is_invalid(self) -> None:  # noqa: E501
         # make login
         self.make_login()
@@ -313,4 +331,3 @@ class CreateProfileTests(TestCase):
                              self.url_create_profile,
                              302,
                              )
-        self.fail('criar expressão regular para validar o CEP')

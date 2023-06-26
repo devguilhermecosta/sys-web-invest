@@ -4,6 +4,19 @@ from user.models import Profile
 from utils.forms.style import add_css_class
 from utils.validators.fields import length_validate
 import c2validator as c2
+import re
+
+
+def validate_cep(cep) -> str:
+    regex = re.compile(r'^[0-9]{8}$')
+
+    if not regex.match(cep):
+        raise ValidationError(
+            ('O cep deve ser composto somente por números '
+             'e ter 8 catacteres.'
+             ),
+            code='invalid',
+        )
 
 
 class ProfileForm(forms.ModelForm):
@@ -12,6 +25,13 @@ class ProfileForm(forms.ModelForm):
         label='cpf',
     )
     add_css_class(cpf, 'C-login_input')
+
+    cep = forms.CharField(
+        required=False,
+        label='cep',
+        validators=[validate_cep, ],
+    )
+    add_css_class(cep, 'C-login_input')
 
     adress = forms.CharField(
         required=False,
@@ -36,12 +56,6 @@ class ProfileForm(forms.ModelForm):
         label='estado',
     )
     add_css_class(uf, 'C-login_input')
-
-    cep = forms.CharField(
-        required=False,
-        label='cep',
-    )
-    add_css_class(cep, 'C-login_input')
 
     class Meta:
         model = Profile
