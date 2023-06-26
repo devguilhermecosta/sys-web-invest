@@ -7,7 +7,7 @@ from product.models import Action
 default_input_class = 'C-login_input'
 
 
-class ActionBuyForm(forms.Form):
+class ActionBuyAndSellForm(forms.Form):
     code = forms.CharField(
         label='código',
         required=False,
