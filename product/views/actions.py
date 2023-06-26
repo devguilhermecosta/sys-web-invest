@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import ActionBuyAndSellForm
-from product.models import Action, UserAction, make_history
+from product.models import Action, UserAction, ActionHistory
 from django.core.exceptions import ValidationError
 
 
@@ -89,14 +89,14 @@ class ActionsBuyView(ActionsView):
 
         if form.is_valid():
             data = form.cleaned_data
-            action = Action.objects.filter(code=data['code']).first()
-            user = self.request.user
             params = {
                 'quantity': int(data['quantity']),
                 'unit_price': float(data['unit_price']),
                 'date': data['date'],
                 'trading_note': data.get('trading_note', None),
             }
+            user = self.request.user
+            action = Action.objects.filter(code=data['code']).first()
 
             user_action_exists = UserAction.objects.filter(
                 action=action,
@@ -109,15 +109,23 @@ class ActionsBuyView(ActionsView):
                     qty=params['quantity'], code=action.code,
                     )
 
-            new_action = UserAction.objects.create(**params)
-            new_action.save()
-            make_history(
-                useraction=new_action,
+            new_useraction = UserAction.objects.create(
+                user=user,
+                action=action,
+                **params,
+                )
+            new_useraction.save()
+
+            action_history = ActionHistory.objects.create(
+                useraction=new_useraction,
                 handler='buy',
+                total_price=params['quantity'] * params['unit_price'],
                 **params,
             )
+            action_history.save()
+
             return self.success_response(
-                params['quantity'], params['action'].code,
+                qty=params['quantity'], code=action.code,
                 )
 
         return redirect(
