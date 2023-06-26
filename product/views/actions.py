@@ -6,8 +6,8 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from product.forms import ActionSellForm, ActionBuyForm
-from product.models import Action, UserAction, ActionHistory
+from product.forms import ActionBuyAndSellForm
+from product.models import Action, UserAction, make_history
 from django.core.exceptions import ValidationError
 
 
@@ -68,7 +68,7 @@ class ActionsBuyView(ActionsView):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('action-buy', None)
-        form = ActionBuyForm(session)
+        form = ActionBuyAndSellForm(session)
 
         return render(
             self.request,
@@ -82,7 +82,7 @@ class ActionsBuyView(ActionsView):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['action-buy'] = post
-        form = ActionBuyForm(
+        form = ActionBuyAndSellForm(
             data=post or None,
             files=self.request.FILES or None,
             )
@@ -106,20 +106,16 @@ class ActionsBuyView(ActionsView):
             if user_action_exists:
                 user_action_exists.buy(**params)
                 return self.success_response(
-                    params['quantity'], action.code,
+                    qty=params['quantity'], code=action.code,
                     )
 
-            new_action = UserAction.objects.create(
-                **params,
-            )
+            new_action = UserAction.objects.create(**params)
             new_action.save()
-            action_history = ActionHistory.objects.create(
+            make_history(
                 useraction=new_action,
                 handler='buy',
-                total_price=params['quantity']*params['unit_price'],
                 **params,
             )
-            action_history.save()
             return self.success_response(
                 params['quantity'], params['action'].code,
                 )
@@ -145,7 +141,7 @@ class ActionsSellView(ActionsView):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('action-sell', None)
-        form = ActionSellForm(session)
+        form = ActionBuyAndSellForm(session)
 
         return render(
             self.request,
@@ -159,15 +155,22 @@ class ActionsSellView(ActionsView):
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
         self.request.session['action-sell'] = post
-        form = ActionSellForm(post)
+        form = ActionBuyAndSellForm(
+            data=post or None,
+            files=self.request.FILES or None,
+            )
 
         if form.is_valid():
             data = form.cleaned_data
-            code = data['code']
-            quantity = int(data['quantity'])
             user = self.request.user
+            params = {
+                'quantity': int(data['quantity']),
+                'unit_price': float(data['unit_price']),
+                'date': data['date'],
+                'trading_note': data.get('trading_note', None),
+            }
+            action = Action.objects.filter(code=data['code']).first()
 
-            action = Action.objects.filter(code=code).first()
             user_action_exists = UserAction.objects.filter(
                 user=user,
                 action=action
@@ -175,8 +178,10 @@ class ActionsSellView(ActionsView):
 
             if user_action_exists:
                 try:
-                    user_action_exists.sell(quantity=quantity)
-                    return self.success_response(quantity, code)
+                    user_action_exists.sell(**params)
+                    return self.success_response(
+                        qty=params['quantity'], code=data['code']
+                        )
                 except ValidationError:
                     messages.error(
                         self.request,
@@ -184,7 +189,7 @@ class ActionsSellView(ActionsView):
                             'Quantidade insuficiente para venda. '
                             f'Você possui {user_action_exists.quantity} '
                             'unidade(s) em seu portifólio e está tentando '
-                            f'vender {quantity}.'
+                            f'vender {params["quantity"]}.'
                         ),
                     )
                     return redirect(
