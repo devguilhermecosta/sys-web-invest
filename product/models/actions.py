@@ -94,19 +94,3 @@ class ActionHistory(models.Model):
 
     def get_total_price(self):
         return self.quantity * self.unit_price
-
-
-def make_history(**kwargs) -> ActionHistory:
-    ''' create a new action history '''
-    new_history = ActionHistory()
-    new_history.objects.create(
-        useraction=kwargs.get('useraction'),
-        handler=kwargs.get('handler'),
-        date=kwargs.get('date'),
-        quantity=kwargs.get('quantity'),
-        unit_price=kwargs.get('unit_price'),
-        total_price=kwargs.get('quantity') * kwargs.get('unit_price'),
-        trading_note=kwargs.get('trading_note'),
-    )
-    new_history.save()
-    return new_history
