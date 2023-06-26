@@ -48,6 +48,7 @@ class ActionBuyForm(forms.Form):
             }
         )
     )
+    add_css_class(trading_note, 'custom-input-file')
 
     def clean_code(self):
         code = self.cleaned_data["code"]
