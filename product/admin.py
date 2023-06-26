@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserAction
+from .models.actions import UserAction
 
 
 @admin.register(UserAction)
