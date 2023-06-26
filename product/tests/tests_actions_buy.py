@@ -4,16 +4,19 @@ from utils.mixins.auth import TestCaseWithLogin
 from product import views
 from product.models import UserAction
 from product.tests.action_base import make_action
+from datetime import date
 
 
 class ActionsBuyTests(TestCaseWithLogin):
     url = reverse('product:actions_buy')
+    date = date.today().strftime('%Y-%m-%d')
 
     def setUp(self) -> None:
         self.action_data = {
             'code': 'bbas3',
             'quantity': '1',
             'unit_price': '10',
+            'date': self.date,
         }
         return super().setUp()
 
@@ -110,14 +113,11 @@ class ActionsBuyTests(TestCaseWithLogin):
         # make new action
         action = make_action('bbas3', 'banco do brasil')
 
-        # set action_data
-        self.action_data.update({'action': action})
-
         # try buy the action
         response = self.client.post(
             self.url,
             self.action_data,
-            follow=True
+            follow=True,
         )
 
         # Try get new user_action into the databases
@@ -212,3 +212,9 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.assertEqual(user_action.first().quantity, 11)
         self.assertEqual(user_action.first().unit_price, 20)
         self.assertEqual(user_action.first().get_total_price(), 220)
+        self.fail(
+            'testar a data como campo obrigatório de compra e venda. '
+            'testar o envio de arquivo PDF como opcional. '
+            'testar a criação do histórico de compra e venda. '
+            'comentar a view de compra e venda para melhorar o entendimento. '
+        )

@@ -2,6 +2,7 @@ from utils.mixins.auth import TestCaseWithLogin
 from django.urls import reverse, resolve
 from .action_base import make_action
 from product import views
+from datetime import date
 
 
 class ActionsListTests(TestCaseWithLogin):
@@ -56,6 +57,7 @@ class ActionsListTests(TestCaseWithLogin):
                 'code': 'bbas3',
                 'quantity': '10',
                 'unit_price': '36',
+                'date': date.today().strftime('%Y-%m-%d'),
             },
             follow=True,
         )
@@ -98,7 +100,7 @@ class ActionsListTests(TestCaseWithLogin):
         content_user_2 = response_actions_list_user_2.content.decode('utf-8')
 
         # checks if the actions list is empty
-        self.assertIn('nenhuma ação até o momento',
+        self.assertIn('Nenhuma ação até o momento',
                       content_user_2,
                       )
         self.assertNotIn(

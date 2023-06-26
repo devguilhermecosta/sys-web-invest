@@ -4,6 +4,7 @@ from product import views
 from product.models import UserAction
 from .action_base import make_action
 from parameterized import parameterized
+from datetime import date
 
 
 class ActionsSellTests(TestCaseWithLogin):
@@ -70,7 +71,8 @@ class ActionsSellTests(TestCaseWithLogin):
             {
                 'code': 'bbas3',
                 'quantity': '5',
-                'unit_price': '10',
+                'unit_price': 10,
+                'date': date.today().strftime('%Y-%m-%d'),
                 },
             follow=True
         )
@@ -92,6 +94,8 @@ class ActionsSellTests(TestCaseWithLogin):
             {
                 'code': 'bbas3',
                 'quantity': 10,
+                'unit_price': 10,
+                'date': date.today().strftime('%Y-%m-%d'),
             },
             follow=True,
         )
@@ -115,6 +119,7 @@ class ActionsSellTests(TestCaseWithLogin):
                 'code': 'bbas3',
                 'quantity': 5,
                 'unit_price': '10',
+                'date': date.today().strftime('%Y-%m-%d'),
                 },
             follow=True
         )
@@ -125,6 +130,8 @@ class ActionsSellTests(TestCaseWithLogin):
             {
                 'code': 'bbas3',
                 'quantity': 5,
+                'unit_price': '10',
+                'date': date.today().strftime('%Y-%m-%d'),
             },
             follow=True,
         )
@@ -153,7 +160,3 @@ class ActionsSellTests(TestCaseWithLogin):
                                       ).first().quantity,
             0,
         )
-        self.fail('adicionar o campo de valor, criar um método para o '
-                  'valor total da venda, e adicionar a opção de anexar '
-                  'a nota de negociação',
-                  )
