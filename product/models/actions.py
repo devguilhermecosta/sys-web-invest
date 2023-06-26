@@ -86,11 +86,21 @@ class ActionHistory(models.Model):
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
 
     def __str__(self) -> str:
+        handler = ''
+        match self.handler:
+            case 'buy':
+                handler = 'compra'
+            case 'sell':
+                handler = 'venda'
+            case 'jscp':
+                handler = 'jscp'
+            case 'proceeds':
+                handler = 'proventos'
+            case _:
+                ''
+
         return (
-            f'compra de {self.quantity} unidade(s) de '
+            f'{handler} de {self.quantity} unidade(s) de '
             f'{self.useraction.action.code} do usuário '
             f'{self.useraction.user.username} realizada '
             f'no dia {self.date}')
-
-    def get_total_price(self):
-        return self.quantity * self.unit_price
