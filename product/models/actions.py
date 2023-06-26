@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from typing import TypeVar
 from datetime import date as dt
 
-date = dt.today().strftime('%Y-%m-%d')
 
+date = dt.today().strftime('%Y-%m-%d')
 PDF = TypeVar('PDF', bytes, None)
 
 
@@ -33,7 +33,7 @@ class UserAction(models.Model):
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
-        history = ActionHistory.objects.create(
+        new_history = ActionHistory.objects.create(
             useraction=self,
             handler='buy',
             date=date,
@@ -42,17 +42,27 @@ class UserAction(models.Model):
             total_price=quantity * unit_price,
             trading_note=trading_note,
         )
-        history.save()
+        new_history.save()
         self.quantity += quantity
         self.unit_price = (self.unit_price + unit_price) / 2
         self.save()
 
-    def sell(self, quantity: int) -> None:
+    def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         if quantity > self.quantity:
             raise ValidationError(
                 {'quantity': 'quantidade insuficiente para venda'},
                 code='invalid'
             )
+        new_history = ActionHistory.objects.create(
+            useraction=self,
+            handler='sell',
+            date=date,
+            quantity=quantity,
+            unit_price=unit_price,
+            total_price=quantity * unit_price,
+            trading_note=trading_note,
+        )
+        new_history.save()
         self.quantity -= quantity
         self.save()
 
@@ -84,3 +94,19 @@ class ActionHistory(models.Model):
 
     def get_total_price(self):
         return self.quantity * self.unit_price
+
+
+def make_history(**kwargs) -> ActionHistory:
+    ''' create a new action history '''
+    new_history = ActionHistory()
+    new_history.objects.create(
+        useraction=kwargs.get('useraction'),
+        handler=kwargs.get('handler'),
+        date=kwargs.get('date'),
+        quantity=kwargs.get('quantity'),
+        unit_price=kwargs.get('unit_price'),
+        total_price=kwargs.get('quantity') * kwargs.get('unit_price'),
+        trading_note=kwargs.get('trading_note'),
+    )
+    new_history.save()
+    return new_history
