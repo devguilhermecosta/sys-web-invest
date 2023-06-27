@@ -575,10 +575,15 @@ body {
   vertical-align: middle;
 }
 
+.C-dashboard_table_details {
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
 .C-dashboard_table {
   margin: 0 auto;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .C-dashboard_table th {
@@ -591,10 +596,25 @@ body {
 .C-dashboard_table td {
   text-align: center;
   text-transform: uppercase;
+  padding: 5px;
 }
 
 .C-dashboard_table tr:nth-of-type(odd) {
   background-color: var(--gray_2);
+}
+
+.C-dashboard_table_buy {
+  color: green;
+}
+
+.C-dashboard_table_sell {
+  color: var(--dark_red);
+}
+
+.C-dashboard_table_nf {
+  text-decoration: underline;
+  display: block;
+  color: var(--black);
 }
 
 .C-product_message {
