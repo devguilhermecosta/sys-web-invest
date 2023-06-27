@@ -1,7 +1,12 @@
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
+    )
+from django.http import Http404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -213,3 +218,32 @@ class ActionsSellView(ActionsView):
         return redirect(
             reverse('product:actions_sell')
             )
+
+
+class ActionHistoryDetails(ActionsView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        action = get_object_or_404(
+            Action,
+            code=kwargs.get('code', None)
+        )
+
+        user_action = get_object_or_404(
+            UserAction,
+            user=self.request.user,
+            action=action,
+        )
+
+        if user_action:
+            action_history = ActionHistory.objects.filter(
+                useraction=user_action,
+            ).order_by('-date')
+        else:
+            raise Http404()
+
+        return render(
+            self.request,
+            'product/pages/actions/actions_history.html',
+            context={
+                'history': action_history,
+            }
+        )
