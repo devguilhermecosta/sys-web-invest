@@ -233,9 +233,12 @@ body {
   top: 50%;
   transform: translateY(-50%);
   transition: all 300ms ease;
-  z-index: 1;
   background-color: var(--white);
   cursor: auto;
+}
+
+.C-login_label:not(.C-login_label[for='id_date']) {
+  z-index: -1;
 }
 
 .C-login_input {
@@ -244,6 +247,7 @@ body {
   padding: 0 5px;
   color: var(--blue_2);
   border: 1.5px solid var(--turquoise_4);
+  background-color: transparent;
   outline: none;
   overflow: auto;
   transition: all 300ms ease;
@@ -263,6 +267,7 @@ body {
   color: var(--blue_4);
   background-color: var(--white);
   width: fit-content;
+  z-index: 1;
 }
 
 .C-input_xhr:not(:empty) + .C-login_label
@@ -339,6 +344,7 @@ body {
   color: var(--gray_1);
   width: 100%;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .custom-input-file::before {
