@@ -1,5 +1,4 @@
 from django.views import View
-from django.views.generic import TemplateView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -9,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from dashboard.forms.login_form import LoginForm
 from user.models import Profile
+from product.models import UserAction
 
 
 class LoginView(View):
@@ -88,5 +88,15 @@ class LogoutView(View):
     ),
     name='dispatch'
 )
-class DashboardView(TemplateView):
-    template_name = 'dashboard/pages/dashboard.html'
+class DashboardView(View):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        actions = UserAction.objects.filter(user=self.request.user)
+        total_actions = sum([action.get_total_price() for action in actions])
+
+        return render(
+            self.request,
+            'dashboard/pages/dashboard.html',
+            context={
+                'total_actions': total_actions,
+            }
+        )
