@@ -98,8 +98,8 @@ class ActionsBuyView(ActionsView):
                 'quantity': int(data['quantity']),
                 'unit_price': float(data['unit_price']),
                 'date': data['date'],
-                'trading_note': data.get('trading_note', None),
             }
+            trading_note = data.get('trading_note', None)
             user = self.request.user
             action = Action.objects.filter(code=data['code']).first()
 
@@ -109,7 +109,7 @@ class ActionsBuyView(ActionsView):
             ).first()
 
             if user_action_exists:
-                user_action_exists.buy(**params)
+                user_action_exists.buy(trading_note=trading_note, **params)
                 return self.success_response(
                     qty=params['quantity'], code=action.code,
                     )
@@ -125,6 +125,7 @@ class ActionsBuyView(ActionsView):
                 useraction=new_useraction,
                 handler='buy',
                 total_price=params['quantity'] * params['unit_price'],
+                trading_note=trading_note,
                 **params,
             )
             action_history.save()
