@@ -25,7 +25,6 @@ class UserAction(models.Model):
     quantity = models.IntegerField()
     unit_price = models.FloatField()
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
-    trading_note = models.FileField(blank=True, null=True, upload_to=upload)
     handler = models.CharField(max_length=255, default='buy')
 
     def __str__(self):
