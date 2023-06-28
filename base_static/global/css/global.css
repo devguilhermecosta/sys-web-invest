@@ -267,7 +267,7 @@ body {
   color: var(--blue_4);
   background-color: var(--white);
   width: fit-content;
-  z-index: 1;
+  z-index: 10 !important;
 }
 
 .C-input_xhr:not(:empty) + .C-login_label
