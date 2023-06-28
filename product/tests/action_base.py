@@ -2,7 +2,7 @@ from product.models import Action
 import c2validator as c2
 
 
-def make_action(code: str, desc: str, cnpj: str) -> Action:
+def make_action(code: str, desc: str, cnpj: str = None) -> Action:
     ''' create a new Action object '''
     new_action = Action.objects.create(
         code=code,
