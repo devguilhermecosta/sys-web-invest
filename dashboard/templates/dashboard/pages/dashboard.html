@@ -1,5 +1,6 @@
 {% extends 'global/pages/base.html' %}
-{%load static  %}
+{%load static %}
+{% load money %}
 
 {% block title %}
   Painel do usuário
@@ -27,7 +28,7 @@
       <div class="C-dashboard_summary_title total">total</div>
     </div>
     <div>
-      <div class="C-dashboard_summary_item">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_item">{{ total_actions|real_brl }}</div>
       <div class="C-dashboard_summary_hidden">R$ --------</div>
       <div class="C-dashboard_summary_item">R$ 1.000,00</div>
       <div class="C-dashboard_summary_hidden">R$ --------</div>
