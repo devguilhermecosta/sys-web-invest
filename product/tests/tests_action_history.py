@@ -2,7 +2,6 @@ from django.urls import resolve, reverse
 from product.views import ActionHistoryDetails
 from utils.mixins.auth import TestCaseWithLogin
 from .action_base import make_action
-from .test_base import make_simple_file
 from datetime import date
 from parameterized import parameterized
 
