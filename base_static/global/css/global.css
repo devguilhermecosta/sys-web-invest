@@ -560,14 +560,32 @@ body {
   font-size: 25px;
 }
 
-.C-dashboard_list_li {
-  margin: 10px 0;
+.C-dashboard_list {
+  list-style: none;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.281);
 }
 
-.C-dashboard_link {
+.C-dashboard_list_li {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.C-dashboard_link, .C-dashboard_link::before {
   text-transform: capitalize;
   text-decoration: none;
   color: var(--black);
+  transition: all 200ms ease;
+}
+
+.C-dashboard_list_li:hover .C-dashboard_link {
+  color: var(--turquoise_6);
+}
+
+.C-dashboard_list_li:hover .C-dashboard_link::before {
+  background-color: var(--turquoise_6);
 }
 
 .C-dashboard_link::before {
@@ -584,6 +602,10 @@ body {
 .C-dashboard_table_details {
   text-transform: uppercase;
   margin-bottom: 15px;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .C-dashboard_table {
@@ -603,6 +625,15 @@ body {
   text-align: center;
   text-transform: uppercase;
   padding: 5px;
+}
+
+.C-dashboard_table a {
+  color: var(--turquoise_6);
+  text-decoration: none;
+}
+
+.C-dashboard_table a:hover {
+  text-decoration: underline;
 }
 
 .C-dashboard_table tr:nth-of-type(odd) {
@@ -688,6 +719,10 @@ body {
 
   .C-upgrade_box p {
     font-size: 12px;
+  }
+
+  .C-dashboard_table {
+    font-size: 16px;
   }
 
   @keyframes open-menu-label {
