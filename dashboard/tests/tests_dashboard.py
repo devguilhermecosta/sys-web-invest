@@ -58,3 +58,4 @@ class DashboardTests(TestCaseWithLogin):
             'meus investimentos',
             content,
         )
+        self.fail('testar o valor total investido em cada categoria de ativo')
