@@ -28,6 +28,7 @@ urlpatterns = [
          name='action_history',
          ),
     path('fiis/', views.FIIsView.as_view(), name='fiis'),
+    path('fiis/lista/', views.AllFIIsView.as_view(), name='fiis_list'),
     path('fiis/comprar/', views.FIISBuyView.as_view(), name='fiis_buy'),
     path('renda-fixa/', TemplateView.as_view(
         template_name='product/pages/fixed_income.html',
