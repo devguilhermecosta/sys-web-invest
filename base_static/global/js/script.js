@@ -72,6 +72,7 @@ try {
         return;
       } else {
         const json = JSON.parse(request.responseText);
+
         
         adress.innerHTML = adress.value = json.logradouro || '';
         city.value = city.innerHTML = json.localidade || '';
