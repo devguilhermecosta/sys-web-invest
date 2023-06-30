@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from product.forms.actions.action_form import ActionBuyAndSellForm
-from product.models import FIIS
+from product.models import FII
 
 
 default_input_class = 'C-login_input'
@@ -9,7 +9,7 @@ default_input_class = 'C-login_input'
 class FIIBuyForm(ActionBuyAndSellForm):
     def clean_code(self):
         code = self.cleaned_data["code"]
-        fii = FIIS.objects.filter(code=code).exists()
+        fii = FII.objects.filter(code=code).exists()
 
         if not code or code == '':
             raise ValidationError(
