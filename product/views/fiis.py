@@ -1,4 +1,5 @@
 from django.views import View
+from django.views.generic import ListView
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -6,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import FIIBuyForm
-from product.models import FIIS, UserFII
+from product.models import FII, UserFII
 
 
 @method_decorator(
@@ -20,12 +21,8 @@ class FIIsView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         return render(
             self.request,
-            'product/pages/fiis.html',
+            'product/pages/fiis/fiis.html',
         )
-
-
-class AllFIIsView():
-    ...
 
 
 @method_decorator(
@@ -35,14 +32,28 @@ class AllFIIsView():
     ),
     name='dispatch',
 )
-class FIISBuyView(View):
+class AllFIIsView(ListView):
+    model = UserFII
+    template_name = 'product/pages/fiis/fiis_list.html'
+    ordering = ['-id']
+    context_object_name = 'fiis'
+
+    def get_queryset(self, *args, **kwargs):
+        query_set = super().get_queryset(*args, **kwargs)
+        user = self.request.user
+        query_set = query_set.filter(user=user)
+
+        return query_set
+
+
+class FIISBuyView(FIIsView):
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('fiis-buy', None)
         form = FIIBuyForm(session)
 
         return render(
             self.request,
-            'product/pages/fiis_buy.html',
+            'product/pages/fiis/fiis_buy.html',
             context={
                 'form': form,
                 'button_submit_value': 'comprar',
@@ -60,7 +71,7 @@ class FIISBuyView(View):
             qty = int(data['quantity'])
             up = float(data['unit_price'])
             user = self.request.user
-            fii = FIIS.objects.filter(code=code).first()
+            fii = FII.objects.filter(code=code).first()
 
             user_fii = UserFII.objects.filter(
                 fii=fii,
