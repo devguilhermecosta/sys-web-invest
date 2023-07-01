@@ -35,7 +35,7 @@ class UserFII(models.Model):
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
         new_history = FiiHistory.objects.create(
-            useraction=self,
+            userfii=self,
             handler='buy',
             date=date,
             quantity=quantity,
@@ -55,7 +55,7 @@ class UserFII(models.Model):
                 code='invalid'
             )
         new_history = FiiHistory.objects.create(
-            useraction=self,
+            userfii=self,
             handler='sell',
             date=date,
             quantity=quantity,
@@ -70,7 +70,7 @@ class UserFII(models.Model):
 
 class FiiHistory(models.Model):
     upload = 'trading-notes/fiis/'
-    useraction = models.ForeignKey(UserFII, on_delete=models.CASCADE)
+    userfii = models.ForeignKey(UserFII, on_delete=models.CASCADE)
     handler = models.CharField(max_length=255, choices=(
         ('B', 'buy'),
         ('S', 'sell'),
