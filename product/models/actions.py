@@ -19,7 +19,6 @@ class Action(models.Model):
 
 
 class UserAction(models.Model):
-    upload = 'trading-notes/actions/'
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     action = models.ForeignKey(Action, on_delete=models.CASCADE)
     quantity = models.IntegerField()
