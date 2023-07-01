@@ -163,7 +163,7 @@ class ActionsBuyTests(TestCaseWithLogin):
             302,
         )
 
-    def test_actions_buy_update_the_user_action_if_action_existis_into_databases(self) -> None:  # noqa: E501
+    def test_actions_buy_update_the_user_action_if_action_exists_into_databases(self) -> None:  # noqa: E501
         """ if user was purchase the same action, is not allowed
             create a new object, this should just update the existing action.
         """
@@ -176,7 +176,6 @@ class ActionsBuyTests(TestCaseWithLogin):
         # set action_data for the first time
         self.action_data.update(
             {
-                'action': action,
                 'quantity': 1,
                 'unit_price': 10,
             }
@@ -189,7 +188,7 @@ class ActionsBuyTests(TestCaseWithLogin):
             follow=True
         )
 
-        # Try get new user_action into the databases
+        # Try get new user_action into databases
         user_action = UserAction.objects.filter(
             user=self.get_user(username='user'),
             action=action,
@@ -208,7 +207,6 @@ class ActionsBuyTests(TestCaseWithLogin):
         # set action_data for the second time
         self.action_data.update(
             {
-                'action': action,
                 'quantity': 10,
                 'unit_price': 30,
             }
