@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from product.forms import FIIBuyForm
 from product.models import FII, UserFII, FiiHistory
 
@@ -55,9 +56,7 @@ class FIISBuyView(FIIsView):
                 'realizada com sucesso'
             )
         )
-
         del self.request.session['fiis-buy']
-
         return redirect(
             reverse('product:fiis')
         )
@@ -130,3 +129,85 @@ class FIISBuyView(FIIsView):
         return redirect(
             reverse('product:fiis_buy')
         )
+
+
+class FIIsSellView(FIIsView):
+    def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
+        messages.success(
+            self.request,
+            (
+                f'venda de {qty} unidade(s) de {code.upper()} '
+                'realizada com sucesso'
+            )
+        )
+        del self.request.session['fii-sell']
+        return redirect(
+            reverse('product:fiis')
+        )
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        session = self.request.session.get('fii-sell', None)
+        form = FIIBuyForm(session)
+
+        return render(
+            self.request,
+            'product/pages/fiis/fiis_sell.html',
+            context={
+                'form': form,
+                'button_submit_value': 'vender',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        post = self.request.POST
+        self.request.session['fii-sell'] = post
+        form = FIIBuyForm(
+            data=post or None,
+            files=self.request.FILES or None,
+            )
+
+        if form.is_valid():
+            data = form.cleaned_data
+            user = self.request.user
+            params = {
+                'quantity': int(data['quantity']),
+                'unit_price': float(data['unit_price']),
+                'date': data['date'],
+                'trading_note': data.get('trading_note', None),
+            }
+            fii = FII.objects.filter(code=data['code']).first()
+
+            user_fii_exists = UserFII.objects.filter(
+                user=user,
+                fii=fii,
+            ).first()
+
+            if user_fii_exists:
+                try:
+                    user_fii_exists.sell(**params)
+                    return self.success_response(
+                        qty=params['quantity'], code=data['code']
+                        )
+                except ValidationError:
+                    messages.error(
+                        self.request,
+                        (
+                            'Quantidade insuficiente para venda. '
+                            f'Você possui {user_fii_exists.quantity} '
+                            'unidade(s) em seu portifólio e está tentando '
+                            f'vender {params["quantity"]}.'
+                        ),
+                    )
+                    return redirect(
+                        reverse('product:fiis_sell')
+                        )
+
+            del self.request.session['fii-sell']
+            messages.error(
+                self.request,
+                'Você não possui este fii em seu portifólio',
+            )
+
+        return redirect(
+            reverse('product:fiis_sell')
+            )

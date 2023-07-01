@@ -7,4 +7,9 @@ from .actions import (
     AllActionsView,
     ActionHistoryDetails,
     )
-from .fiis import FIIsView, FIISBuyView, AllFIIsView
+from .fiis import (
+    FIIsView,
+    FIISBuyView,
+    AllFIIsView,
+    FIIsSellView,
+    )
