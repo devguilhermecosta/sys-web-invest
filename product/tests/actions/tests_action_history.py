@@ -141,7 +141,6 @@ class ActionHistoryTests(TestCaseWithLogin):
             text,
             content,
         )
-        # self.fail(
-        #     'o arquivo pdf está sendo salvo em duplicidade. '
-        #     'salvar o pdf em uma pasta com o nome do usuário. '
-        #     )
+        self.fail(
+            'salvar o pdf em uma pasta com o nome do usuário. '
+            )
