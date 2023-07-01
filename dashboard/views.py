@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from dashboard.forms.login_form import LoginForm
 from user.models import Profile
-from product.models import UserAction
+from product.models import UserAction, UserFII
 
 
 class LoginView(View):
@@ -93,10 +93,14 @@ class DashboardView(View):
         actions = UserAction.objects.filter(user=self.request.user)
         total_actions = sum([action.get_total_price() for action in actions])
 
+        fiis = UserFII.objects.filter(user=self.request.user)
+        total_fiis = sum([fii.get_total_price() for fii in fiis])
+
         return render(
             self.request,
             'dashboard/pages/dashboard.html',
             context={
                 'total_actions': total_actions,
+                'total_fiis': total_fiis,
             }
         )
