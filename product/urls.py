@@ -30,6 +30,7 @@ urlpatterns = [
     path('fiis/', views.FIIsView.as_view(), name='fiis'),
     path('fiis/lista/', views.AllFIIsView.as_view(), name='fiis_list'),
     path('fiis/comprar/', views.FIISBuyView.as_view(), name='fiis_buy'),
+    path('fiis/vender/', views.FIIsSellView.as_view(), name='fiis_sell'),
     path('renda-fixa/', TemplateView.as_view(
         template_name='product/pages/fixed_income.html',
         ), name='fixed_income'),
