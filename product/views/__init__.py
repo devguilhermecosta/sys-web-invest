@@ -12,4 +12,5 @@ from .fiis import (
     FIISBuyView,
     AllFIIsView,
     FIIsSellView,
+    FIIHistoryDetails,
     )
