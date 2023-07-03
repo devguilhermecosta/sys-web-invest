@@ -2,8 +2,7 @@ from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product.views import FIISBuyView
 from product.models import UserFII, FiiHistory
-from product.tests.base_tests import make_fii
-from product.tests.actions.test_base import make_simple_file
+from product.tests.base_tests import make_fii, make_simple_file
 from parameterized import parameterized
 
 

@@ -4,9 +4,8 @@ from parameterized import parameterized
 from utils.mixins.auth import TestCaseWithLogin
 from product import views
 from product.models import UserAction
-from ..base_tests import make_action
+from ..base_tests import make_action, make_simple_file
 from product.models import ActionHistory
-from .test_base import make_simple_file
 from datetime import date
 import shutil
 import contextlib

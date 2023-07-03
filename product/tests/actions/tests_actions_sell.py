@@ -3,8 +3,7 @@ from django.urls import reverse, resolve
 from django.test import override_settings
 from product import views
 from product.models import UserAction, ActionHistory
-from ..base_tests import make_action
-from .test_base import make_simple_file
+from ..base_tests import make_action, make_simple_file
 from parameterized import parameterized
 from datetime import date
 import contextlib
