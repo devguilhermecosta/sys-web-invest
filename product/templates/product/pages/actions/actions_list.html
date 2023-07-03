@@ -17,7 +17,7 @@
   {% for action in actions %}
     <tr>
       <td><a href="{% url 'product:action_history' action.product.code %}">
-        {{ action.action.code }}
+        {{ action.product.code }}
       </a></td>
       <td>{{ action.quantity }}</td>
       <td>{{ action.unit_price|real_brl }}</td>
