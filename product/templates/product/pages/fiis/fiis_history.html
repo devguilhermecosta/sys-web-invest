@@ -1,5 +1,6 @@
 {% extends 'global/pages/base.html' %}
 {% load money %}
+{% load cnpj %}
 
 {% block title %}
     Histórico
@@ -10,7 +11,7 @@
   {% with fii=history.0.userproduct.product %}
     <h1>{{ fii.code }}</h1>
     <h2>{{ fii.description }}</h2>
-    <h3>cnpj: {{ fii.cnpj }}</h3>
+    <h3>cnpj: {{ fii.cnpj|fomated_cnpj }}</h3>
   {% endwith %}
 </section>
 <table class="C-dashboard_table">
