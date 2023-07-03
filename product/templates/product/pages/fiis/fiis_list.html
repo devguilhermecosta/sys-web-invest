@@ -16,7 +16,7 @@
     </tr>
   {% for fii in fiis %}
     <tr>
-      <td><a href="">
+      <td><a href="{% url 'product:fii_history' fii.product.code %}">
         {{ fii.product.code }}
       </a></td>
       <td>{{ fii.quantity }}</td>
