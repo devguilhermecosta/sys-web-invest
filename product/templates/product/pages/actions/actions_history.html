@@ -7,10 +7,10 @@
 
 {% block content %}
 <section class="C-dashboard_table_details">
-  {% with action=history.0.useraction %}
-    <h1>{{ action.action.code }}</h1>
-    <h2>{{ action.action.description }}</h2>
-    <h3>cnpj: {{ action.action.cnpj }}</h3>
+  {% with action=history.0.userproduct.product %}
+    <h1>{{ action.code }}</h1>
+    <h2>{{ action.description }}</h2>
+    <h3>cnpj: {{ action.cnpj }}</h3>
   {% endwith %}
 </section>
 <table class="C-dashboard_table">
