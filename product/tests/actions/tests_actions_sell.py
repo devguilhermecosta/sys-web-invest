@@ -220,7 +220,7 @@ class ActionsSellTests(TestCaseWithLogin):
         # the quantity should be zero
         self.assertEqual(
             UserAction.objects.filter(user=user,
-                                      action=action,
+                                      product=action,
                                       ).first().quantity,
             0,
         )
@@ -265,12 +265,12 @@ class ActionsSellTests(TestCaseWithLogin):
         # get useraction
         user_action = UserAction.objects.get(
             user=user,
-            action=action
+            product=action
         )
 
         # get queryset from action history
         action_history = ActionHistory.objects.filter(
-            useraction=user_action
+            userproduct=user_action
         )
 
         # must be have 2 history (one for buy and one for sell)

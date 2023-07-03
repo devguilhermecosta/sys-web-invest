@@ -138,7 +138,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         # Try get new user_action into the databases
         user_action = UserAction.objects.filter(
             user=self.get_user(username='user'),
-            action=action,
+            product=action,
         ).first()
 
         # checks if the success message is displayed
@@ -191,7 +191,7 @@ class ActionsBuyTests(TestCaseWithLogin):
         # Try get new user_action into databases
         user_action = UserAction.objects.filter(
             user=self.get_user(username='user'),
-            action=action,
+            product=action,
         )
 
         # checks if the user_action was saved in the databases
@@ -252,12 +252,12 @@ class ActionsBuyTests(TestCaseWithLogin):
         # get the new user_action into the databases
         user_action = UserAction.objects.filter(
             user=self.get_user(username='user'),
-            action=action,
+            product=action,
         ).first()
 
         # get queryset from action history
         action_history = ActionHistory.objects.filter(
-            useraction=user_action,
+            userproduct=user_action,
         )
 
         self.assertEqual(len(action_history), 1)

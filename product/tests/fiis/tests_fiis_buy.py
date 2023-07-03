@@ -205,11 +205,11 @@ class FIIsBuyTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         user_fii = UserFII.objects.filter(
-            fii=fii
+            product=fii
         )
 
         user_fii_history = FiiHistory.objects.filter(
-            userfii=user_fii[0],
+            userproduct=user_fii[0],
         )
 
         self.assertIn(
@@ -260,7 +260,7 @@ class FIIsBuyTests(TestCaseWithLogin):
         # Get the user fii into databases
         user_fii = UserFII.objects.filter(
             user=self.get_user('user'),
-            fii=fii,
+            product=fii,
         )
 
         # checks if the quantity is 10 and total price is 95.00

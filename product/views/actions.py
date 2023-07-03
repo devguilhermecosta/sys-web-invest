@@ -1,19 +1,13 @@
 from django.views import View
 from django.views.generic import ListView
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import (
-    render,
-    redirect,
-    get_object_or_404,
-    )
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.http import Http404
-from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from product.forms import ActionBuyAndSellForm
 from product.models import Action, UserAction, ActionHistory
-from django.core.exceptions import ValidationError
+from .base_views.variable_income import Buy, Sell
 
 
 login_url = '/'
@@ -55,170 +49,23 @@ class AllActionsView(ListView):
         return query_set
 
 
-class ActionsBuyView(ActionsView):
-    def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
-        messages.success(
-            self.request,
-            (
-                f'compra de {qty} unidade(s) de {code.upper()} '
-                'realizada com sucesso'
-            )
-        )
-
-        del self.request.session['action-buy']
-
-        return redirect(
-            reverse('product:actions')
-        )
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        session = self.request.session.get('action-buy', None)
-        form = ActionBuyAndSellForm(session)
-
-        return render(
-            self.request,
-            'product/pages/actions/actions_buy.html',
-            context={
-                'form': form,
-                'button_submit_value': 'comprar',
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        post = self.request.POST
-        self.request.session['action-buy'] = post
-        form = ActionBuyAndSellForm(
-            data=post or None,
-            files=self.request.FILES or None,
-            )
-
-        if form.is_valid():
-            data = form.cleaned_data
-            params = {
-                'quantity': int(data['quantity']),
-                'unit_price': float(data['unit_price']),
-                'date': data['date'],
-            }
-            trading_note = data.get('trading_note', None)
-            user = self.request.user
-            action = Action.objects.filter(code=data['code']).first()
-
-            user_action_exists = UserAction.objects.filter(
-                action=action,
-                user=user,
-            ).first()
-
-            if user_action_exists:
-                user_action_exists.buy(trading_note=trading_note, **params)
-                return self.success_response(
-                    qty=params['quantity'], code=action.code,
-                    )
-
-            new_useraction = UserAction.objects.create(
-                user=user,
-                action=action,
-                **params,
-                )
-            new_useraction.save()
-
-            action_history = ActionHistory.objects.create(
-                useraction=new_useraction,
-                handler='buy',
-                total_price=params['quantity'] * params['unit_price'],
-                trading_note=trading_note,
-                **params,
-            )
-            action_history.save()
-
-            return self.success_response(
-                qty=params['quantity'], code=action.code,
-                )
-
-        return redirect(
-            reverse('product:actions_buy')
-        )
+class ActionsBuyView(Buy):
+    success_response_url_redirect = 'product:actions'
+    error_response_url_redirect = 'product:actions_buy'
+    form = ActionBuyAndSellForm
+    template_get_request = 'product/pages/actions/actions_buy.html'
+    product_model = Action
+    user_product_model = UserAction
+    history_model = ActionHistory
 
 
-class ActionsSellView(ActionsView):
-    def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
-        messages.success(
-            self.request,
-            (
-                f'venda de {qty} unidade(s) de {code.upper()} '
-                'realizada com sucesso'
-            )
-        )
-        del self.request.session['action-sell']
-        return redirect(
-            reverse('product:actions')
-        )
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        session = self.request.session.get('action-sell', None)
-        form = ActionBuyAndSellForm(session)
-
-        return render(
-            self.request,
-            'product/pages/actions/actions_sell.html',
-            context={
-                'form': form,
-                'button_submit_value': 'vender',
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        post = self.request.POST
-        self.request.session['action-sell'] = post
-        form = ActionBuyAndSellForm(
-            data=post or None,
-            files=self.request.FILES or None,
-            )
-
-        if form.is_valid():
-            data = form.cleaned_data
-            user = self.request.user
-            params = {
-                'quantity': int(data['quantity']),
-                'unit_price': float(data['unit_price']),
-                'date': data['date'],
-                'trading_note': data.get('trading_note', None),
-            }
-            action = Action.objects.filter(code=data['code']).first()
-
-            user_action_exists = UserAction.objects.filter(
-                user=user,
-                action=action
-            ).first()
-
-            if user_action_exists:
-                try:
-                    user_action_exists.sell(**params)
-                    return self.success_response(
-                        qty=params['quantity'], code=data['code']
-                        )
-                except ValidationError:
-                    messages.error(
-                        self.request,
-                        (
-                            'Quantidade insuficiente para venda. '
-                            f'Você possui {user_action_exists.quantity} '
-                            'unidade(s) em seu portifólio e está tentando '
-                            f'vender {params["quantity"]}.'
-                        ),
-                    )
-                    return redirect(
-                        reverse('product:actions_sell')
-                        )
-
-            del self.request.session['action-sell']
-            messages.error(
-                self.request,
-                'Você não possui esta ação em seu portifólio',
-            )
-
-        return redirect(
-            reverse('product:actions_sell')
-            )
+class ActionsSellView(Sell):
+    success_response_url_redirect = 'product:actions'
+    error_response_url_redirect = 'product:actions_sell'
+    form = ActionBuyAndSellForm
+    template_get_request = 'product/pages/actions/actions_sell.html'
+    product_model = Action
+    user_product_model = UserAction
 
 
 class ActionHistoryDetails(ActionsView):
@@ -231,12 +78,12 @@ class ActionHistoryDetails(ActionsView):
         user_action = get_object_or_404(
             UserAction,
             user=self.request.user,
-            action=action,
+            product=action,
         )
 
         if user_action:
             action_history = ActionHistory.objects.filter(
-                useraction=user_action,
+                userproduct=user_action,
             ).order_by('-date')
         else:
             raise Http404()

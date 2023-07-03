@@ -20,19 +20,19 @@ class Action(models.Model):
 
 class UserAction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    action = models.ForeignKey(Action, on_delete=models.CASCADE)
+    product = models.ForeignKey(Action, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     unit_price = models.FloatField()
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     handler = models.CharField(max_length=255, default='buy')
 
     def __str__(self):
-        return f'{self.action.code} de {self.user.username}'
+        return f'{self.product.code} de {self.user.username}'
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
         new_history = ActionHistory.objects.create(
-            useraction=self,
+            userproduct=self,
             handler='buy',
             date=date,
             quantity=quantity,
@@ -52,7 +52,7 @@ class UserAction(models.Model):
                 code='invalid'
             )
         new_history = ActionHistory.objects.create(
-            useraction=self,
+            userproduct=self,
             handler='sell',
             date=date,
             quantity=quantity,
@@ -70,7 +70,7 @@ class UserAction(models.Model):
 
 class ActionHistory(models.Model):
     upload = 'trading-notes/actions/'
-    useraction = models.ForeignKey(UserAction, on_delete=models.CASCADE)
+    userproduct = models.ForeignKey(UserAction, on_delete=models.CASCADE)
     handler = models.CharField(max_length=255, choices=(
         ('B', 'buy'),
         ('S', 'sell'),
@@ -99,6 +99,6 @@ class ActionHistory(models.Model):
 
         return (
             f'{handler} de {self.quantity} unidade(s) de '
-            f'{self.useraction.action.code} do usuário '
-            f'{self.useraction.user.username} realizada '
+            f'{self.userproduct.product.code} do usuário '
+            f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')

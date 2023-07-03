@@ -198,7 +198,7 @@ class FIIsSellTests(TestCaseWithLogin):
         # check if the fii has been created
         fii = UserFII.objects.filter(
             user=self.get_user('user'),
-            fii=fii,
+            product=fii,
         )
         self.assertTrue(fii.exists())
 
@@ -246,7 +246,7 @@ class FIIsSellTests(TestCaseWithLogin):
         # check if the fii has been created
         fii = UserFII.objects.filter(
             user=self.get_user('user'),
-            fii=fii,
+            product=fii,
         )
         self.assertTrue(fii.exists())
 
@@ -296,7 +296,7 @@ class FIIsSellTests(TestCaseWithLogin):
         # check if the fii has been created
         user_fii = UserFII.objects.filter(
             user=self.get_user('user'),
-            fii=fii,
+            product=fii,
         )
         self.assertTrue(user_fii.exists())
 
@@ -319,7 +319,6 @@ class FIIsSellTests(TestCaseWithLogin):
         # the quantity must been 5
         user_fii_2 = UserFII.objects.filter(
             user=self.get_user('user'),
-            fii=fii,
+            product=fii,
         )
         self.assertEqual(user_fii_2.first().quantity, 5)
-        self.fail('refatorar as views de compra e venda')

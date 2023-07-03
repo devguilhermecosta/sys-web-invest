@@ -20,14 +20,14 @@ class FII(models.Model):
 
 class UserFII(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    fii = models.ForeignKey(FII, on_delete=models.CASCADE)
+    product = models.ForeignKey(FII, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     unit_price = models.FloatField()
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     handler = models.CharField(max_length=255, default='buy')
 
     def __str__(self) -> str:
-        return f'{self.fii.code} de {self.user.username}'
+        return f'{self.product.code} de {self.user.username}'
 
     def get_total_price(self) -> float:
         return round(self.quantity * float(self.unit_price), 2)
@@ -35,7 +35,7 @@ class UserFII(models.Model):
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
         new_history = FiiHistory.objects.create(
-            userfii=self,
+            userproduct=self,
             handler='buy',
             date=date,
             quantity=quantity,
@@ -55,7 +55,7 @@ class UserFII(models.Model):
                 code='invalid'
             )
         new_history = FiiHistory.objects.create(
-            userfii=self,
+            userproduct=self,
             handler='sell',
             date=date,
             quantity=quantity,
@@ -70,7 +70,7 @@ class UserFII(models.Model):
 
 class FiiHistory(models.Model):
     upload = 'trading-notes/fiis/'
-    userfii = models.ForeignKey(UserFII, on_delete=models.CASCADE)
+    userproduct = models.ForeignKey(UserFII, on_delete=models.CASCADE)
     handler = models.CharField(max_length=255, choices=(
         ('B', 'buy'),
         ('S', 'sell'),
@@ -96,6 +96,6 @@ class FiiHistory(models.Model):
 
         return (
             f'{handler} de {self.quantity} unidade(s) de '
-            f'{self.useraction.action.code} do usuário '
-            f'{self.useraction.user.username} realizada '
+            f'{self.userproduct.product.code} do usuário '
+            f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
