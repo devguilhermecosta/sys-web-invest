@@ -192,7 +192,7 @@ class FIIsHistoryTests(TestCaseWithLogin):
 
     @parameterized.expand([
         ('maxi renda'),
-        ('cnpj: 94961154404529'),
+        ('cnpj: 94.961.154/4045-29'),
         ('02/07/23'),
         ('compra'),
         ('R$ 9,50'),

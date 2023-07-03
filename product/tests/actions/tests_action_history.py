@@ -200,7 +200,7 @@ class ActionHistoryTests(TestCaseWithLogin):
             )
 
     @parameterized.expand([
-        ('cnpj: 82794638958601'),
+        ('cnpj: 82.794.638/9586-01'),
         ('R$ 50,00'),
         ('compra'),
         ('venda'),
