@@ -187,6 +187,7 @@ body {
 .C-main {
   grid-area: main;
   padding: 10px;
+  overflow: hidden;
 }
 
 .C-login {
@@ -601,17 +602,31 @@ body {
 
 .C-dashboard_table_details {
   text-transform: uppercase;
-  margin-bottom: 15px;
   width: 100%;
-  max-width: 430px;
+  max-width: fit-content;
   margin: 0 auto;
-  margin-bottom: 20px;
+  overflow: hidden;
 }
 
 .C-dashboard_table {
-  margin: 0 auto;
+  display: block;
+  width: 100%;
+  max-width: fit-content;
+  margin-top: 20px;
   border-collapse: collapse;
   font-size: 12px;
+  overflow-x: scroll;
+}
+
+.C-dashboard_table::-webkit-scrollbar {
+  background-color: var(--turquoise_6);
+  height: 10px;
+}
+
+.C-dashboard_table::-webkit-scrollbar-thumb {
+  background-color: var(--turquoise_1);
+  border-radius: 10px;
+  border: 2px solid var(--turquoise_6);
 }
 
 .C-dashboard_table th {
@@ -625,6 +640,7 @@ body {
   text-align: center;
   text-transform: uppercase;
   padding: 5px;
+  white-space: nowrap;
 }
 
 .C-dashboard_table a {
@@ -743,6 +759,12 @@ body {
     to {
       width: 300px;
     }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .C-dashboard_table {
+    font-size: 20px;
   }
 }
 /* end media queries */
