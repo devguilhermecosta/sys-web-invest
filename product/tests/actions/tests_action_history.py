@@ -89,7 +89,7 @@ class ActionHistoryTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/actions/actions_history.html',
+            'product/partials/history.html',
             )
 
     def test_action_history_creates_a_new_history_if_user_buys_the_action(self) -> None:  # noqa: E501

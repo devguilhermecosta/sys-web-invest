@@ -61,7 +61,7 @@ class FIIsHistoryTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/fiis/fiis_history.html'
+            'product/partials/history.html',
         )
 
     def test_fiis_history_returns_status_code_200_if_user_is_authenticated_and_fii_exists(self) -> None:  # noqa: E501
