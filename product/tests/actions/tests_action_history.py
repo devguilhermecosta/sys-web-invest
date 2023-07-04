@@ -20,7 +20,7 @@ class ActionHistoryTests(TestCaseWithLogin):
             ActionHistoryDetails,
         )
 
-    def test_action_history_get_request_is_allowed_if_user_is_authenticated(self) -> None:  # noqa: E501
+    def test_action_history_returns_status_code_302_if_user_is_not_authenticated(self) -> None:  # noqa: E501
         response = self.client.get(self.url)
         self.assertRedirects(
             response,
