@@ -1,13 +1,12 @@
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from product.forms import ActionBuyAndSellForm
 from product.models import Action, UserAction, ActionHistory
-from .base_views.variable_income import Buy, Sell
+from .base_views.variable_income import Buy, Sell, History
 
 
 login_url = '/'
@@ -68,30 +67,8 @@ class ActionsSellView(Sell):
     user_product_model = UserAction
 
 
-class ActionHistoryDetails(ActionsView):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        action = get_object_or_404(
-            Action,
-            code=kwargs.get('code', None)
-        )
-
-        user_action = get_object_or_404(
-            UserAction,
-            user=self.request.user,
-            product=action,
-        )
-
-        if user_action:
-            action_history = ActionHistory.objects.filter(
-                userproduct=user_action,
-            ).order_by('-date')
-        else:
-            raise Http404()
-
-        return render(
-            self.request,
-            'product/pages/actions/actions_history.html',
-            context={
-                'history': action_history,
-            }
-        )
+class ActionHistoryDetails(History):
+    template_to_render_response = 'product/pages/actions/actions_history.html'
+    product_model = Action
+    user_product_model = UserAction
+    history_model = ActionHistory

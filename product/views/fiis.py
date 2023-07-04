@@ -1,13 +1,12 @@
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from product.forms import FIIBuyForm
 from product.models import FII, UserFII, FiiHistory
-from .base_views.variable_income import Buy, Sell
+from .base_views.variable_income import Buy, Sell, History
 
 
 @method_decorator(
@@ -65,30 +64,8 @@ class FIIsSellView(Sell):
     user_product_model = UserFII
 
 
-class FIIHistoryDetails(FIIsView):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        fii = get_object_or_404(
-            FII,
-            code=kwargs.get('code', None)
-        )
-
-        user_fii = get_object_or_404(
-            UserFII,
-            user=self.request.user,
-            product=fii,
-        )
-
-        if user_fii:
-            fii_history = FiiHistory.objects.filter(
-                userproduct=user_fii,
-            ).order_by('-date')
-        else:
-            raise Http404()
-
-        return render(
-            self.request,
-            'product/pages/fiis/fiis_history.html',
-            context={
-                'history': fii_history,
-            }
-        )
+class FIIHistoryDetails(History):
+    template_to_render_response = 'product/pages/fiis/fiis_history.html'
+    product_model = FII
+    user_product_model = UserFII
+    history_model = FiiHistory
