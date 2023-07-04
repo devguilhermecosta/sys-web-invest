@@ -7,24 +7,26 @@
 
 {% block content %}
   <h1 class="C-dashboard_title">ações em carteira</h1>
-  <table class="C-dashboard_table">
-    <tr>
-      <th>código</th>
-      <th>quant.</th>
-      <th>valor med.</th>
-      <th>total</th>
-    </tr>
-  {% for action in actions %}
-    <tr>
-      <td><a href="{% url 'product:action_history' action.product.code %}">
-        {{ action.product.code }}
-      </a></td>
-      <td>{{ action.quantity }}</td>
-      <td>{{ action.unit_price|real_brl }}</td>
-      <td>{{ action.get_total_price|real_brl }}</td>
-    </tr>
-  {% empty %}
-    <p class="C-product_message">Nenhuma ação até o momento</p>
-  </table>
-  {% endfor %}
+  <section class="C-dashboard_table_details">
+    <table class="C-dashboard_table">
+      <tr>
+        <th>código</th>
+        <th>quant.</th>
+        <th>valor med.</th>
+        <th>total</th>
+      </tr>
+    {% for action in actions %}
+      <tr>
+        <td><a href="{% url 'product:action_history' action.product.code %}">
+          {{ action.product.code }}
+        </a></td>
+        <td>{{ action.quantity }}</td>
+        <td>{{ action.unit_price|real_brl }}</td>
+        <td>{{ action.get_total_price|real_brl }}</td>
+      </tr>
+    {% empty %}
+      <p class="C-product_message">Nenhuma ação até o momento</p>
+    </table>
+    {% endfor %}
+  </section>
 {% endblock content %}
