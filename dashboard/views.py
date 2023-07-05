@@ -96,11 +96,14 @@ class DashboardView(View):
         fiis = UserFII.objects.filter(user=self.request.user)
         total_fiis = sum([fii.get_total_price() for fii in fiis])
 
+        grand_total = total_actions + total_fiis
+
         return render(
             self.request,
             'dashboard/pages/dashboard.html',
             context={
                 'total_actions': total_actions,
                 'total_fiis': total_fiis,
+                'grand_total': grand_total,
             }
         )
