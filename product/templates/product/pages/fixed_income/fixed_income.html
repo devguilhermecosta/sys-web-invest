@@ -1,0 +1,35 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+
+{% block title %}
+  Renda Fixa
+{% endblock title %}
+
+{% block content %}
+  {% include 'global/partials/_messages.html' %}
+  <h1 class="C-dashboard_title">renda fixa</h1>
+  <ul class="C-dashboard_list">
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="">cadastrar novo</a>
+    </li>
+  </ul>
+
+  <table>
+    <thead>
+      <th>nome</th>
+      <th>total investido</th>
+      <th>vencimento</th>
+    </thead>
+    <tbody>
+    {% for object in fixed_income_objects %}
+      <tr>
+        <td>{{ object.name }}</td>
+        <td>R$ {{ object.value|real_brl }}</td>
+        <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
+      </tr>
+    </tbody>
+    {% empty %}
+      <p>nenhum produto cadastrado</p>
+    {% endfor %}
+  </table>
+{% endblock content %}

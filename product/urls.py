@@ -35,9 +35,7 @@ urlpatterns = [
          views.FIIHistoryDetails.as_view(),
          name='fii_history',
          ),
-    path('renda-fixa/', TemplateView.as_view(
-        template_name='product/pages/fixed_income.html',
-        ), name='fixed_income'),
+    path('renda-fixa/', views.FixedIncomeView.as_view(), name='fixed_income'),
     path('tesouro-direto/', TemplateView.as_view(
         template_name='product/pages/direct_treasure.html',
         ), name='direct_treasure'),

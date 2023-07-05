@@ -1,6 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.models import User
 from pathlib import Path
-from product.models import Action, FII
+from product.models import Action, FII, ProductFixedIncome
 import c2validator as c2
 
 
@@ -39,3 +40,20 @@ def make_simple_file() -> SimpleUploadedFile:
         content_type='file/pdf'
     )
     return simple_file
+
+
+def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
+    new_object = ProductFixedIncome.objects.create(
+        user=user,
+        category='cdb',
+        name='cdb bb 2035',
+        value=1250,
+        grace_period='2023-07-04',
+        maturity_date='2035-01-01',
+        liquidity='no vencimento',
+        profitability='102% cdi',
+        interest_receipt='não há',
+        description='cdb muito legal'
+    )
+    new_object.save()
+    return new_object

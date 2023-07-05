@@ -14,3 +14,4 @@ from .fiis import (
     FIIsSellView,
     FIIHistoryDetails,
     )
+from .fixed_income import FixedIncomeView
