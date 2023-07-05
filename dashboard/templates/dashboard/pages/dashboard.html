@@ -21,10 +21,16 @@
   </div>
   <section class="C-dashboard_summary">
     <div>
-      <div class="C-dashboard_summary_title">ações</div>
-      <div class="C-dashboard_summary_title">renda fixa</div>
+      <div class="C-dashboard_summary_title">
+        <a href="{% url 'product:actions' %}">ações</a>
+      </div>
+      <div class="C-dashboard_summary_title">
+        <a href="{% url 'product:fixed_income' %}">renda fixa</a>
+      </div>
       <div class="C-dashboard_summary_title">tesouro direto</div>
-      <div class="C-dashboard_summary_title">FIIs</div>
+      <div class="C-dashboard_summary_title">
+        <a href="{% url 'product:fiis' %}">FIIs</a>
+      </div>
       <div class="C-dashboard_summary_title total">total</div>
     </div>
     <div>
@@ -36,7 +42,7 @@
       <div class="C-dashboard_summary_hidden">R$ --------</div>
       <div class="C-dashboard_summary_item">{{ total_fiis|real_brl }}</div>
       <div class="C-dashboard_summary_hidden">R$ --------</div>
-      <div class="C-dashboard_summary_item total">R$ 1.000,00</div>
+      <div class="C-dashboard_summary_item total">{{ grand_total|real_brl }}</div>
       <div class="C-dashboard_summary_hidden">R$ --------</div>
     </div>
   </section>
