@@ -2,10 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from typing import TypeVar
-from datetime import date as dt
 
 
-date = dt.today().strftime('%Y-%m-%d')
+date = '2023-07-04'
 PDF = TypeVar('PDF', bytes, None)
 
 
