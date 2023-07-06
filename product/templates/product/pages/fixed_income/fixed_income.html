@@ -24,7 +24,7 @@
     {% for object in fixed_income_objects %}
       <tr>
         <td>{{ object.name }}</td>
-        <td>R$ {{ object.value|real_brl }}</td>
+        <td>{{ object.value|real_brl }}</td>
         <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
       </tr>
     </tbody>
