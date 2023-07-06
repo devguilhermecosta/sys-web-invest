@@ -43,10 +43,15 @@ def make_simple_file() -> SimpleUploadedFile:
 
 
 def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
+    '''
+        create a new fixed income object
+
+        kwargs opts: category, name
+    '''
     new_object = ProductFixedIncome.objects.create(
         user=user,
-        category='cdb',
-        name='cdb bb 2035',
+        category=kwargs.pop('category', 'cdb'),
+        name=kwargs.pop('name', 'cdb bb 2035'),
         value=1250,
         grace_period='2023-07-04',
         maturity_date='2035-01-01',
