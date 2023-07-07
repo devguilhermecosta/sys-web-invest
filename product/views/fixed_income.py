@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.contrib import messages
 from product.models import ProductFixedIncome
 from product.forms.fixed_income import FixedIncomeRegisterForm
+from product.forms.fixed_income import FixedIncomeEditForm
 
 
 @method_decorator(
@@ -78,7 +79,7 @@ class FixedIncomeRegisterView(FixedIncomeView):
         )
 
 
-class FixedIncomeApplyView(FixedIncomeView):
+class FixedIncomeEditView(FixedIncomeView):
     def get(self, *args, **kwargs) -> HttpResponse:
         product = get_object_or_404(
             ProductFixedIncome,
@@ -86,7 +87,7 @@ class FixedIncomeApplyView(FixedIncomeView):
             id=kwargs.get('id'),
         )
 
-        form = FixedIncomeRegisterForm(instance=product)
+        form = FixedIncomeEditForm(instance=product)
 
         return render(
             self.request,
@@ -94,4 +95,24 @@ class FixedIncomeApplyView(FixedIncomeView):
             context={
                 'form': form,
                 }
+        )
+
+    def post(self, *args, **kwars) -> HttpResponse:
+        p_id = kwars.get('id')
+        post = self.request.POST
+        self.request.session['fixed-income-edit'] = post
+        form = FixedIncomeEditForm(post)
+
+        if form.is_valid():
+            form.save()
+
+            del self.request.session['fixed-income-edit']
+
+            messages.success(
+                self.request,
+                'Salvo com sucesso',
+            )
+
+        return redirect(
+            reverse('product:fixed_income_edit', args=(p_id,))
         )

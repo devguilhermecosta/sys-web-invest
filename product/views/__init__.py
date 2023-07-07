@@ -17,5 +17,5 @@ from .fiis import (
 from .fixed_income import (
     FixedIncomeView,
     FixedIncomeRegisterView,
-    FixedIncomeApplyView,
+    FixedIncomeEditView,
     )
