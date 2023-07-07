@@ -54,9 +54,9 @@ urlpatterns = [
          views.FixedIncomeRegisterView.as_view(),
          name='fixed_income_register',
          ),
-    path('renda-fixa/<int:id>/aplicar/',
-         views.FixedIncomeApplyView.as_view(),
-         name='fixed_income_apply',
+    path('renda-fixa/<int:id>/editar/',
+         views.FixedIncomeEditView.as_view(),
+         name='fixed_income_edit',
          ),
     path('tesouro-direto/',
          TemplateView.as_view(
