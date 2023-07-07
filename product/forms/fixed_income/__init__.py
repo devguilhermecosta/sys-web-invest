@@ -1,3 +1,3 @@
 # flake8: noqa
 
-from .fixed_income import FixedIncomeRegisterForm
+from .fixed_income import FixedIncomeRegisterForm, FixedIncomeEditForm

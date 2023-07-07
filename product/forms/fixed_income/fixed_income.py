@@ -79,3 +79,15 @@ class FixedIncomeRegisterForm(forms.ModelForm):
                 )
 
         return super().clean()
+
+
+class FixedIncomeEditForm(FixedIncomeRegisterForm):
+    value = forms.FloatField(
+        required=False,
+        label='valor',
+        widget=forms.NumberInput(
+            attrs={
+                'readonly': 'readonly',
+            }
+        )
+    )
