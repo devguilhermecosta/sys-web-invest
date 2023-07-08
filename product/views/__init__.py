@@ -18,4 +18,5 @@ from .fixed_income import (
     FixedIncomeView,
     FixedIncomeRegisterView,
     FixedIncomeEditView,
+    FixedIncomeDetailsView,
     )
