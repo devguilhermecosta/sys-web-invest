@@ -1,5 +1,5 @@
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -79,40 +79,82 @@ class FixedIncomeRegisterView(FixedIncomeView):
         )
 
 
-class FixedIncomeEditView(FixedIncomeView):
-    def get(self, *args, **kwargs) -> HttpResponse:
+class FixedIncomeDetailsView(FixedIncomeView):
+    def get(self, request: HttpRequest, id: int = None) -> HttpResponse:
         product = get_object_or_404(
             ProductFixedIncome,
-            user=self.request.user,
-            id=kwargs.get('id'),
+            pk=id,
         )
-
-        form = FixedIncomeEditForm(instance=product)
 
         return render(
             self.request,
             'product/pages/fixed_income/product_details.html',
             context={
+                'product': product,
+                },
+        )
+
+
+class FixedIncomeEditView(FixedIncomeView):
+    def get_product(self, id: int = None) -> ProductFixedIncome:
+        product = None
+
+        if id is not None:
+            product = get_object_or_404(
+                ProductFixedIncome,
+                pk=id,
+            )
+        return product
+
+    def render_product(self, form) -> HttpResponse:
+        return render(
+            self.request,
+            'product/pages/fixed_income/fixed_income_edit.html',
+            context={
                 'form': form,
+                'button_submit_value': 'salvar',
                 }
         )
 
-    def post(self, *args, **kwars) -> HttpResponse:
-        p_id = kwars.get('id')
+    def get(self, request: HttpRequest, id: int) -> HttpResponse:
+        product = self.get_product(id)
+        session = self.request.session.get('product-fixed-income-edit', None)
+        form = FixedIncomeEditForm(session, instance=product)
+        return self.render_product(form)
+
+    def post(self, request: HttpRequest, id: int) -> HttpResponse:
+        product = self.get_product(id)
         post = self.request.POST
-        self.request.session['fixed-income-edit'] = post
-        form = FixedIncomeEditForm(post)
+        self.request.session['product-fixed-income-edit'] = post
+        form = FixedIncomeEditForm(
+            files=self.request.FILES or None,
+            data=self.request.POST or None,
+            instance=product,
+            )
 
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.user = request.user
+            product.save()
 
-            del self.request.session['fixed-income-edit']
+            del self.request.session['product-fixed-income-edit']
 
             messages.success(
                 self.request,
                 'Salvo com sucesso',
             )
 
-        return redirect(
-            reverse('product:fixed_income_edit', args=(p_id,))
+            return redirect(
+                reverse('product:fixed_income',)
+            )
+
+        messages.error(
+            self.request,
+            'Verifique os dados abaixo',
         )
+
+        return self.render_product(form)
+
+
+# quando o usuário clica no ativo, ele verifica o estado atual.
+# no menu inferior, haverá as opções de edição, resgate e aplicação.
