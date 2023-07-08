@@ -13,26 +13,26 @@ class ProductFixedIncome(models.Model):
         ('lca', 'lca'),
         ('lf', 'lf'),
         ('lfsn', 'lfsn'),
-        ('db', 'debêntures'),
+        ('debêntures', 'debêntures'),
     ))
     name = models.CharField(max_length=255)
     value = models.FloatField()
     grace_period = models.DateField(default='2023-07-01')
     maturity_date = models.DateField(default='2023-07-01')
     liquidity = models.CharField(max_length=255, choices=(
-        ('nv', 'no vencimento'),
-        ('di', 'diária'),
-        ('30d', '30 dias'),
-        ('30d+', '30 dias +'),
-        ('30d-', '30 dias -'),
+        ('no vencimento', 'no vencimento'),
+        ('diária', 'diária'),
+        ('30 dias', '30 dias'),
+        ('30 dias +', '30 dias +'),
+        ('30 dias -', '30 dias -'),
     ))
     profitability = models.CharField(max_length=255)
     interest_receipt = models.CharField(max_length=255, choices=(
-        ('nh', 'não há'),
-        ('m', 'mensal'),
-        ('tm', 'trimestral'),
-        ('sm', 'semestral'),
-        ('a', 'anual'),
+        ('não há', 'não há'),
+        ('mensal', 'mensal'),
+        ('trimestral', 'trimestral'),
+        ('semestral', 'semestral'),
+        ('anual', 'anual'),
     ))
     description = models.TextField()
 
