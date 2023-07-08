@@ -138,6 +138,3 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
             '/ativos/renda-fixa/',
             302,
         )
-
-    def test_fail(self) -> None:
-        self.fail('talvez usar o help text?')
