@@ -24,7 +24,7 @@
     {% for object in fixed_income_objects %}
       <tr>
         <td>
-          <a href="{% url 'product:fixed_income_edit' object.id %}">{{ object.name }}</a>
+          <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
         </td>
         <td>{{ object.value|real_brl }}</td>
         <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
