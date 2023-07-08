@@ -3,6 +3,7 @@ from utils.mixins.auth import TestCaseWithLogin
 from product import views
 from product.tests.base_tests import make_fixed_income_product
 from parameterized import parameterized
+from product.models import ProductFixedIncome
 
 
 class FixedIncomeEditTests(TestCaseWithLogin):
@@ -65,7 +66,7 @@ class FixedIncomeEditTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/product_details.html',
+            'product/pages/fixed_income/fixed_income_edit.html',
         )
 
     @parameterized.expand([
@@ -96,17 +97,16 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('category', 'Campo obrigatório'),
-        ('name', 'Campo obrigatório'),
-        ('value', 'Campo obrigatório'),
-        ('grace_period', 'Campo obrigatório'),
-        ('maturity_date', 'Campo obrigatório'),
-        ('liquidity', 'Campo obrigatório'),
-        ('profitability', 'Campo obrigatório'),
-        ('interest_receipt', 'Campo obrigatório'),
-        ('description', 'Campo obrigatório'),
+        ('category',),
+        ('name',),
+        ('value',),
+        ('grace_period',),
+        ('maturity_date',),
+        ('liquidity',),
+        ('profitability',),
+        ('interest_receipt',),
     ])
-    def test_fixed_income_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
+    def test_fixed_income_edit_returns_error_messages_if_any_field_is_empty(self, field: str) -> None:  # noqa: E501
         # make login
         _, user = self.make_login()
 
@@ -115,7 +115,7 @@ class FixedIncomeEditTests(TestCaseWithLogin):
 
         # product data
         product_data = {
-            field: 'value',
+            field: '',
         }
 
         # try save the produtct
@@ -127,18 +127,49 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            message,
+            'Verifique os dados abaixo',
             content,
         )
 
-    # @parameterized.expand([
-    #     ('category', 'cdb'),
-    #     ('name', 'cdb bb 2035'),
-    #     ('value', '1250'),
-    #     ('grace_period', '2023-07-04'),
-    #     ('maturity_date', '2035-01-01'),
-    #     ('liquidity', 'nv'),
-    #     ('profitability', '102% cdi'),
-    #     ('interest_receipt', 'nh'),
-    #     ('description', 'cdb muito legal'),
-    # ])
+    def test_fixed_income_edit_returns_success_messages_if_product_is_saved(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # create product fixed income
+        make_fixed_income_product(user=user)
+
+        # product data
+        # original name = 'cdb bb 2035'
+        product_data = {
+            'category': 'cdb',
+            'name': 'outro cdb qualquer',
+            'value': 1250,
+            'grace_period': '2023-07-04',
+            'maturity_date': '2035-01-01',
+            'liquidity': 'nv',
+            'profitability': '102% cdi',
+            'interest_receipt': 'nh',
+            'description': 'cdb muito legal'
+        }
+
+        # try save the produtct
+        response = self.client.post(
+            self.url,
+            product_data,
+            follow=True,
+            )
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            'Salvo com sucesso',
+            content,
+        )
+        self.assertRedirects(
+            response,
+            '/ativos/renda-fixa/',
+            302,
+        )
+
+        # checks if the data has been changed
+        product_changed = ProductFixedIncome.objects.all()
+        self.assertEqual(product_changed[0].name, 'outro cdb qualquer')
