@@ -146,9 +146,9 @@ class FixedIncomeEditTests(TestCaseWithLogin):
             'value': 1250,
             'grace_period': '2023-07-04',
             'maturity_date': '2035-01-01',
-            'liquidity': 'nv',
+            'liquidity': 'no vencimento',
             'profitability': '102% cdi',
-            'interest_receipt': 'nh',
+            'interest_receipt': 'não há',
             'description': 'cdb muito legal'
         }
 

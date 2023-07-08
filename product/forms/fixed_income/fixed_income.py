@@ -27,7 +27,7 @@ class FixedIncomeRegisterForm(forms.ModelForm):
                 ('lca', 'lca'),
                 ('lf', 'lf'),
                 ('lfsn', 'lfsn'),
-                ('db', 'debêntures'),
+                ('debêntures', 'debêntures'),
             )
         )
     )
@@ -58,11 +58,11 @@ class FixedIncomeRegisterForm(forms.ModelForm):
         label='liquidez',
         widget=forms.Select(
             choices=(
-                ('nv', 'no vencimento'),
-                ('di', 'diária'),
-                ('30d', '30 dias'),
-                ('30d+', '30 dias +'),
-                ('30d-', '30 dias -'),
+                ('no vencimento', 'no vencimento'),
+                ('diária', 'diária'),
+                ('30 dias', '30 dias'),
+                ('30 dias +', '30 dias +'),
+                ('30 dias -', '30 dias -'),
             )
         )
     )
@@ -71,11 +71,11 @@ class FixedIncomeRegisterForm(forms.ModelForm):
         label='pagamento de juros',
         widget=forms.Select(
             choices=(
-                ('nh', 'não há'),
-                ('m', 'mensal'),
-                ('tm', 'trimestral'),
-                ('sm', 'semestral'),
-                ('a', 'anual'),
+                ('não há', 'não há'),
+                ('mensal', 'mensal'),
+                ('trimestral', 'trimestral'),
+                ('semestral', 'semestral'),
+                ('anual', 'anual'),
             )
         )
     )

@@ -116,9 +116,9 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
             'value': 12580.78,
             'grace_period': '2023-07-06',
             'maturity_date': '2025-07-06',
-            'liquidity': 'nv',
+            'liquidity': 'no vencimento',
             'profitability': '120% cdi',
-            'interest_receipt': 'nh',
+            'interest_receipt': 'não há',
             'description': 'um cdb muito bom',
         }
 
