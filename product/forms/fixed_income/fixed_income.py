@@ -139,3 +139,33 @@ class FixedIncomeEditForm(FixedIncomeRegisterForm):
         )
     )
     add_css_class(value, default_input_class)
+
+
+class FixedIncomeApplyRedeemForm(forms.Form):
+    value = forms.FloatField(
+        required=False,
+        label='valor a ser aplicado',
+        widget=forms.NumberInput(
+            attrs={
+                'min': 1,
+            }
+        )
+    )
+    add_css_class(value, default_input_class)
+
+    def clean_value(self):
+        value = self.cleaned_data["value"]
+
+        if not value or value == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+
+        if value <= 0:
+            raise ValidationError(
+                ('O valor deve ser maior do que zero.'),
+                code='invalid',
+            )
+
+        return value
