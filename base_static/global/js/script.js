@@ -131,3 +131,48 @@ try {
     })
   } catch(e){};
 })();
+
+// prevent default for form aplly and redeem fixed income
+(() => {
+  try {
+    const formApply = document.querySelector('#form-apply');
+    const buttonSubmitFormApply = document.querySelector('#btn-form-apply');
+  
+    buttonSubmitFormApply.addEventListener("click", function(event) {
+      event.preventDefault();
+  
+      const body = document.body;
+      const divContainer = document.createElement('div');
+      const divConfirm = document.createElement('div');
+      const divFlexButton = document.createElement('div');
+      const text = document.createElement('p');
+      const buttonConfirm = document.createElement('button');
+      const buttonCancel = document.createElement('button');
+  
+      buttonConfirm.innerHTML = 'Confirmar';
+      buttonCancel.innerHTML = 'Cancelar';
+      
+      text.innerHTML = 'Deseja confirmar a aplicação?'
+      text.style.color = 'white';
+      
+      divContainer.classList.add('C-product_form_container');
+      divConfirm.classList.add('C-product_form_confirm');
+      divFlexButton.classList.add('C-product_form_buttons');
+      
+      divFlexButton.appendChild(buttonCancel);
+      divFlexButton.appendChild(buttonConfirm);
+      divConfirm.appendChild(text);
+      divConfirm.appendChild(divFlexButton);
+      divContainer.appendChild(divConfirm);
+      body.appendChild(divContainer);
+  
+      buttonConfirm.addEventListener('click', function() {
+        formApply.submit();
+      })
+  
+      buttonCancel.addEventListener('click', function() {
+        body.removeChild(divContainer);
+      })
+    })
+  } catch(e){}
+})();
