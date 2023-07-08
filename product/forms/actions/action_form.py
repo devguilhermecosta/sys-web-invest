@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django import forms
 from utils.forms.style import add_css_class
 from django.core.exceptions import ValidationError
@@ -10,26 +11,19 @@ default_input_class = 'C-login_input'
 class ActionBuyAndSellForm(forms.Form):
     code = forms.CharField(
         label='código',
-        required=False,
         widget=forms.TextInput()
     )
-    add_css_class(code, default_input_class)
 
     quantity = forms.CharField(
         label='quantidade',
-        required=False,
         widget=forms.NumberInput()
     )
-    add_css_class(quantity, default_input_class)
 
     unit_price = forms.FloatField(
         label='valor unitário',
-        required=False,
     )
-    add_css_class(unit_price, default_input_class)
 
     date = forms.DateField(
-        required=False,
         label='data',
         widget=forms.DateInput(
             attrs={
@@ -37,28 +31,25 @@ class ActionBuyAndSellForm(forms.Form):
             }
         )
     )
-    add_css_class(date, default_input_class)
 
     trading_note = forms.FileField(
         label='',
-        required=False,
         widget=forms.FileInput(
             {
                 'accept': 'application/pdf',
             }
         )
     )
-    add_css_class(trading_note, 'custom-input-file')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.items():
+            field[1].required = False
+            add_css_class(field[1], default_input_class)
 
     def clean_code(self):
         code = self.cleaned_data["code"]
         action = Action.objects.filter(code=code).exists()
-
-        if not code or code == '':
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
-            )
 
         if code[-1] == 'f' or code[-1] == 'F':
             raise ValidationError(
@@ -80,34 +71,20 @@ class ActionBuyAndSellForm(forms.Form):
                 (f'Código {code.upper()} não encontrado'),
                 code='invalid',
             )
-
         return str(code).lower()
 
     def clean_quantity(self):
         quantity = self.cleaned_data["quantity"]
-
-        if not quantity or quantity == '':
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
-            )
 
         if int(quantity) <= 0:
             raise ValidationError(
                 ('A quantidade deve ser maior que zero'),
                 code='invallid',
             )
-
         return quantity
 
     def clean_unit_price(self):
         unit_price = self.cleaned_data["unit_price"]
-
-        if not unit_price or unit_price == '':
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
-            )
 
         if float(unit_price) <= 0:
             raise ValidationError(
@@ -118,13 +95,15 @@ class ActionBuyAndSellForm(forms.Form):
         str(unit_price).replace(',', '.')
         return float(unit_price)
 
-    def clean_date(self):
-        date = self.cleaned_data["date"]
+    def clean(self) -> Dict[str, Any]:
+        data = self.cleaned_data
 
-        if not date or date == '':
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
-            )
-
-        return date
+        for key, value in data.items():
+            if not value or value == '':
+                raise ValidationError(
+                    {
+                        key: 'Campo obrigatório',
+                    },
+                    code='required',
+                )
+        return super().clean()
