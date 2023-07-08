@@ -1,5 +1,5 @@
 from django.views import View
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -9,6 +9,7 @@ from django.contrib import messages
 from product.models import ProductFixedIncome
 from product.forms.fixed_income import FixedIncomeRegisterForm
 from product.forms.fixed_income import FixedIncomeEditForm
+from product.forms.fixed_income import FixedIncomeApplyRedeemForm
 
 
 @method_decorator(
@@ -79,22 +80,6 @@ class FixedIncomeRegisterView(FixedIncomeView):
         )
 
 
-class FixedIncomeDetailsView(FixedIncomeView):
-    def get(self, request: HttpRequest, id: int = None) -> HttpResponse:
-        product = get_object_or_404(
-            ProductFixedIncome,
-            pk=id,
-        )
-
-        return render(
-            self.request,
-            'product/pages/fixed_income/product_details.html',
-            context={
-                'product': product,
-                },
-        )
-
-
 class FixedIncomeEditView(FixedIncomeView):
     def get_product(self, id: int = None) -> ProductFixedIncome:
         product = None
@@ -156,5 +141,85 @@ class FixedIncomeEditView(FixedIncomeView):
         return self.render_product(form)
 
 
-# quando o usuário clica no ativo, ele verifica o estado atual.
-# no menu inferior, haverá as opções de edição, resgate e aplicação.
+class FixedIncomeDetailsView(FixedIncomeView):
+    def get(self, request: HttpRequest, id: int = None) -> HttpResponse:
+        product = get_object_or_404(
+            ProductFixedIncome,
+            pk=id,
+        )
+
+        session_apply = self.request.session.get('product-apply', None)
+        session_redeem = self.request.session.get('product-redeem', None)
+        form_apply = FixedIncomeApplyRedeemForm(session_apply)
+        form_redeem = FixedIncomeApplyRedeemForm(session_redeem)
+
+        return render(
+            self.request,
+            'product/pages/fixed_income/product_details.html',
+            context={
+                'product': product,
+                'form_apply': form_apply,
+                'form_redeem': form_redeem,
+                },
+        )
+
+
+class FixedIncomeApplyView(FixedIncomeEditView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        raise Http404()
+
+    def post(self, request: HttpRequest, id: int) -> HttpResponse:
+        product = self.get_product(id)
+        post = self.request.POST
+        self.request.session['product-apply'] = post
+        form = FixedIncomeApplyRedeemForm(post)
+
+        if form.is_valid():
+            value = form.cleaned_data.get('value')
+            product.value += value
+            product.save()
+
+            del self.request.session['product-apply']
+
+            messages.success(
+                self.request,
+                'Aplicação realizado com sucesso.'
+            )
+
+        return redirect(
+            reverse('product:fixed_income_details', args=(product.id,))
+        )
+
+
+class FixedIncomeRedeemView(FixedIncomeApplyView):
+    def post(self, request: HttpRequest, id: int) -> HttpResponse:
+        product = self.get_product(id)
+        post = self.request.POST
+        self.request.session['product-redeem'] = post
+        form = FixedIncomeApplyRedeemForm(post)
+
+        if form.is_valid():
+            value = form.cleaned_data.get('value')
+
+            if value > product.value:
+                messages.error(
+                    self.request,
+                    'Saldo insuficiente para resgate'
+                )
+                return redirect(
+                    reverse('product:fixed_income_details', args=(product.id,))
+                )
+
+            product.value -= value
+            product.save()
+
+            del self.request.session['product-redeem']
+
+            messages.success(
+                self.request,
+                'Resgate realizado com sucesso.'
+            )
+
+        return redirect(
+            reverse('product:fixed_income_details', args=(product.id,))
+        )
