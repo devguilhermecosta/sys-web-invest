@@ -686,6 +686,37 @@ textarea.C-login_input {
   text-align: center;
   margin-bottom: 15px;
 }
+
+.C-product_form_container,
+.C-product_form_confirm  {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+}
+
+.C-product_form_container {
+  background-color: rgba(0, 0, 0, 0.6);
+  animation: open-form-container 300ms ease forwards;
+}
+
+.C-product_form_confirm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  animation: open-form 300ms ease forwards;
+}
+
+.C-product_form_buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
 /* end dashboard - actions */
 
 /* start animation */
@@ -726,6 +757,30 @@ textarea.C-login_input {
 
   to {
     width: 50%;
+  }
+}
+
+@keyframes open-form-container {
+  from {
+    width: 0;
+    height: 0;
+  }
+
+  to {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+@keyframes open-form {
+  from {
+    width: 0;
+    height: 0;
+  }
+
+  to {
+    width: 250px;
+    height: 100px;
   }
 }
 /* end animation */
