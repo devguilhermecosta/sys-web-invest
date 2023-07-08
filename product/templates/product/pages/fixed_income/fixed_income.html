@@ -10,7 +10,7 @@
   <h1 class="C-dashboard_title">renda fixa</h1>
   <ul class="C-dashboard_list">
     <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="">cadastrar novo</a>
+      <a class="C-dashboard_link" href="{% url 'product:fixed_income_register' %}">cadastrar novo</a>
     </li>
   </ul>
 
@@ -23,7 +23,9 @@
     <tbody>
     {% for object in fixed_income_objects %}
       <tr>
-        <td>{{ object.name }}</td>
+        <td>
+          <a href="{% url 'product:fixed_income_edit' object.id %}">{{ object.name }}</a>
+        </td>
         <td>{{ object.value|real_brl }}</td>
         <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
       </tr>

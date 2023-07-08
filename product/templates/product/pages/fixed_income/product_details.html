@@ -1,9 +1,23 @@
 {% extends 'global/pages/base.html' %}
+{% load money %}
 
 {% block title %}
-  Renda Fixa | Aplicar
+  Detalhes
 {% endblock title %}
 
 {% block content%}
-  {% include 'global/partials/_form.html' %}
+  <button>editar</button>
+  <p>nome: {{ product.name }}</p>
+  <p>categoria: {{ product.category }}</p>
+  <p>valor aplicado: {{ product.value|real_brl }}</p>
+  <p>carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
+  <p>vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
+  <p>liquidez: {{ product.liquidity }}</p>
+  <p>rentabilidade: {{ product.profitability }}</p>
+  <p>pagamento de juros: {{ product.interest_receipt }}</p>
+  <p>observações: {{ product.description }}</p>
+  <section>
+    <button>aplicar</button>
+    <button>resgatar</button>
+  </section>
 {% endblock content %}
