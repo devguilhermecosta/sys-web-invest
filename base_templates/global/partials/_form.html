@@ -9,6 +9,9 @@ enctype="multipart/form-data">
     <div class="C-login_div_input" >
       {{ field }}
       <label class="C-login_label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% if field.help_text %}
+        <p class="C-form_help_text">{{ field.help_text }}</p>
+      {% endif %}
     </div>
   {% endfor %}
   <input class="C-login_button C-login_sign_in" type="submit" value="{{ button_submit_value }}">
