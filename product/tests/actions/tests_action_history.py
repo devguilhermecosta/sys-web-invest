@@ -3,7 +3,6 @@ from product.views import ActionHistoryDetails
 from product.models import UserAction, ActionHistory
 from utils.mixins.auth import TestCaseWithLogin
 from ..base_tests import make_action, make_simple_file
-from datetime import date
 from parameterized import parameterized
 
 
@@ -57,7 +56,7 @@ class ActionHistoryTests(TestCaseWithLogin):
                 'code': 'cash3',
                 'quantity': '1',
                 'unit_price': 1,
-                'date': date.today().strftime('%Y-%m-%d'),
+                'date': '2023-07-02',
             },
             follow=True
         )
@@ -80,7 +79,7 @@ class ActionHistoryTests(TestCaseWithLogin):
                 'code': 'cash3',
                 'quantity': '1',
                 'unit_price': 1,
-                'date': date.today().strftime('%Y-%m-%d'),
+                'date': '2023-07-02',
             },
             follow=True
         )
@@ -223,7 +222,7 @@ class ActionHistoryTests(TestCaseWithLogin):
             'code': 'bbas3',
             'quantity': 5,
             'unit_price': 10,
-            'date': date.today().strftime('%Y-%m-%d'),
+            'date': '2023-07-02',
         }
 
         # buy the action
