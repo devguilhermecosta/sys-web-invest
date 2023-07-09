@@ -6,34 +6,35 @@
 {% endblock title %}
 
 {% block content%}
-  {% include 'global/partials/_messages.html' %}
-  <a href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
-  <p>nome: {{ product.name }}</p>
-  <p>categoria: {{ product.category }}</p>
-  <p>valor aplicado: {{ product.value|real_brl }}</p>
-  <p>carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
-  <p>vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
-  <p>liquidez: {{ product.liquidity }}</p>
-  <p>rentabilidade: {{ product.profitability }}</p>
-  <p>pagamento de juros: {{ product.interest_receipt }}</p>
-  <p>observações: {{ product.description }}</p>
-  <section>
-    <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
-      {% csrf_token %}
-      {% for field in form_apply %}
-        {{ field.errors }}
-        {{ field }}
-      {% endfor %}
-      <input id="btn-form-apply" type="submit" value="aplicar">
-    </form>
-
-    <form id="form-redeem" action="{% url 'product:fixed_income_redeem' product.id %}" method="POST">
-      {% csrf_token %}
-      {% for field in form_redeem %}
-        {{ field.errors }}
-        {{ field }}
-      {% endfor %}
-      <input type="submit" value="resgatar">
-    </form>
+  <section class="C-fixed_income_details">
+    {% include 'global/partials/_messages.html' %}
+    <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
+    <p>nome: {{ product.name }}</p>
+    <p>categoria: {{ product.category }}</p>
+    <p>valor aplicado: {{ product.value|real_brl }}</p>
+    <p>carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>liquidez: {{ product.liquidity }}</p>
+    <p>rentabilidade: {{ product.profitability }}</p>
+    <p>pagamento de juros: {{ product.interest_receipt }}</p>
+    <p>observações: {{ product.description }}</p>
+    <section>
+      <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
+        {% csrf_token %}
+        {% for field in form_apply %}
+          {{ field.errors }}
+          {{ field }}
+        {% endfor %}
+        <input id="btn-form-apply" class="C-product_button_apply" type="submit" value="aplicar">
+      </form>
+      <form id="form-redeem" action="{% url 'product:fixed_income_redeem' product.id %}" method="POST">
+        {% csrf_token %}
+        {% for field in form_redeem %}
+          {{ field.errors }}
+          {{ field }}
+        {% endfor %}
+        <input id="btn-form-redeem" class="C-product_button_redeem" type="submit" value="resgatar">
+      </form>
+    </section>
   </section>
 {% endblock content %}
