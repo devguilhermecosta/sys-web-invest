@@ -132,47 +132,114 @@ try {
   } catch(e){};
 })();
 
-// prevent default for form aplly and redeem fixed income
-(() => {
-  try {
-    const formApply = document.querySelector('#form-apply');
-    const buttonSubmitFormApply = document.querySelector('#btn-form-apply');
-  
-    buttonSubmitFormApply.addEventListener("click", function(event) {
-      event.preventDefault();
-  
+// functions for create html elements
+function createDefaultContainer() {
+  const divContainer = document.createElement('div');
+  divContainer.classList.add('C-product_form_container');
+  return divContainer;
+}
+
+function createDefaultFrame() {
+  const frame = document.createElement('div');
+  frame.classList.add('C-product_form_confirm');
+  return frame;
+}
+
+function createButton(value) {
+  const button = document.createElement('button');
+  button.classList.add('C-product_form_btn');
+  button.innerHTML = value;
+  return button;
+}
+
+function createDivFlexButton() {
+  const divFlexButton = document.createElement('div');
+  divFlexButton.classList.add('C-product_form_buttons');
+  return divFlexButton;
+}
+
+function createTextElement(color, message) {
+  const text = document.createElement('p');
+  text.style.color = color;
+  text.innerHTML = message;
+  return text;
+}
+
+// create message alert
+function createMessageAlert(color, message) {
+  const body = document.body;
+  const container = createDefaultContainer();
+  const frame = createDefaultFrame();
+  const text = createTextElement(color, message);
+  const button = createButton('OK');
+
+  frame.appendChild(text);
+  frame.appendChild(button);
+  container.appendChild(frame);
+  body.appendChild(container);
+
+  button.addEventListener('click', function() {
+    body.removeChild(container);
+  })
+}
+
+// create form confirmation fixed income
+function createFormFixedIncome(form, buttonInput, input, message, messageAlert) {
+  const formApply = form;
+  const buttonSubmit = buttonInput;
+  const inputValue = input;
+
+  buttonSubmit.addEventListener('click', function(event) {
+    event.preventDefault();
+
+    function createFormConfirmation() {
       const body = document.body;
-      const divContainer = document.createElement('div');
-      const divConfirm = document.createElement('div');
-      const divFlexButton = document.createElement('div');
-      const text = document.createElement('p');
-      const buttonConfirm = document.createElement('button');
-      const buttonCancel = document.createElement('button');
-  
-      buttonConfirm.innerHTML = 'Confirmar';
-      buttonCancel.innerHTML = 'Cancelar';
-      
-      text.innerHTML = 'Deseja confirmar a aplicação?'
-      text.style.color = 'white';
-      
-      divContainer.classList.add('C-product_form_container');
-      divConfirm.classList.add('C-product_form_confirm');
-      divFlexButton.classList.add('C-product_form_buttons');
-      
-      divFlexButton.appendChild(buttonCancel);
-      divFlexButton.appendChild(buttonConfirm);
-      divConfirm.appendChild(text);
-      divConfirm.appendChild(divFlexButton);
-      divContainer.appendChild(divConfirm);
-      body.appendChild(divContainer);
-  
+      const container = createDefaultContainer();
+      const frame = createDefaultFrame();
+      const text = createTextElement('white', message);
+      const divFlex = createDivFlexButton();
+      const buttonConfirm = createButton('Confirmar');
+      const buttonCancel = createButton('Cancelar');
+
+      divFlex.appendChild(buttonCancel);
+      divFlex.appendChild(buttonConfirm);
+      frame.appendChild(text);
+      frame.appendChild(divFlex);
+
+      container.appendChild(frame);
+      body.appendChild(container);
+
       buttonConfirm.addEventListener('click', function() {
         formApply.submit();
+        body.removeChild(container);
       })
-  
       buttonCancel.addEventListener('click', function() {
-        body.removeChild(divContainer);
+        body.removeChild(container);
       })
-    })
+    }
+
+    inputValue.value === '' ? createMessageAlert('white', messageAlert) : createFormConfirmation();
+
+    return inputValue;
+  })
+}
+
+// prevent default form aplly
+(() => {
+  try {
+    const form = document.querySelector('#form-apply');
+    const button = document.querySelector('#btn-form-apply');
+    const input = document.querySelectorAll('.C-fixed_income_input')[0];
+    createFormFixedIncome(form, button, input, 'deseja confirmar a aplicação?', 'informe um valor');
+  } catch(e){}
+})();
+
+// prevent default form redeem
+(() => {
+  try {
+    const form = document.querySelector('#form-redeem');
+    const button = document.querySelector('#btn-form-redeem');
+    const input = document.querySelectorAll('.C-fixed_income_input')[1];
+    createFormFixedIncome(form, button, input, 'deseja confirmar o resgate?', 'informe um valor');
   } catch(e){}
 })();

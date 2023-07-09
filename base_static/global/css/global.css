@@ -697,6 +697,31 @@ textarea.C-login_input {
   height: 0;
 }
 
+.C-fixed_income_details {
+  max-width: 400px;
+  padding: 10px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--gray_0);
+}
+
+.C-fixed_income_btn_edit {
+  float: right;
+  background-color: var(--gray_0);
+  color: var(--white);
+  text-transform: uppercase;
+  padding: 5px;
+  font-size: 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 200ms linear,
+              color 200ms linear;
+}
+
+.C-fixed_income_btn_edit:hover {
+  background-color: var(--gray_1);
+  color: var(--black);
+}
+
 .C-product_form_container {
   background-color: rgba(0, 0, 0, 0.6);
   animation: open-form-container 300ms ease forwards;
@@ -707,8 +732,51 @@ textarea.C-login_input {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.8);
   animation: open-form 300ms ease forwards;
+}
+
+#form-apply, #form-redeem {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 10px;
+  margin: 10px 0;
+} 
+
+.C-product_button_apply, .C-product_button_redeem {
+  width: 110px;
+  height: 35px;
+  padding: 5px;
+  border: none;
+  outline: none;
+  color: var(--white);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 300ms ease,
+              border 300ms ease;
+}
+
+.C-product_button_apply {
+  background-color: var(--turquoise_6);
+}
+
+.C-product_button_apply:hover {
+  background-color: var(--turquoise_4);
+}
+
+.C-product_button_redeem {
+  background-color: var(--white);
+  color: var(--black);
+  border: 0.5px solid var(--black);
+}
+
+.C-product_button_redeem:hover {
+  background-color: var(--gray_2);
+  border: none;
 }
 
 .C-product_form_buttons {
@@ -716,6 +784,38 @@ textarea.C-login_input {
   display: flex;
   justify-content: space-around;
   align-items: center;
+}
+
+.C-product_form_btn {
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  background-color: var(--blue_3);
+  transition: background 150ms ease;
+  color: var(--white);
+  padding: 5px;
+  cursor: pointer;
+}
+
+.C-product_form_btn:hover {
+  background-color: var(--blue_2);
+}
+
+.C-fixed_income_input {
+  max-width: 100px;
+  height: 35px;
+  border: 1px solid var(--turquoise_6);
+  padding: 5px 10px;
+}
+
+.C-fixed_income_input::placeholder {
+  color: var(--gray_1);
+  text-transform: capitalize;
+}
+
+.C-fixed_income_input:focus {
+  border: 1px solid var(--turquoise_5);
+  outline: none;
 }
 /* end dashboard - actions */
 
