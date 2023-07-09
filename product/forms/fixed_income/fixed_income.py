@@ -144,14 +144,14 @@ class FixedIncomeEditForm(FixedIncomeRegisterForm):
 class FixedIncomeApplyRedeemForm(forms.Form):
     value = forms.FloatField(
         required=False,
-        label='valor a ser aplicado',
         widget=forms.NumberInput(
             attrs={
                 'min': 1,
+                'placeholder': 'valor',
             }
         )
     )
-    add_css_class(value, default_input_class)
+    add_css_class(value, 'C-fixed_income_input')
 
     def clean_value(self):
         value = self.cleaned_data["value"]
