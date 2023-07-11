@@ -237,10 +237,6 @@ body {
   cursor: auto;
 }
 
-.C-login_label:not(.C-login_label[for='id_date']) {
-  z-index: -1;
-}
-
 .C-login_input {
   width: 100%;
   height: 35px;
@@ -617,6 +613,7 @@ textarea.C-login_input {
   width: 100%;
   max-width: fit-content;
   margin: 0 auto;
+  margin-bottom: 10px;
   overflow: hidden;
 }
 
@@ -702,6 +699,14 @@ textarea.C-login_input {
   padding: 10px;
   margin: 0 auto;
   border-bottom: 1px solid var(--gray_0);
+}
+
+.C-fixed_income_text {
+  line-height: 1.5;
+}
+
+.C-fixed_income_text.is_bold {
+  font-weight: 700;
 }
 
 .C-fixed_income_btn_edit {
