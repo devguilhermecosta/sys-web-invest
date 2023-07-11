@@ -1,5 +1,6 @@
 {% extends 'global/pages/base.html' %}
 {% load money %}
+{% load text %}
 
 {% block title %}
   Detalhes
@@ -9,15 +10,15 @@
   <section class="C-fixed_income_details">
     {% include 'global/partials/_messages.html' %}
     <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
-    <p>nome: {{ product.name }}</p>
-    <p>categoria: {{ product.category }}</p>
-    <p>valor aplicado: {{ product.value|real_brl }}</p>
-    <p>carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
-    <p>vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
-    <p>liquidez: {{ product.liquidity }}</p>
-    <p>rentabilidade: {{ product.profitability }}</p>
-    <p>pagamento de juros: {{ product.interest_receipt }}</p>
-    <p>observações: {{ product.description }}</p>
+    <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
+    <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
+    <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.value|real_brl }}</p>
+    <p class="C-fixed_income_text">Carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
+    <p class="C-fixed_income_text">Vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
+    <p class="C-fixed_income_text">Liquidez: {{ product.liquidity }}</p>
+    <p class="C-fixed_income_text">Rentabilidade: {{ product.profitability }}</p>
+    <p class="C-fixed_income_text">Pagamento de juros: {{ product.interest_receipt|title }}</p>
+    <p class="C-fixed_income_text">Observações: {{ product.description|captalize }}</p>
     <section>
       <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
         {% csrf_token %}

@@ -13,25 +13,26 @@
       <a class="C-dashboard_link" href="{% url 'product:fixed_income_register' %}">cadastrar novo</a>
     </li>
   </ul>
-
-  <table>
-    <thead>
-      <th>nome</th>
-      <th>total investido</th>
-      <th>vencimento</th>
-    </thead>
-    <tbody>
-    {% for object in fixed_income_objects %}
-      <tr>
-        <td>
-          <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
-        </td>
-        <td>{{ object.value|real_brl }}</td>
-        <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
-      </tr>
-    </tbody>
-    {% empty %}
-      <p>nenhum produto cadastrado</p>
-    {% endfor %}
-  </table>
+  <section class="C-dashboard_table_details">
+    <table class="C-dashboard_table">
+      <thead>
+        <th>nome</th>
+        <th>total investido</th>
+        <th>vencimento</th>
+      </thead>
+      <tbody>
+      {% for object in fixed_income_objects %}
+        <tr>
+          <td>
+            <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
+          </td>
+          <td>{{ object.value|real_brl }}</td>
+          <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
+        </tr>
+      </tbody>
+      {% empty %}
+        <p>nenhum produto cadastrado</p>
+      {% endfor %}
+    </table>
+  </section>
 {% endblock content %}
