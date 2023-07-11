@@ -33,16 +33,20 @@ class ActionBuyAndSellForm(forms.Form):
 
     trading_note = forms.FileField(
         label='',
+        required=False,
         widget=forms.FileInput(
-            {
+            attrs={
                 'accept': 'application/pdf',
-            }
+                'class': 'custom-input-file',
+            },
         )
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.items():
+            if field[0] == 'trading_note':
+                continue
             field[1].required = False
             add_css_class(field[1], default_input_class)
 
@@ -111,3 +115,14 @@ class ActionBuyAndSellForm(forms.Form):
 
         str(unit_price).replace(',', '.')
         return float(unit_price)
+
+    def clean_date(self):
+        date = self.cleaned_data["date"]
+
+        if not date or date == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+
+        return date

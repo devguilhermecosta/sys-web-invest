@@ -107,22 +107,85 @@ class FixedIncomeRegisterForm(forms.ModelForm):
             'description': 'observações',
         }
 
-    def clean(self) -> Dict[str, Any]:
-        data = self.cleaned_data
+    def clean_category(self):
+        category = self.cleaned_data["category"]
 
-        for key, value in data.items():
-            if key == 'description':
-                continue
-            else:
-                if not value or value == '':
-                    raise ValidationError(
-                        {
-                            key: 'Campo obrigatório',
-                        },
-                        code='required',
-                    )
+        if not category or category == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return category
 
-        return super().clean()
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+
+        if not name or name == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return name
+
+    def clean_value(self):
+        value = self.cleaned_data["value"]
+
+        if not value or value == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return value
+
+    def clean_grace_period(self):
+        grace_period = self.cleaned_data["grace_period"]
+
+        if not grace_period or grace_period == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return grace_period
+
+    def clean_maturity_date(self):
+        maturity_date = self.cleaned_data["maturity_date"]
+
+        if not maturity_date or maturity_date == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return maturity_date
+
+    def clean_liquidity(self):
+        liquidity = self.cleaned_data["liquidity"]
+
+        if not liquidity or liquidity == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return liquidity
+
+    def clean_profitability(self):
+        profitability = self.cleaned_data["profitability"]
+
+        if not profitability or profitability == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return profitability
+
+    def clean_interest_receipt(self):
+        interest_receipt = self.cleaned_data["interest_receipt"]
+
+        if not interest_receipt or interest_receipt == '':
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='invalid',
+            )
+        return interest_receipt
 
 
 class FixedIncomeEditForm(FixedIncomeRegisterForm):
