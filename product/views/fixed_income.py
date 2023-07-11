@@ -46,7 +46,7 @@ class FixedIncomeRegisterView(FixedIncomeView):
             'product/pages/fixed_income/fixed_income_register.html',
             context={
                 'form': form,
-                'form_title': 'cadastrar novo ativo',
+                'form_title': 'Novo ativo',
                 'button_submit_value': 'aplicar',
             }
         )
@@ -130,7 +130,7 @@ class FixedIncomeEditView(FixedIncomeView):
             )
 
             return redirect(
-                reverse('product:fixed_income',)
+                reverse('product:fixed_income_details', args=(product.id,))
             )
 
         messages.error(
@@ -183,7 +183,7 @@ class FixedIncomeApplyView(FixedIncomeEditView):
 
             messages.success(
                 self.request,
-                'Aplicação realizado com sucesso.'
+                'Aplicação realizada com sucesso.'
             )
 
         return redirect(
