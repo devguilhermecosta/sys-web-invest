@@ -97,16 +97,16 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('category',),
-        ('name',),
-        ('value',),
-        ('grace_period',),
-        ('maturity_date',),
-        ('liquidity',),
-        ('profitability',),
-        ('interest_receipt',),
+        ('category', 'Campo obrigatório'),
+        ('name', 'Campo obrigatório'),
+        ('value', 'Campo obrigatório'),
+        ('grace_period', 'Campo obrigatório'),
+        ('maturity_date', 'Campo obrigatório'),
+        ('liquidity', 'Campo obrigatório'),
+        ('profitability', 'Campo obrigatório'),
+        ('interest_receipt', 'Campo obrigatório'),
     ])
-    def test_fixed_income_edit_returns_error_messages_if_any_field_is_empty(self, field: str) -> None:  # noqa: E501
+    def test_fixed_income_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # make login
         _, user = self.make_login()
 
@@ -126,6 +126,10 @@ class FixedIncomeEditTests(TestCaseWithLogin):
             )
         content = response.content.decode('utf-8')
 
+        self.assertIn(
+            message,
+            content,
+        )
         self.assertIn(
             'Verifique os dados abaixo',
             content,
