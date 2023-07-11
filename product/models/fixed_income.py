@@ -36,4 +36,10 @@ class ProductFixedIncome(models.Model):
     ))
     description = models.TextField()
 
+    def __str__(self) -> str:
+        return self.name
+
+    def get_total_applied(self) -> float:
+        return self.value
+
 # métodos: aplicar, resgatar, receber juros, histórico.
