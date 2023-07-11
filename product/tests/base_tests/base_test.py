@@ -52,7 +52,7 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
         user=user,
         category=kwargs.pop('category', 'cdb'),
         name=kwargs.pop('name', 'cdb bb 2035'),
-        value=1250,
+        value=kwargs.pop('value', 1250),
         grace_period='2023-07-04',
         maturity_date='2035-01-01',
         liquidity='no vencimento',
