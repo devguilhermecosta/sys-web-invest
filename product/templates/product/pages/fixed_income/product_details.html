@@ -9,7 +9,11 @@
 {% block content%}
   <section class="C-fixed_income_details">
     {% include 'global/partials/_messages.html' %}
-    <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
+    <div style="float: right">
+      <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
+      <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_history' product.id %}">histórico</a>
+    </div>
+
     <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
     <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
     <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.value|real_brl }}</p>

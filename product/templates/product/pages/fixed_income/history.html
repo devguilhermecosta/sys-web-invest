@@ -1,0 +1,37 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+
+{% block title %}
+  Histórico
+{% endblock title %}
+
+{% block content %}
+<section class="C-dashboard_table_details">
+  <h1>{{ product.name }}</h1>
+  <h2 
+  class="C-dashboard_table_details_fi_value">valor atual: {{ product.value|real_brl }}
+  </h2>
+  <table class="C-dashboard_table fixed_income">
+    <thead>
+      <th>data</th>
+      <th>mov</th>
+      <th>valor</th>
+    </thead>
+    <tbody>
+    {% for h in history %}
+      <tr>
+        <td>{{ h.date|date:"d/m/y" }}</td>
+        {% with handler=h.state %}
+          {% if handler == 'apply' %}
+            <td class="C-dashboard_table_buy">aplicação</td>
+          {% elif handler == 'redeem' %}
+            <td class="C-dashboard_table_sell">resgate</td>
+          {% endif %}
+        {% endwith %}
+        <td>{{ h.value|real_brl }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock content %}
