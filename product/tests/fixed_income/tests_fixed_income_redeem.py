@@ -140,8 +140,3 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
 
         # checks if the product value is 1
         self.assertEqual(product.value, 1)
-
-    def test_fail(self) -> None:
-        self.fail(
-            'após os testes de aplicação e resgate, criar o history',
-        )
