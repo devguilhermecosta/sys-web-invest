@@ -608,6 +608,10 @@ textarea.C-login_input {
   vertical-align: middle;
 }
 
+.C-dashboard_table_details_fi_value {
+  font-size: 12px;
+}
+
 .C-dashboard_table_details {
   text-transform: uppercase;
   width: 100%;
@@ -650,6 +654,12 @@ textarea.C-login_input {
   text-transform: uppercase;
   padding: 5px;
   white-space: nowrap;
+  width: 100%;
+}
+
+.C-dashboard_table.fixed_income {
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .C-dashboard_table a {
@@ -710,9 +720,10 @@ textarea.C-login_input {
 }
 
 .C-fixed_income_btn_edit {
-  float: right;
+  display: block;
   background-color: var(--gray_0);
   color: var(--white);
+  text-align: center;
   text-transform: uppercase;
   padding: 5px;
   font-size: 12px;
@@ -720,6 +731,10 @@ textarea.C-login_input {
   border-radius: 5px;
   transition: background 200ms linear,
               color 200ms linear;
+}
+
+.C-fixed_income_btn_edit:nth-child(1) {
+  margin-bottom: 10px;
 }
 
 .C-fixed_income_btn_edit:hover {
