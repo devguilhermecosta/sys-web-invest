@@ -22,6 +22,7 @@
       <th>total</th>
       <th>nota</th>
     </tbody>
+    <thead>
     {% for product in history %}
       <tr>
         <td>{{ product.date|date:"d/m/y" }}</td>
@@ -44,6 +45,7 @@
         {% endif %}
       </tr>
     {% endfor %}
+    </thead>
   </table>
 </section>
 
