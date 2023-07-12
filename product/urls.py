@@ -70,6 +70,10 @@ urlpatterns = [
          views.FixedIncomeRedeemView.as_view(),
          name='fixed_income_redeem',
          ),
+    path('renda-fixa/<int:id>/histórico/',
+         views.FixedIncomeHistoryView.as_view(),
+         name='fixed_income_history',
+         ),
     path('tesouro-direto/',
          TemplateView.as_view(
               template_name='product/pages/direct_treasure.html',
