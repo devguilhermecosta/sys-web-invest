@@ -70,7 +70,7 @@ urlpatterns = [
          views.FixedIncomeRedeemView.as_view(),
          name='fixed_income_redeem',
          ),
-    path('renda-fixa/<int:id>/histórico/',
+    path('renda-fixa/<int:id>/historico/',
          views.FixedIncomeHistoryView.as_view(),
          name='fixed_income_history',
          ),
