@@ -21,4 +21,5 @@ from .fixed_income import (
     FixedIncomeDetailsView,
     FixedIncomeApplyView,
     FixedIncomeRedeemView,
+    FixedIncomeHistoryView,
     )

@@ -6,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib import messages
-from product.models import ProductFixedIncome
-from product.forms.fixed_income import FixedIncomeRegisterForm
-from product.forms.fixed_income import FixedIncomeEditForm
-from product.forms.fixed_income import FixedIncomeApplyRedeemForm
+from product.models import ProductFixedIncome, FixedIncomeHistory
+from product.forms.fixed_income import (
+    FixedIncomeRegisterForm,
+    FixedIncomeEditForm,
+    FixedIncomeApplyRedeemForm,
+)
 
 
 @method_decorator(
@@ -64,6 +66,7 @@ class FixedIncomeRegisterView(FixedIncomeView):
                 **data,
             )
             new_obj.save()
+            new_obj.make_history(state='apply', value=data['value'])
 
             del self.request.session['fixed-income-register']
 
@@ -178,6 +181,7 @@ class FixedIncomeApplyView(FixedIncomeEditView):
             value = form.cleaned_data.get('value')
             product.value += value
             product.save()
+            product.make_history(state='apply', value=value)
 
             del self.request.session['product-apply']
 
@@ -212,6 +216,7 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
 
             product.value -= value
             product.save()
+            product.make_history(state='redeem', value=value)
 
             del self.request.session['product-redeem']
 
@@ -222,4 +227,25 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
 
         return redirect(
             reverse('product:fixed_income_details', args=(product.id,))
+        )
+
+
+class FixedIncomeHistoryView(FixedIncomeView):
+    def get(self, request: HttpRequest, id: int) -> HttpResponse:
+        product = get_object_or_404(
+            ProductFixedIncome,
+            user=request.user,
+            pk=id,
+        )
+        history = FixedIncomeHistory.objects.filter(
+            product=product
+            ).order_by('-id')
+
+        return render(
+            request,
+            'product/pages/fixed_income/history.html',
+            context={
+                'product': product,
+                'history': history
+            }
         )
