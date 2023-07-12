@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
+
+
+default_date = date.today().strftime('%Y-%m-%d')
 
 
 class ProductFixedIncome(models.Model):
@@ -42,4 +46,29 @@ class ProductFixedIncome(models.Model):
     def get_total_applied(self) -> float:
         return self.value
 
-# métodos: aplicar, resgatar, receber juros, histórico.
+    def make_history(self, state: str, value: float) -> None:
+        new_history = FixedIncomeHistory.objects.create(
+            product=self,
+            state=state,
+            date=default_date,
+            value=value
+        )
+        new_history.save()
+
+
+class FixedIncomeHistory(models.Model):
+    product = models.ForeignKey(ProductFixedIncome,
+                                on_delete=models.CASCADE,
+                                )
+    state = models.CharField(max_length=255, default='apply', choices=(
+        ('apply', 'apply'),
+        ('redeem', 'redeem'),
+    ))
+    date = models.DateField(default='2023-07-02')
+    value = models.FloatField()
+
+    def __str__(self) -> str:
+        history = (
+            f'{self.product.name} - {self.date} - {self.state} - {self.value}'
+            )
+        return history
