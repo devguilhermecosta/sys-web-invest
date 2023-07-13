@@ -1,6 +1,7 @@
 from utils.mixins.auth import TestCaseWithLogin
 from django.urls import reverse, resolve
 from product import views
+from product.models import ProductFixedIncome, FixedIncomeHistory
 from parameterized import parameterized
 
 
@@ -108,7 +109,7 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         # make login
         _, user = self.make_login()
 
-        # form data
+        # set form data
         form_data = {
             'user': user,
             'category': 'cdb',
@@ -126,7 +127,8 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         response = self.client.post(
             self.url,
             form_data,
-            follow=True,)
+            follow=True,
+            )
         content = response.content.decode('utf-8')
 
         self.assertIn(
@@ -138,3 +140,41 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
             '/ativos/renda-fixa/',
             302,
         )
+
+    def test_fixed_income_register_create_a_first_history(self) -> None:
+        # make login
+        _, user = self.make_login()
+
+        # set form data
+        form_data = {
+            'user': user,
+            'category': 'cdb',
+            'name': 'cdb banco inter',
+            'value': 500,
+            'grace_period': '2023-07-06',
+            'maturity_date': '2025-07-06',
+            'liquidity': 'no vencimento',
+            'profitability': '120% cdi',
+            'interest_receipt': 'não há',
+            'description': 'um cdb muito bom',
+        }
+
+        # make post request
+        self.client.post(
+            self.url,
+            form_data,
+            follow=True,
+            )
+
+        # takes the product that was just created
+        product = ProductFixedIncome.objects.get(user=user)
+
+        # get the history
+        history = FixedIncomeHistory.objects.filter(product=product)
+
+        # checks if the history lenght is 1
+        self.assertEqual(len(history), 1)
+
+        # cheks the history data
+        self.assertEqual(history[0].value, 500)
+        self.assertEqual(history[0].state, 'apply')

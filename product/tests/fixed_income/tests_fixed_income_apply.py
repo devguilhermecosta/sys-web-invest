@@ -3,6 +3,7 @@ from django.urls import reverse, resolve
 from product.tests.base_tests import make_fixed_income_product
 from product.views import FixedIncomeApplyView
 from product.models import ProductFixedIncome
+from product.models import FixedIncomeHistory
 
 
 class FixedIncomeApplyTests(TestCaseWithLogin):
@@ -106,3 +107,26 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
 
         # checks if the value is 100
         self.assertEqual(product.value, 100)
+
+    def test_fixed_income_apply_creates_a_history(self) -> None:  # noqa: E501
+        _, user = self.make_login()
+
+        # create a product fixed income
+        product = make_fixed_income_product(user=user)
+
+        # apply
+        self.client.post(
+            self.url,
+            {'value': 10},
+            follow=True,
+            )
+
+        # get history
+        history = FixedIncomeHistory.objects.filter(
+            product=product,
+        )
+
+        # cheks if the history has been created
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0].value, 10)
+        self.assertEqual(history[0].state, 'apply')

@@ -2,7 +2,7 @@ from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product.views.fixed_income import FixedIncomeRedeemView
 from product.tests.base_tests import make_fixed_income_product
-from product.models import ProductFixedIncome
+from product.models import ProductFixedIncome, FixedIncomeHistory
 
 
 class FixedIncomeRedeemTests(TestCaseWithLogin):
@@ -120,7 +120,7 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         )
 
     def test_fixed_income_redeem_decreases_the_value_of_the_object_if_form_is_ok(self) -> None:  # noqa: E501
-        # make logn
+        # make login
         _, user = self.make_login()
 
         # create the product fixed income with value equal 100
@@ -140,3 +140,27 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
 
         # checks if the product value is 1
         self.assertEqual(product.value, 1)
+
+    def test_fixed_income_redeem_creates_a_history(self) -> None:
+        # make login
+        _, user = self.make_login()
+
+        # create the product fixed income
+        product = make_fixed_income_product(user=user)
+
+        # make post request with value 100
+        self.client.post(
+            self.url,
+            {'value': 100},
+            follow=True,
+        )
+
+        # get history
+        history = FixedIncomeHistory.objects.filter(
+            product=product,
+        )
+
+        # cheks if the history has been created
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0].value, 100)
+        self.assertEqual(history[0].state, 'redeem')
