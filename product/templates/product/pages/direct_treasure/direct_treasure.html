@@ -2,15 +2,15 @@
 {% load money %}
 
 {% block title %}
-  Renda Fixa
+  Tesouro Direto
 {% endblock title %}
 
 {% block content %}
   {% include 'global/partials/_messages.html' %}
-  <h1 class="C-dashboard_title">renda fixa</h1>
+  <h1 class="C-dashboard_title">tesouro direto</h1>
   <ul class="C-dashboard_list">
     <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="{% url 'product:fixed_income_register' %}">cadastrar novo</a>
+      <a class="C-dashboard_link" href="">cadastrar novo</a>
     </li>
   </ul>
   <section class="C-dashboard_table_details">
@@ -21,13 +21,13 @@
         <th>vencimento</th>
       </thead>
       <tbody>
-      {% for object in fixed_income_objects %}
+      {% for product in products %}
         <tr>
           <td>
-            <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
+            <a href="">{{ product.name }}</a>
           </td>
-          <td>{{ object.value|real_brl }}</td>
-          <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
+          <td>{{ product.value|real_brl }}</td>
+          <td>{{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
         </tr>
       </tbody>
       {% empty %}
