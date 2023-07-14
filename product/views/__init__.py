@@ -23,3 +23,7 @@ from .fixed_income import (
     FixedIncomeRedeemView,
     FixedIncomeHistoryView,
     )
+from .direct_treasure import (
+    DirectTreasureView,
+    DirectTreasureRegisterView,
+)
