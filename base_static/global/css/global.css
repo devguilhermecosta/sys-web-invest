@@ -679,6 +679,11 @@ textarea.C-login_input {
   background-color: var(--gray_2);
 }
 
+.C-dashboard_table_empty_message {
+  text-align: center;
+  margin-top: 30px;
+}
+
 .C-dashboard_table_buy {
   color: green;
 }
