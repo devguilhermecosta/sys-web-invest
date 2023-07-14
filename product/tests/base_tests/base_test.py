@@ -1,7 +1,12 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from pathlib import Path
-from product.models import Action, FII, ProductFixedIncome
+from product.models import (
+    Action,
+    FII,
+    ProductFixedIncome,
+    DirectTreasure,
+    )
 import c2validator as c2
 
 
@@ -59,6 +64,24 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
         profitability='102% cdi',
         interest_receipt='não há',
         description='cdb muito legal'
+    )
+    new_object.save()
+    return new_object
+
+
+def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
+    '''
+        create a new direct treasure object
+    '''
+    new_object = DirectTreasure.objects.create(
+        user=user,
+        name='tesouro ipca+ 2024',
+        category='ipca',
+        interest_receipt='não há',
+        profitability='ipca + 4,9% a.a.',
+        maturity_date='2024-12-31',
+        value=1500,
+        description='tesouro ipca sem pagamento de juros'
     )
     new_object.save()
     return new_object
