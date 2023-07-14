@@ -55,15 +55,15 @@ class ProductFixedIncomeEdit(TestCaseWithLogin):
 
     @parameterized.expand([
         ('editar',),
-        ('cdb',),
-        ('cdb bb 2035',),
+        ('CDB',),
+        ('CDB BB 2035',),
         ('R$ 1250,00',),
         ('04/07/2023',),
         ('01/01/2035',),
         ('no vencimento',),
         ('102% cdi',),
-        ('não há',),
-        ('cdb muito legal',),
+        ('Não Há',),
+        ('Cdb muito legal',),
         ('aplicar',),
         ('resgatar',),
         ])

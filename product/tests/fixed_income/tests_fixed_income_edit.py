@@ -170,7 +170,7 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         )
         self.assertRedirects(
             response,
-            '/ativos/renda-fixa/',
+            '/ativos/renda-fixa/1/detalhes/',
             302,
         )
 
