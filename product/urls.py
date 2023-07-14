@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.generic import TemplateView
 from . import views
 
 
@@ -75,9 +74,11 @@ urlpatterns = [
          name='fixed_income_history',
          ),
     path('tesouro-direto/',
-         TemplateView.as_view(
-              template_name='product/pages/direct_treasure.html',
-              ),
+         views.DirectTreasureView.as_view(),
          name='direct_treasure',
+         ),
+    path('tesouro-direto/registrar/',
+         views.DirectTreasureRegisterView.as_view(),
+         name='direct_treasure_register',
          ),
 ]
