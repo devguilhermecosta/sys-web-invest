@@ -130,3 +130,4 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0].value, 10)
         self.assertEqual(history[0].state, 'apply')
+        self.fail('criar a opção de receber juros')
