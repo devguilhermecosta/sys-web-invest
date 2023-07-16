@@ -1,0 +1,43 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+{% load text %}
+
+{% block title %}
+  Detalhes
+{% endblock title %}
+
+{% block content %}
+<section class="C-fixed_income_details">
+  {% include 'global/partials/_messages.html' %}
+  <div style="float: right">
+    <a class="C-fixed_income_btn_edit" href="{% url 'product:direct_treasure_edit' product.id %}">editar</a>
+    <a class="C-fixed_income_btn_edit" href="">histórico</a>
+  </div>
+
+  <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
+  <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
+  <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.value|real_brl }}</p>
+  <p class="C-fixed_income_text">Vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
+  <p class="C-fixed_income_text">Rentabilidade: {{ product.profitability }}</p>
+  <p class="C-fixed_income_text">Pagamento de juros: {{ product.interest_receipt|title }}</p>
+  <p class="C-fixed_income_text">Observações: {{ product.description|captalize }}</p>
+  <section>
+    {% comment %} <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
+      {% csrf_token %}
+      {% for field in form_apply %}
+        {{ field.errors }}
+        {{ field }}
+      {% endfor %}
+      <input id="btn-form-apply" class="C-product_button_apply" type="submit" value="aplicar">
+    </form>
+    <form id="form-redeem" action="{% url 'product:fixed_income_redeem' product.id %}" method="POST">
+      {% csrf_token %}
+      {% for field in form_redeem %}
+        {{ field.errors }}
+        {{ field }}
+      {% endfor %}
+      <input id="btn-form-redeem" class="C-product_button_redeem" type="submit" value="resgatar">
+    </form> {% endcomment %}
+  </section>
+</section>
+{% endblock content %}
