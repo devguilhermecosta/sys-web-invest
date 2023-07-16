@@ -80,7 +80,7 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
         interest_receipt='não há',
         profitability='ipca + 4,9% a.a.',
         maturity_date='2024-12-31',
-        value=1500,
+        value=kwargs.get('value', 1500),
         description='tesouro ipca sem pagamento de juros'
     )
     new_object.save()
