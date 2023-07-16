@@ -22,7 +22,7 @@
   <p class="C-fixed_income_text">Pagamento de juros: {{ product.interest_receipt|title }}</p>
   <p class="C-fixed_income_text">Observações: {{ product.description|captalize }}</p>
   <section>
-    {% comment %} <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
+    <form id="form-apply" action="{% url 'product:direct_treasure_apply' product.id %}" method="POST">
       {% csrf_token %}
       {% for field in form_apply %}
         {{ field.errors }}
@@ -30,14 +30,14 @@
       {% endfor %}
       <input id="btn-form-apply" class="C-product_button_apply" type="submit" value="aplicar">
     </form>
-    <form id="form-redeem" action="{% url 'product:fixed_income_redeem' product.id %}" method="POST">
+    <form id="form-redeem" action="{% url 'product:direct_treasure_redeem' product.id %}" method="POST">
       {% csrf_token %}
       {% for field in form_redeem %}
         {{ field.errors }}
         {{ field }}
       {% endfor %}
       <input id="btn-form-redeem" class="C-product_button_redeem" type="submit" value="resgatar">
-    </form> {% endcomment %}
+    </form>
   </section>
 </section>
 {% endblock content %}
