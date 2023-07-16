@@ -81,4 +81,12 @@ urlpatterns = [
          views.DirectTreasureRegisterView.as_view(),
          name='direct_treasure_register',
          ),
+    path('tesouro-direto/<int:id>/editar/',
+         views.DirectTreasureEditView.as_view(),
+         name='direct_treasure_edit',
+         ),
+    path('tesouro-direto/<int:id>/detalhes/',
+         views.DirectTreasureDetailsView.as_view(),
+         name='direct_treasure_details',
+         ),
 ]
