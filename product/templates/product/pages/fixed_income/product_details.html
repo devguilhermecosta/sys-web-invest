@@ -9,6 +9,7 @@
 {% block content%}
   <section class="C-fixed_income_details">
     {% include 'global/partials/_messages.html' %}
+
     <div style="float: right">
       <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
       <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_history' product.id %}">histórico</a>
@@ -23,23 +24,10 @@
     <p class="C-fixed_income_text">Rentabilidade: {{ product.profitability }}</p>
     <p class="C-fixed_income_text">Pagamento de juros: {{ product.interest_receipt|title }}</p>
     <p class="C-fixed_income_text">Observações: {{ product.description|captalize }}</p>
+
     <section>
-      <form id="form-apply" action="{% url 'product:fixed_income_apply' product.id %}" method="POST">
-        {% csrf_token %}
-        {% for field in form_apply %}
-          {{ field.errors }}
-          {{ field }}
-        {% endfor %}
-        <input id="btn-form-apply" class="C-product_button_apply" type="submit" value="aplicar">
-      </form>
-      <form id="form-redeem" action="{% url 'product:fixed_income_redeem' product.id %}" method="POST">
-        {% csrf_token %}
-        {% for field in form_redeem %}
-          {{ field.errors }}
-          {{ field }}
-        {% endfor %}
-        <input id="btn-form-redeem" class="C-product_button_redeem" type="submit" value="resgatar">
-      </form>
+      {% include 'product/partials/_form_apply.html' %}
+      {% include 'product/partials/_form_redeem.html' %}
     </section>
   </section>
 {% endblock content %}

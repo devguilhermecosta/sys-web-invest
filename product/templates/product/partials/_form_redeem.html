@@ -1,0 +1,8 @@
+<form id="form-redeem" action="{{ url_redeem }}" method="POST">
+    {% csrf_token %}
+    {% for field in form_redeem %}
+      {{ field.errors }}
+      {{ field }}
+    {% endfor %}
+    <input id="btn-form-redeem" class="C-product_button_redeem" type="submit" value="resgatar">
+</form>

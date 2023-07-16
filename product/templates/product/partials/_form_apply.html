@@ -1,0 +1,8 @@
+<form id="form-apply" action="{{ url_apply }}" method="POST">
+    {% csrf_token %}
+    {% for field in form_apply %}
+      {{ field.errors }}
+      {{ field }}
+    {% endfor %}
+    <input id="btn-form-apply" class="C-product_button_apply" type="submit" value="aplicar">
+</form>
