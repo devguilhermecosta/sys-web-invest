@@ -26,4 +26,6 @@ from .fixed_income import (
 from .direct_treasure import (
     DirectTreasureView,
     DirectTreasureRegisterView,
+    DirectTreasureEditView,
+    DirectTreasureDetailsView,
 )
