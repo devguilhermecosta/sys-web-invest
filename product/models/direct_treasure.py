@@ -27,6 +27,15 @@ class DirectTreasure(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    def make_initial_history(self, date: date, value: float) -> None:
+        new_history = DirectTreasureHistory.objects.create(
+            product=self,
+            date=date,
+            state='apply',
+            value=value,
+        )
+        new_history.save()
+
     def apply(self, date: date, value: float) -> None:
         new_history = DirectTreasureHistory.objects.create(
             product=self,
