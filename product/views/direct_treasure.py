@@ -1,16 +1,18 @@
 from django.views import View
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 from product.models import DirectTreasure
 from product.forms.direct_treasure import (
     DirectTreasureRegisterForm,
     DirectTreasureEditForm,
     )
 from product.forms.fixed_income import FixedIncomeApplyRedeemForm
-from django.contrib import messages
+from datetime import date as dt
 
 
 @method_decorator(
@@ -36,6 +38,8 @@ class DirectTreasureView(View):
 
 
 class DirectTreasureRegisterView(DirectTreasureView):
+    date = dt.today().strftime('%Y-%m-%d')
+
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('direct-treasure-apply', None)
         form = DirectTreasureRegisterForm(session)
@@ -63,6 +67,10 @@ class DirectTreasureRegisterView(DirectTreasureView):
                 **data,
             )
             new_object.save()
+            new_object.make_initial_history(
+                date=self.date,
+                value=data['value']
+            )
 
             del self.request.session['direct-treasure-apply']
 
@@ -145,19 +153,83 @@ class DirectTreasureDetailsView(DirectTreasureView):
             user=self.request.user,
             pk=kwargs.get('id', None),
         )
+        s_apply = self.request.session.get('direct-treasure-apply-h', None)
+        form_apply = FixedIncomeApplyRedeemForm(s_apply)
+
+        s_redeem = self.request.session.get('direct-treasure-redeem-h', None)
+        form_redeem = FixedIncomeApplyRedeemForm(s_redeem)
 
         return render(
             self.request,
             'product/pages/direct_treasure/details.html',
             context={
                 'product': product,
+                'form_apply': form_apply,
+                'form_redeem': form_redeem,
             }
         )
 
 
-class DirectTreasureApplyView(DirectTreasureView):
-    ...
+class DirectTreasureApplyView(DirectTreasureEditView):
+    date = dt.today().strftime('%Y-%m-%d')
+
+    def redirect_response(self, product_id: int) -> HttpResponse:
+        return redirect(
+            reverse('product:direct_treasure_details', args=(product_id,)),
+        )
+
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product(id=kwargs.get('id', None))
+        post = self.request.POST
+        self.request.session['direct-treasure-apply-h'] = post
+        form = FixedIncomeApplyRedeemForm(post)
+
+        if form.is_valid():
+            value = form.cleaned_data['value']
+            product.apply(
+                date=self.date,
+                value=value,
+            )
+
+            del self.request.session['direct-treasure-apply-h']
+
+            messages.success(
+                self.request,
+                'Aplicação realizada com sucesso'
+            )
+
+        return self.redirect_response(product.id)
 
 
-class DirectTreasureRedeemView(DirectTreasureView):
-    ...
+class DirectTreasureRedeemView(DirectTreasureApplyView):
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product(id=kwargs.get('id', None))
+        post = self.request.POST
+        self.request.session['direct-treasure-redeem-h'] = post
+        form = FixedIncomeApplyRedeemForm(post)
+
+        if form.is_valid():
+            value = form.cleaned_data['value']
+            try:
+                product.redeem(
+                    date=self.date,
+                    value=value,
+                )
+            except ValidationError:
+                messages.error(
+                    self.request,
+                    'Saldo insuficiente para resgate',
+                )
+
+                return self.redirect_response(product.id)
+
+            del self.request.session['direct-treasure-redeem-h']
+            messages.success(
+                self.request,
+                'Resgate realizado com sucesso',
+            )
+
+        return self.redirect_response(product.id)

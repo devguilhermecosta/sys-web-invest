@@ -28,4 +28,6 @@ from .direct_treasure import (
     DirectTreasureRegisterView,
     DirectTreasureEditView,
     DirectTreasureDetailsView,
+    DirectTreasureApplyView,
+    DirectTreasureRedeemView,
 )
