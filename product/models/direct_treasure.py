@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from datetime import date
 
 
 class DirectTreasure(models.Model):
@@ -24,3 +26,43 @@ class DirectTreasure(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def apply(self, date: date, value: float) -> None:
+        new_history = DirectTreasureHistory.objects.create(
+            product=self,
+            date=date,
+            state='apply',
+            value=value,
+        )
+        new_history.save()
+        self.value += value
+        self.save()
+
+    def redeem(self, date: date, value: float) -> None:
+        if self.value < value:
+            raise ValidationError(
+                ('saldo insuficiente para resgate'),
+                code='invalid',
+            )
+        new_history = DirectTreasureHistory.objects.create(
+            product=self,
+            date=date,
+            state='redeem',
+            value=value,
+        )
+        new_history.save()
+        self.value -= value
+        self.save()
+
+
+class DirectTreasureHistory(models.Model):
+    product = models.ForeignKey(DirectTreasure, on_delete=models.CASCADE)
+    date = models.DateField(default='2023-07-02')
+    state = models.CharField(max_length=255, choices=(
+        ('apply', 'apply'),
+        ('redeem', 'redeem'),
+    ))
+    value = models.FloatField()
+
+    def __str__(self) -> str:
+        return f'{self.state} of R$ {self.value:.2f} in {self.date}'
