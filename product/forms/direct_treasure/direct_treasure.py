@@ -5,6 +5,12 @@ from utils.forms.style import add_css_class
 
 
 default_input_class = 'C-login_input'
+date_field_formats = [
+    '%Y-%m-%d',
+    '%Y/%m/%d',
+    '%d-%m-%Y',
+    '%d/%m/%Y',
+    ]
 
 
 class DirectTreasureRegisterForm(forms.ModelForm):
@@ -12,10 +18,12 @@ class DirectTreasureRegisterForm(forms.ModelForm):
         label='vencimento',
         required=False,
         widget=forms.DateInput(
+            format='%Y-%m-%d',
             attrs={
                 'type': 'date',
             }
-        )
+        ),
+        input_formats=date_field_formats,
     )
 
     def __init__(self, *args, **kwargs) -> None:
@@ -112,3 +120,19 @@ class DirectTreasureRegisterForm(forms.ModelForm):
                 code='required'
             )
         return value
+
+
+class DirectTreasureEditForm(DirectTreasureRegisterForm):
+    value = forms.FloatField(
+        required=False,
+        label='valor',
+        help_text=(
+            'O valor não pode ser alterado por aqui. '
+            'Altere através da Aplicação e Regaste.'),
+        widget=forms.NumberInput(
+            attrs={
+                'readonly': 'readonly',
+            }
+        )
+    )
+    add_css_class(value, default_input_class)
