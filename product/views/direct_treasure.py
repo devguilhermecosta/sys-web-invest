@@ -166,6 +166,12 @@ class DirectTreasureDetailsView(DirectTreasureView):
                 'product': product,
                 'form_apply': form_apply,
                 'form_redeem': form_redeem,
+                'url_apply': reverse(
+                    'product:direct_treasure_apply', args=(product.id,)
+                    ),
+                'url_redeem': reverse(
+                    'product:direct_treasure_redeem', args=(product.id,)
+                    )
             }
         )
 

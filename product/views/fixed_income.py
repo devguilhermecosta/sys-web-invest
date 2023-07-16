@@ -163,6 +163,12 @@ class FixedIncomeDetailsView(FixedIncomeView):
                 'product': product,
                 'form_apply': form_apply,
                 'form_redeem': form_redeem,
+                'url_apply': reverse(
+                    'product:fixed_income_apply', args=(product.id,)
+                ),
+                'url_redeem': reverse(
+                    'product:fixed_income_redeem', args=(product.id,)
+                )
                 },
         )
 
