@@ -207,4 +207,3 @@ class DirectTreasureEditTests(TestCaseWithLogin):
             product.category,
             form_data['category'],
         )
-        self.fail('criar a aplicação, resgate e histórico')
