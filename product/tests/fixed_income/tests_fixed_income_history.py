@@ -54,7 +54,7 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/history.html',
+            'product/partials/_history_dt_&_fi.html',
         )
 
     @parameterized.expand([
