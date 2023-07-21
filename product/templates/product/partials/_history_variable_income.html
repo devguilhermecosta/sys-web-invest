@@ -14,15 +14,15 @@
     <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
   {% endwith %}
   <table class="C-dashboard_table">
-    <tbody>
+    <thead>
       <th>data</th>
       <th>mov</th>
       <th>qtde</th>
       <th>valor</th>
       <th>total</th>
       <th>nota</th>
-    </tbody>
-    <thead>
+    </thead>
+    <tbody>
     {% for product in history %}
       <tr>
         <td>{{ product.date|date:"d/m/y" }}</td>
@@ -45,7 +45,7 @@
         {% endif %}
       </tr>
     {% endfor %}
-    </thead>
+    </tbody>
   </table>
 </section>
 

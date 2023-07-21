@@ -8,25 +8,27 @@
 {% block content %}
   <h1 class="C-dashboard_title">FIIs em carteira</h1>
   <section class="C-dashboard_table_details">
-    <table class="C-dashboard_table">
-      <tr>
-        <th>código</th>
-        <th>quant.</th>
-        <th>valor med.</th>
-        <th>total</th>
-      </tr>
-    {% for fii in fiis %}
-      <tr>
-        <td><a href="{% url 'product:fii_history' fii.product.code %}">
-          {{ fii.product.code }}
-        </a></td>
-        <td>{{ fii.quantity }}</td>
-        <td>{{ fii.unit_price|real_brl }}</td>
-        <td>{{ fii.get_total_price|real_brl }}</td>
-      </tr>
-    {% empty %}
-      <p class="C-product_message">nenhum fii até o momento</p>
-    </table>
-    {% endfor %}
+    {% if fiis|length == 0 %}
+      <p class="C-dashboard_table_empty_message">nenhum fii até o momento</p>
+    {% else %}
+      <table class="C-dashboard_table">
+        <tr>
+          <th>código</th>
+          <th>quant.</th>
+          <th>valor med.</th>
+          <th>total</th>
+        </tr>
+      {% for fii in fiis %}
+        <tr>
+          <td><a href="{% url 'product:fii_history' fii.product.code %}">
+            {{ fii.product.code }}
+          </a></td>
+          <td>{{ fii.quantity }}</td>
+          <td>{{ fii.unit_price|real_brl }}</td>
+          <td>{{ fii.get_total_price|real_brl }}</td>
+        </tr>
+      </table>
+      {% endfor %}
+    {% endif %}
   </section>
 {% endblock content %}
