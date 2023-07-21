@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from product.models import DirectTreasure
+from product.models import DirectTreasure, DirectTreasureHistory
 from product.forms.direct_treasure import (
     DirectTreasureRegisterForm,
     DirectTreasureEditForm,
@@ -239,3 +239,21 @@ class DirectTreasureRedeemView(DirectTreasureApplyView):
             )
 
         return self.redirect_response(product.id)
+
+
+class DirectTreasureHistoryView(DirectTreasureEditView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product(id=kwargs.get('id', None))
+        history = DirectTreasureHistory.objects.all().order_by('-id')
+
+        return render(
+            self.request,
+            'product/partials/_history_dt_&_fi.html',
+            context={
+                'product': product,
+                'history': history,
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        return Http404()

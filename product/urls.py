@@ -95,4 +95,7 @@ urlpatterns = [
     path('tesouro-direto/<int:id>/resgatar/',
          views.DirectTreasureRedeemView.as_view(),
          name='direct_treasure_redeem'),
+    path('tesouro-direto/<int:id>/historico/',
+         views.DirectTreasureHistoryView.as_view(),
+         name='direct_treasure_history'),
 ]
