@@ -68,7 +68,7 @@ class ActionsSellView(Sell):
 
 
 class ActionHistoryDetails(History):
-    template_to_render_response = 'product/partials/history.html'
+    template_to_render_response = 'product/partials/_history_variable_income.html'  # noqa: E501
     product_model = Action
     user_product_model = UserAction
     history_model = ActionHistory

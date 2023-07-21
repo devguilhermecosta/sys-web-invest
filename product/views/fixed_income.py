@@ -249,7 +249,7 @@ class FixedIncomeHistoryView(FixedIncomeView):
 
         return render(
             request,
-            'product/pages/fixed_income/history.html',
+            'product/partials/_history_dt_&_fi.html',
             context={
                 'product': product,
                 'history': history

@@ -65,7 +65,7 @@ class FIIsSellView(Sell):
 
 
 class FIIHistoryDetails(History):
-    template_to_render_response = 'product/partials/history.html'
+    template_to_render_response = 'product/partials/_history_variable_income.html'  # noqa: E501
     product_model = FII
     user_product_model = UserFII
     history_model = FiiHistory
