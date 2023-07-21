@@ -63,6 +63,9 @@ class DirectTreasure(models.Model):
         self.value -= value
         self.save()
 
+    def get_total_value(self) -> float:
+        return self.value
+
 
 class DirectTreasureHistory(models.Model):
     product = models.ForeignKey(DirectTreasure, on_delete=models.CASCADE)
