@@ -75,7 +75,7 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     '''
     new_object = DirectTreasure.objects.create(
         user=user,
-        name='tesouro ipca+ 2024',
+        name=kwargs.get('name', 'tesouro ipca+ 2024'),
         category='ipca',
         interest_receipt='não há',
         profitability='ipca + 4,9% a.a.',
