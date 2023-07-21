@@ -636,14 +636,13 @@ textarea.C-login_input {
 }
 
 .C-dashboard_table::-webkit-scrollbar {
-  background-color: var(--turquoise_6);
-  height: 10px;
+  height: 8px;
 }
 
 .C-dashboard_table::-webkit-scrollbar-thumb {
-  background-color: var(--turquoise_1);
+  background-color: var(--turquoise_3);
+  border: 1px solid white;
   border-radius: 10px;
-  border: 2px solid var(--turquoise_6);
 }
 
 .C-dashboard_table th {
@@ -915,6 +914,15 @@ textarea.C-login_input {
 /* end animation */
 
 /* media queries */
+@media screen and (min-width: 500px) {
+  .C-dashboard_table {
+    white-space: nowrap;
+  }
+
+  .C-dashboard_table th {
+    padding: 10px;
+  }
+}
 @media screen and (min-width: 800px) {
   .C-login_form {
     max-width: 380px;
