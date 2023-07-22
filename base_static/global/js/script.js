@@ -1,3 +1,18 @@
+// function for quit the suMenu
+(() => {
+  const menuMobile = document.querySelectorAll('.C-menu_mobile')[0];
+  const subMenu = document.querySelector('#C-menu_ativos_checkox');
+
+  if (menuMobile) {
+    menuMobile.addEventListener("click", function() {
+      if (subMenu.checked) {
+        subMenu.checked = false;
+      }
+    })
+  }
+})();
+
+
 // animate input field
 (() => {
   const formInput = document.querySelectorAll('.C-login_input');
@@ -104,6 +119,7 @@ try {
   } catch(e){};
 })();
 
+
 // Function for change btn value into register page
 (() => {
   try {
@@ -118,6 +134,7 @@ try {
   } catch(e){};
 })();
 
+
 // Function for change btn value into register page
 (() => {
   try {
@@ -131,6 +148,7 @@ try {
     })
   } catch(e){};
 })();
+
 
 // functions for create html elements
 function createDefaultContainer() {
@@ -165,6 +183,7 @@ function createTextElement(color, message) {
   return text;
 }
 
+
 // create message alert
 function createMessageAlert(color, message) {
   const body = document.body;
@@ -182,6 +201,7 @@ function createMessageAlert(color, message) {
     body.removeChild(container);
   })
 }
+
 
 // create form confirmation fixed income
 function createFormFixedIncome(form, buttonInput, input, message, messageAlert) {
@@ -224,6 +244,7 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
   })
 }
 
+
 // prevent default form aplly
 (() => {
   try {
@@ -233,6 +254,7 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
     createFormFixedIncome(form, button, input, 'deseja confirmar a aplicação?', 'informe um valor');
   } catch(e){}
 })();
+
 
 // prevent default form redeem
 (() => {
