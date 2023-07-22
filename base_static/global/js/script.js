@@ -179,10 +179,12 @@ function createDivFlexButton() {
 function createTextElement(color, message) {
   const text = document.createElement('p');
   text.style.color = color;
+  text.style.whiteSpace = 'nowrap';
+  text.style.textAlign = 'center';
+  text.style.padding = '10px';
   text.innerHTML = message;
   return text;
 }
-
 
 // create message alert
 function createMessageAlert(color, message) {
@@ -264,4 +266,94 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
     const input = document.querySelectorAll('.C-fixed_income_input')[1];
     createFormFixedIncome(form, button, input, 'deseja confirmar o resgate?', 'informe um valor');
   } catch(e){}
+})();
+
+
+// FIIs form for receipt income
+(() => {
+  const btnFiisReceiptIncome = document.querySelector('#fiis_btn_income');
+
+  if (btnFiisReceiptIncome) {
+    btnFiisReceiptIncome.addEventListener("click", function() {
+      
+    })
+  }
+})();
+
+// form fiis receiv profis
+(() => {
+  const formFiisReceivProfis = document.querySelector('#form_fii_receiv_profis');
+
+  if (formFiisReceivProfis) {
+    formFiisReceivProfis.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const form = new FormData(formFiisReceivProfis);
+      const product = parseInt(form.get('product_id'));
+      const select = formFiisReceivProfis.querySelector('#id_product_id');
+      const productDesc = select.options[select.selectedIndex].innerHTML;
+      const date = form.get('date');
+      const value = parseFloat(form.get('value'));
+
+      const body = document.body;
+      let container = createDefaultContainer();
+
+      if (product >= 1 && date.length > 0 && value > 0) {
+        const formatedValue = value.toLocaleString(
+          'pt-br',
+          {
+            style: 'currency',
+            currency: 'BRL'
+          });
+        const frame = createDefaultFrame();
+        const buttonContainer = createDivFlexButton();
+
+        const message = createTextElement(
+          'white',
+          `<p>Deseja salvar o recebimento</p>
+          <p>de ${formatedValue}</p>
+          <p>para o produto ${productDesc}?</p>`,
+          );
+        
+        const buttonConfirm = createButton('confirmar');
+        const buttonCancel = createButton('cancelar');
+
+        buttonContainer.appendChild(buttonConfirm);
+        buttonContainer.appendChild(buttonCancel);
+        frame.appendChild(message);
+        frame.appendChild(buttonContainer);
+        container.appendChild(frame)
+        body.appendChild(container);
+
+        buttonContainer.addEventListener("click", () => {
+          body.removeChild(container);
+        });
+
+        buttonConfirm.addEventListener("click", function() {
+          let urlPath = `/ativos/fiis/gerenciar-proventos/${product}/receber/`;
+          let token = formFiisReceivProfis.querySelectorAll('input')[0].value;
+          let labels = formFiisReceivProfis.querySelectorAll('.C-login_label');
+
+          let xmlr = new XMLHttpRequest();
+
+          xmlr.onreadystatechange = function() {
+            if (xmlr.readyState === 4 && xmlr.status == 200) {
+              let result = document.querySelector('#result');
+              result.innerHTML = 
+              `Recebimento de ${formatedValue} lançado com sucesso para ${productDesc}`;
+              formFiisReceivProfis.reset();
+              labels.forEach((l) => {l.classList.remove('C-login_input_active')});
+            }
+          }
+          xmlr.open('POST', urlPath);
+          xmlr.setRequestHeader('X-CSRF-TOKEN', token)
+          xmlr.send(form);
+        })
+        return;
+      }
+
+      createMessageAlert('white', 'Informe todos os dados');
+    
+    })
+  }
 })();
