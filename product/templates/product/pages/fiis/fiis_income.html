@@ -1,0 +1,14 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+
+{% block title %}
+  Proventos
+{% endblock title %}
+
+{% block content %}
+  <h1 class="C-dashboard_title">Receber Proventos</h1>
+  <section class="C-dashboard_table_details">
+    {% include 'global/partials/_form.html' %}
+    <div id="result"></div>
+  </section>
+{% endblock content %}
