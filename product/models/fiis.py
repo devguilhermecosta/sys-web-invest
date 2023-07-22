@@ -24,6 +24,10 @@ class UserFII(models.Model):
     unit_price = models.FloatField()
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     handler = models.CharField(max_length=255, default='buy')
+    earnings_accumulated = models.FloatField(default=0.0,
+                                             blank=True,
+                                             null=True,
+                                             )
 
     def __str__(self) -> str:
         return f'{self.product.code} de {self.user.username}'
@@ -67,6 +71,19 @@ class UserFII(models.Model):
         self.unit_price = (self.unit_price + unit_price) / 2
         self.save()
 
+    def receive_profits(self, value: float, date: str) -> None:
+        new_history = FiiHistory.objects.create(
+            userproduct=self,
+            handler='profits',
+            date=date,
+            quantity=1,
+            unit_price=value,
+            total_price=value,
+        )
+        new_history.save()
+        self.earnings_accumulated += value
+        self.save()
+
 
 class FiiHistory(models.Model):
     upload = 'trading-notes/fiis/'
@@ -74,7 +91,7 @@ class FiiHistory(models.Model):
     handler = models.CharField(max_length=255, choices=(
         ('B', 'buy'),
         ('S', 'sell'),
-        ('P', 'proceeds'),
+        ('P', 'profits'),
     ))
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
@@ -89,8 +106,8 @@ class FiiHistory(models.Model):
                 handler = 'compra'
             case 'sell':
                 handler = 'venda'
-            case 'proceeds':
-                handler = 'aluguel'
+            case 'profits':
+                handler = 'lucros'
             case _:
                 ''
 
@@ -99,3 +116,24 @@ class FiiHistory(models.Model):
             f'{self.userproduct.product.code} do usuário '
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
+
+# um field de acumulo de proventos será criado dentro de cada fii.
+# ao receber proventos, esse field será alteado.
+# na tela inicial, um relatório de recebimento de proventos será criado.
+# teremos duas informações: o total investido contendo o recebimento
+# de proventos, e um total sem considerar o recebimento de proventos.
+
+# quando o usuário clicar em lançar proventos, uma página inline será aberta.
+# nesta página, um form com os seguintes campos será criado:
+# - um select para o usuário escolher o fii;
+# - a data;
+# - o valor total;
+# - um botão para salvar;
+# - um botão para cancelar;
+# - um botão para fechar o form.
+# ao clicar em lançar proventos, caso tudo esteja ok, um form de confirmação
+# será criado.
+# se o usuário clicar em ok, o provento será lançado, senão, será cancelado.
+# uma mensagem de sucesso será criada.
+# se o form tiver erros, uma mensagem de erro será gerada.
+# um histório EDITÁVEL será criado;
