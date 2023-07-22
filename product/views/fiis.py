@@ -1,10 +1,10 @@
 from django.views import View
 from django.views.generic import ListView
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from product.forms import FIIBuyForm
+from product.forms import FIIBuyForm, FIIReceiptProfitsForm
 from product.models import FII, UserFII, FiiHistory
 from .base_views.variable_income import Buy, Sell, History
 
@@ -69,3 +69,49 @@ class FIIHistoryDetails(History):
     product_model = FII
     user_product_model = UserFII
     history_model = FiiHistory
+
+
+class FIIManageIncomeReceipt(FIIsView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        products = UserFII.objects.filter(
+            user=self.request.user
+        )
+
+        choices = [('---', '---')]
+        for product in products:
+            choices.append(
+                (product.product.id, product.product.code),
+            )
+
+        form = FIIReceiptProfitsForm()
+        form.fields.get('product_id').widget.choices = choices
+
+        return render(
+            self.request,
+            'product/pages/fiis/fiis_income.html',
+            context={
+                'form': form,
+                'custom_id': 'form_fii_receiv_profis',
+                'button_submit_value': 'salvar',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        post = self.request.POST
+        form = FIIReceiptProfitsForm(post)
+
+        if form.is_valid():
+            p_id = form.cleaned_data['product_id']
+            value = form.cleaned_data['value']
+            date = form.cleaned_data['date']
+
+            product = UserFII.objects.get(
+                user=self.request.user,
+                product=p_id
+            )
+            product.receive_profits(
+                value=value,
+                date=date,
+            )
+
+        return JsonResponse({'data': ''})
