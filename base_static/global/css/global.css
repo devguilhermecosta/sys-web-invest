@@ -807,6 +807,7 @@ textarea.C-login_input {
 
 .C-product_form_container {
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000000;
   animation: open-form-container 300ms ease forwards;
 }
 
@@ -819,6 +820,8 @@ textarea.C-login_input {
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.8);
   animation: open-form 300ms ease forwards;
+  height: fit-content !important;
+  padding-bottom: 10px;
 }
 
 #form-apply, #form-redeem {
@@ -864,6 +867,7 @@ textarea.C-login_input {
 
 .C-product_form_buttons {
   width: 100%;
+  height: auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
