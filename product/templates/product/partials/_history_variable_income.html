@@ -31,6 +31,8 @@
             <td class="C-dashboard_table_buy">compra</td>
           {% elif handler == 'sell' %}
             <td class="C-dashboard_table_sell">venda</td>
+          {% else %}
+            <td class="C-dashboard_table_buy">proventos</td>
           {% endif %}
         {% endwith %}
         <td>{{ product.quantity }}</td>
