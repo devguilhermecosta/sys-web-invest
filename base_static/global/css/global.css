@@ -512,14 +512,44 @@ textarea.C-login_input {
   line-height: 2;
 }
 
+.C-dashboard_summary_title {
+  width: fit-content;
+  position: relative;
+}
+
 .C-dashboard_summary_title::before {
   content: '';
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-color: var(--gray_1);
+  background-color: var(--black);
   border-radius: 50%;
   margin-right: 3px;
+}
+
+.C-dashboard_summary_title > a {
+  text-decoration: none;
+  color: var(--black);
+  font-weight: 600;
+  width: fit-content;
+  z-index: 100;
+}
+
+.C-dashboard_summary_title a::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--turquoise_6);
+  width: 0px;
+  height: 5px;
+  transition: width 150ms linear;
+  border-radius: 5px;
+}
+
+.C-dashboard_summary_title a:hover::after {
+  width: calc(100% + 10px);
 }
 
 .total {
@@ -837,7 +867,8 @@ textarea.C-login_input {
 }
 
 .C-fixed_income_input::placeholder {
-  color: var(--gray_1);
+  color: var(--gray_0);
+  opacity: .7;
   text-transform: capitalize;
 }
 
