@@ -113,6 +113,3 @@ class DirectTreasureHistoryTests(TestCaseWithLogin):
         self.assertIn(
             text, content
         )
-        self.fail('criar os tests de histórico nos demais scripts. '
-                  'criar botões para voltar a página dentro dos detalhes.'
-                  )

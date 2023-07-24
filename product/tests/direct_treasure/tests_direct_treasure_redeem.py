@@ -2,7 +2,7 @@ from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product.views import DirectTreasureRedeemView
 from product.tests.base_tests import make_direct_treasure
-from product.models import DirectTreasure
+from product.models import DirectTreasure, DirectTreasureHistory
 
 
 class DirectTreasureRedeemTests(TestCaseWithLogin):
@@ -145,4 +145,36 @@ class DirectTreasureRedeemTests(TestCaseWithLogin):
         self.assertEqual(
             product.value,
             0,
+        )
+
+    def test_direct_treasure_redeem_creates_a_new_history(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # creates a new direct treasure object
+        obj = make_direct_treasure(user=user)
+
+        # make post request
+        self.client.post(
+            self.url,
+            {'value': 5},
+            follow=True,
+        )
+
+        # get history
+        history = DirectTreasureHistory.objects.filter(
+            product=obj,
+        )
+
+        self.assertEqual(
+            len(history),
+            1,
+        )
+        self.assertEqual(
+            history.first().state,
+            'redeem',
+        )
+        self.assertEqual(
+            history.first().value,
+            5,
         )
