@@ -1,17 +1,18 @@
 // function for quit the suMenu
-(() => {
+function closeMenu(id_submenu) {
   const menuMobile = document.querySelectorAll('.C-menu_mobile')[0];
-  const subMenu = document.querySelector('#C-menu_ativos_checkox');
+  const subMenu = document.querySelector(`#${id_submenu}`);
 
-  if (menuMobile) {
+  if (subMenu) {
     menuMobile.addEventListener("click", function() {
       if (subMenu.checked) {
         subMenu.checked = false;
       }
     })
   }
-})();
-
+}
+closeMenu('C-menu_ativos_checkox');
+closeMenu('C-menu_admin_checkox');
 
 // animate input field
 (() => {

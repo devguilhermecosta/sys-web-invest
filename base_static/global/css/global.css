@@ -159,7 +159,7 @@ body {
   opacity: 0;
 }
 
-.C-menu__link, label[for="C-menu_ativos_checkox"] {
+.C-menu__link, .C-menu_submenu_label {
   text-decoration: none;
   text-transform: capitalize;
   color: var(--white);
@@ -170,12 +170,16 @@ body {
   transition: background 150ms linear;
 }
 
-.C-menu__link:hover, label[for="C-menu_ativos_checkox"]:hover {
+.C-menu__link:hover, .C-menu_submenu_label:hover {
   background-color: var(--turquoise_6);
 }
 
-#C-menu_ativos_checkox {
+#C-menu_ativos_checkox, #C-menu_admin_checkox {
   display: none;
+}
+
+#C-menu_ativos_checkox:checked ~ .C-menu_submenu {
+  display: block;
 }
 
 .C-menu_submenu {
@@ -186,8 +190,20 @@ body {
   padding-left: 8px;
 }
 
-#C-menu_ativos_checkox:checked ~ .C-menu_submenu {
+#C-menu_admin_checkox:checked ~ .C-menu_submenu {
   display: block;
+}
+
+.C-menu_admin_submenu {
+  display: block;
+  max-height: 0;
+  transition: max-height 600ms ease;
+  overflow: hidden;
+}
+
+#C-menu_admin_checkox:checked ~ .C-menu_admin_submenu {
+  max-height: 800px;
+  transition: max-height 1s ease;
 }
 
 .C-logo {

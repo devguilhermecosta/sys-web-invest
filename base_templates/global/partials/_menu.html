@@ -17,7 +17,7 @@
     {% if user.is_authenticated %}
       <li class="C-menu_li">
         <input type="checkbox" name="C-menu_ativos_checkox" id="C-menu_ativos_checkox">
-        <label for="C-menu_ativos_checkox">ativos</label>
+        <label class="C-menu_submenu_label" for="C-menu_ativos_checkox">ativos</label>
         <ul class="C-menu_submenu">
           <li class="C-menu_submenu_li">
             <a class="C-menu__link" href="{% url 'product:actions' %}">ações</a>
@@ -36,6 +36,10 @@
       <li class="C-menu_li">
         <a class="C-menu__link" href="">configurações</a>
       </li>
+
+      <!-- just if the user is staff -->
+      {% include 'global/partials/_admin_menu.html' %}
+
       <li class="C-menu_li">
         <form action="{% url 'dashboard:logout' %}" method="POST">
           {% csrf_token %}
