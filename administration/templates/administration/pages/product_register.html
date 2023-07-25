@@ -1,0 +1,12 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Registrar novo produto
+{% endblock title %}
+
+{% block content %}
+  <section class="C-actions center_x_y_flex">
+    {% include 'global/partials/_form.html' %}
+  </section>
+  {% include 'global/partials/_messages.html' %} 
+{% endblock content %}
