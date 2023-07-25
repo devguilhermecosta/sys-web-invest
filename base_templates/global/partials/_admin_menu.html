@@ -1,0 +1,14 @@
+{% if user.is_authenticated and user.is_staff %}
+  <li class="C-menu_li">
+    <input type="checkbox" name="C-menu_admin_checkox" id="C-menu_admin_checkox">
+    <label class="C-menu_submenu_label" for="C-menu_admin_checkox">Administração do site</label>
+    <ul class="C-menu_admin_submenu">
+      <li class="C-menu_submenu_li">
+        <a class="C-menu__link" href="">cadastrar FII</a>
+      </li>
+      <li class="C-menu_submenu_li">
+        <a class="C-menu__link" href="">cadastrar ação</a>
+      </li>
+    </ul>
+  </li>
+{% endif %}
