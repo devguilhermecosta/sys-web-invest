@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
-    # path('admin/', admin.site.urls),
+    path('painel-de-controle/', include('administration.urls')),
     path('usuario/', include('user.urls')),
     path('password/', include('resetpassword.urls')),
     path('ativos/', include('product.urls')),
