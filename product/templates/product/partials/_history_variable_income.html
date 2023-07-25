@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block content %}
-<section class="C-dashboard_table_details">
+<section class="C-dashboard_table_details is_head">
   {% with product=history.0.userproduct.product %}
     <h1>{{ product.code }}</h1>
     <h2>{{ product.description }}</h2>
