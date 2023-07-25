@@ -678,6 +678,10 @@ textarea.C-login_input {
   margin: 0 auto;
   margin-bottom: 10px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 30px;
 }
 
 .C-dashboard_table {
