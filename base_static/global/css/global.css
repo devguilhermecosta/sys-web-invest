@@ -700,6 +700,11 @@ textarea.C-login_input {
   row-gap: 30px;
 }
 
+.C-dashboard_table_details.is_head {
+  align-items: flex-start;
+  row-gap: 0px;
+}
+
 .C-dashboard_table {
   display: block;
   width: 100%;
