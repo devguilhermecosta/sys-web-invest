@@ -77,6 +77,11 @@ class FIIManageIncomeReceipt(FIIsView):
             user=self.request.user
         )
 
+        history = UserFII.get_full_history(
+            user=self.request.user,
+            handler='profits',
+            )
+
         choices = [('---', '---')]
         for product in products:
             choices.append(
@@ -91,6 +96,7 @@ class FIIManageIncomeReceipt(FIIsView):
             'product/pages/fiis/fiis_income.html',
             context={
                 'form': form,
+                'history': history,
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
             }

@@ -1,11 +1,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from typing import TypeVar
+from typing import TypeVar, List
+from datetime import datetime as dt
 
 
 date = '2023-07-04'
 PDF = TypeVar('PDF', bytes, None)
+QuerySet = TypeVar('QuerySet', list, None)
 
 
 class FII(models.Model):
@@ -83,6 +85,42 @@ class UserFII(models.Model):
         new_history.save()
         self.earnings_accumulated += value
         self.save()
+
+    def get_partial_history(self, handler: str) -> QuerySet:
+        history = FiiHistory.objects.filter(
+            userproduct=self,
+            handler=handler,
+        )
+        return history
+
+    @classmethod
+    def get_full_history(cls, user: User, handler: str) -> List[dict] | None:
+        ''' handler: buy, redeem or profits  '''
+        history = []
+
+        products = UserFII.objects.filter(
+            user=user,
+        )
+
+        for product in products:
+            for h in product.get_partial_history(handler):
+                history.append({
+                    'date': h.date,
+                    'history_id': h.pk,
+                    'product': product.product.code,
+                    'value': h.total_price,
+                    'handler': h.handler,
+                })
+
+        history.sort(
+            key=lambda item: dt.strptime(
+                str(item['date']),
+                '%Y-%m-%d',
+                ),
+            reverse=True,
+        )
+
+        return history
 
 
 class FiiHistory(models.Model):
