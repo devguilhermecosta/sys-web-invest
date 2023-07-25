@@ -14,25 +14,27 @@
     </li>
   </ul>
   <section class="C-dashboard_table_details">
-    <table class="C-dashboard_table">
-      <thead>
-        <th>nome</th>
-        <th>total investido</th>
-        <th>vencimento</th>
-      </thead>
-      <tbody>
-      {% for product in products %}
-        <tr>
-          <td>
-            <a href="{% url 'product:direct_treasure_details' product.id %}">{{ product.name }}</a>
-          </td>
-          <td>{{ product.value|real_brl }}</td>
-          <td>{{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
-        </tr>
-      </tbody>
-      {% empty %}
-        <p class="C-dashboard_table_empty_message">nenhum produto cadastrado</p>
-      {% endfor %}
-    </table>
+    {% if products|length == 0 %}
+      <p class="C-dashboard_table_empty_message">nenhum produto cadastrado</p>
+    {% else %}
+      <table class="C-dashboard_table">
+        <thead>
+          <th>nome</th>
+          <th>total investido</th>
+          <th>vencimento</th>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td>
+              <a href="{% url 'product:direct_treasure_details' product.id %}">{{ product.name }}</a>
+            </td>
+            <td>{{ product.value|real_brl }}</td>
+            <td>{{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>         
+      </table>
+    {% endif %}
   </section>
 {% endblock content %}
