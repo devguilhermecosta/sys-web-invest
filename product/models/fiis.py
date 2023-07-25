@@ -11,7 +11,7 @@ QuerySet = TypeVar('QuerySet', list, None)
 
 
 class FII(models.Model):
-    code = models.CharField(max_length=5, unique=True)
+    code = models.CharField(max_length=6, unique=True)
     description = models.CharField(max_length=50)
     cnpj = models.CharField(max_length=18, unique=True)
 
