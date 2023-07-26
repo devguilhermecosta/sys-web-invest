@@ -1,4 +1,5 @@
 from django.views import View
+from django.urls import reverse
 from django.views.generic import ListView
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -77,11 +78,6 @@ class FIIManageIncomeReceipt(FIIsView):
             user=self.request.user
         )
 
-        history = UserFII.get_full_history(
-            user=self.request.user,
-            handler='profits',
-            )
-
         choices = [('---', '---')]
         for product in products:
             choices.append(
@@ -95,8 +91,8 @@ class FIIManageIncomeReceipt(FIIsView):
             self.request,
             'product/pages/fiis/fiis_income.html',
             context={
+                'url': reverse('product:fii_history_json'),
                 'form': form,
-                'history': history,
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
             }
@@ -121,3 +117,14 @@ class FIIManageIncomeReceipt(FIIsView):
             )
 
         return JsonResponse({'data': ''})
+
+
+class FIIManageIncomeReceiptXML(FIIsView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = UserFII.get_full_history(
+            user=self.request.user,
+            handler='profits',
+            )
+        return JsonResponse(
+            {'data': history}
+        )

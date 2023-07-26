@@ -14,6 +14,7 @@ from .fiis import (
     FIIsSellView,
     FIIManageIncomeReceipt,
     FIIHistoryDetails,
+    FIIManageIncomeReceiptXML,
     )
 from .fixed_income import (
     FixedIncomeView,

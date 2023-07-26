@@ -360,3 +360,69 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
     })
   }
 })();
+
+// new ajax
+function createDataTable(date, code, value, handler, p_id) {
+  const tableBody = document.querySelector('#table-body');
+  let tableRow = document.createElement('tr');
+  let tableDate = document.createElement('td');
+  let tableCode = document.createElement('td');
+  let tableValue = document.createElement('td');
+  let tableHandler = document.createElement('td');
+  let tableId = document.createElement('td');
+
+
+  tableDate.innerHTML = date;
+  tableCode.innerHTML = code;
+  tableValue.innerHTML = value;
+  tableHandler.innerHTML = handler;
+  tableHandler.style.color = '#0f6e6a';
+  tableId.innerHTML = p_id;
+
+  tableRow.appendChild(tableDate);
+  tableRow.appendChild(tableCode);
+  tableRow.appendChild(tableValue);
+  tableRow.appendChild(tableHandler);
+  tableRow.appendChild(tableId);
+
+  tableBody.appendChild(tableRow);
+}
+
+function createProfitsTable() {
+  const elem = document.querySelector('#url');
+  const path = elem.dataset.url;
+  let request = new XMLHttpRequest();
+
+  request.onreadystatechange = function() {
+    if (request.readyState == 4 && request.status == 200) {
+      const result = JSON.parse(request.responseText);
+      const data = result.data;
+      let date;
+
+      data.map((el) => {
+        date = new Date(el.date);
+
+        createDataTable(
+          date.toLocaleDateString(
+            'pt-BR',
+            {'timeZone': 'UTC'},
+          ),
+          el.product,
+          el.value.toLocaleString(
+            'pt-BR',
+            {
+              style: 'currency',
+              currency: 'BRL',
+            },
+          ),
+          el.handler === 'profits' ? 'PROVENTOS' : '',
+          el.history_id);
+      }
+      )
+    }
+  }
+  request.open('GET', path.toString(), true);
+  request.send();
+}
+
+createProfitsTable();

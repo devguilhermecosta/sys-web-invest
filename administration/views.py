@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from administration.forms import FIIRegisterForm
+from product.models import FII
 
 
 class FIIRegister(TemplateView):
@@ -14,11 +15,13 @@ class FIIRegister(TemplateView):
         context_data = super().get_context_data(**kwargs)
         session = self.request.session.get('fii-admin-register', None)
         form = FIIRegisterForm(session)
+        fiis = FII.objects.all().order_by('-id')
 
         context_data.update({
             'form': form,
             'form_title': 'Registrar novo FII',
             'button_submit_value': 'registrar',
+            'fiis': fiis,
         })
 
         return context_data
