@@ -12,35 +12,21 @@
   </section>
   
   <div id="result"></div>
+
+  <p id="url" data-url={{ url }}></p>
   
   <section class="C-dashboard_table_details">
-    <table class="C-dashboard_table">
-      <thead>
-        <th>data</th>
-        <th>código</th>
-        <th>valor</th>
-        <th>mov</th>
-        <th>id</th>
-      </thead>
-      <tbody>
-      {% for h in history %}
-        <tr>
-          <td>{{ h.date|date:"d/m/y" }}</td>
-          <td>{{ h.product }}</td>
-          <td>{{ h.value|real_brl }}</td>
-          {% with handler=h.handler %}
-            {% if handler == 'buy' %}
-              <td class="C-dashboard_table_buy">compra</td>
-            {% elif handler == 'sell' %}
-              <td class="C-dashboard_table_sell">venda</td>
-            {% else %}
-              <td class="C-dashboard_table_buy">proventos</td>
-            {% endif %}
-          {% endwith %}
-          <td>{{ h.history_id }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+    {% comment %} {% if history|length != 0 %} {% endcomment %}
+      <table id="profits-table" class="C-dashboard_table">
+        <thead>
+          <th>data</th>
+          <th>código</th>
+          <th>valor</th>
+          <th>mov</th>
+          <th>id</th>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    {% comment %} {% endif %} {% endcomment %}
   </section>
 {% endblock content %}

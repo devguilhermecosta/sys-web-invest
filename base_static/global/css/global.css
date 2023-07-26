@@ -453,6 +453,7 @@ textarea.C-login_input {
 .errorlist {
   color: var(--dark_red);
   list-style: none;
+  text-align: justify;
 }
 
 .C-login_form > .errorlist {
