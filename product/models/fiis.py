@@ -113,10 +113,7 @@ class UserFII(models.Model):
                 })
 
         history.sort(
-            key=lambda item: dt.strptime(
-                str(item['date']),
-                '%Y-%m-%d',
-                ),
+            key=lambda item: dt.strptime(str(item['date']), '%Y-%m-%d',),
             reverse=True,
         )
 
