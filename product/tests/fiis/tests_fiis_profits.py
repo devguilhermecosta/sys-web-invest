@@ -30,6 +30,15 @@ class FIIsProfitsTests(TestCaseWithLogin):
             302,
         )
 
+    def test_fiis_profits_is_allowed_if_user_is_authenticated(self) -> None:
+        self.make_login()
+        response = self.client.get(self.url)
+
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
+
     def test_fiis_profits_loads_correct_template(self) -> None:
         self.make_login()
 
@@ -180,7 +189,3 @@ class FIIsProfitsTests(TestCaseWithLogin):
             history.total_price,
             4.96
         )
-
-
-# testar o FIIManageIncomeReceiptXML
-# criar a opção de deletar e editar os proventos
