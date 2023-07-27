@@ -74,12 +74,16 @@ body {
   white-space: nowrap;
   overflow: hidden;
   list-style: none;
-  background-color: var(--turquoise_3);
+  background-color: #f7f7f7;
   transition: width 300ms ease;
 }
 
 .C-menu_li {
-  margin: 15px 0 ;
+  padding: 10px 8px;
+}
+
+.C-menu_li > .C-menu__link, .C-menu_submenu_label {
+  font-weight: 600;
 }
 
 .C-menu_label {
@@ -162,28 +166,33 @@ body {
 .C-menu__link, .C-menu_submenu_label {
   text-decoration: none;
   text-transform: capitalize;
-  color: var(--white);
+  color: var(--black);
   display: block;
   padding: 5px;
   width: 100%;
   cursor: pointer;
   transition: background 150ms linear;
+  border-radius: 6px;
 }
 
 .C-menu__link:hover, .C-menu_submenu_label:hover {
   background-color: var(--turquoise_6);
+  color: var(--white);
 }
 
 #C-menu_ativos_checkox, #C-menu_admin_checkox {
   display: none;
 }
 
-#C-menu_ativos_checkox:checked ~ .C-menu_submenu {
-  display: block;
+.C-menu_submenu {
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 600ms ease;
 }
 
-.C-menu_submenu {
-  display: none;
+#C-menu_ativos_checkox:checked ~ .C-menu_submenu {
+  max-height: 500px;
+  transition: max-height 600ms ease;
 }
 
 .C-menu_submenu_li {
@@ -354,7 +363,7 @@ textarea.C-login_input {
 }
 
 .C-login_sign_in {
-  border: 1px solid var(--turquoise_4);
+  border: 1px solid var(--turquoise_6);
   color: var(--blue_3);
   cursor: pointer;
   outline: none;
@@ -626,7 +635,7 @@ textarea.C-login_input {
 
 .C-upgrade_box p {
   font-size: 9px;
-  background-color: var(--turquoise_3);
+  background-color: var(--turquoise_6);
   color: var(--white);
   width: fit-content;
   padding: 10px 5px;
