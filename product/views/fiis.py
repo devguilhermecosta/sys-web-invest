@@ -81,7 +81,7 @@ class FIIManageIncomeReceipt(FIIsView):
         choices = [('---', '---')]
         for product in products:
             choices.append(
-                (product.product.id, product.product.code),
+                (product.product.id, str(product.product.code).upper()),
             )
 
         form = FIIReceiptProfitsForm()
