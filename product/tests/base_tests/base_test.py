@@ -4,9 +4,11 @@ from pathlib import Path
 from product.models import (
     Action,
     FII,
+    UserFII,
     ProductFixedIncome,
     DirectTreasure,
     )
+from datetime import date
 import c2validator as c2
 
 
@@ -32,6 +34,25 @@ def make_fii(code: str, desc: str, cnpj: str = None) -> FII:
     new_fii.save()
 
     return new_fii
+
+
+def make_user_fii(user: User,
+                  qty: int,
+                  unit_price: float,
+                  code: str,
+                  desc: str,
+                  **kwargs,
+                  ) -> UserFII:
+    new_obj = UserFII.objects.create(
+        user=user,
+        product=make_fii(code, desc, cnpj=c2.create_cnpj()),
+        quantity=qty,
+        unit_price=unit_price,
+        date=date.today().strftime('%Y-%m-%d'),
+        handler=kwargs.get('handler', 'buy'),
+    )
+    new_obj.save()
+    return new_obj
 
 
 def make_simple_file() -> SimpleUploadedFile:
