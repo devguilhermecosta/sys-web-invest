@@ -716,6 +716,7 @@ textarea.C-login_input {
 }
 
 .C-dashboard_table {
+  align-self: center;
   display: block;
   width: 100%;
   max-width: fit-content;
