@@ -22,12 +22,32 @@
   <!-- footer -->
   <footer></footer>
 
-  <!-- script js -->
+  <!-- scripts js -->
   <script>
-    let script = window.document.createElement('script');
-    let body = window.document.body;
+    // create default script
+    const body = window.document.body;
+    const script = window.document.createElement('script');
+    script.setAttribute('type', 'module');
     script.setAttribute('src', '{% static "global/js/script.js" %}');
     body.appendChild(script);
+
+    // create script for search cep
+    const cep = window.document.createElement('script');
+    cep.setAttribute('type', 'module');
+    cep.setAttribute('src', '{% static "global/js/cep.js" %}');
+    body.appendChild(cep);
+
+    // create script for fiis
+    const fiis = window.document.createElement('script');
+    fiis.setAttribute('type', 'module');
+    fiis.setAttribute('src', '{% static "global/js/fiis.js" %}');
+    body.appendChild(fiis);
+
+    // create script for fiis and direct treasure
+    const dt_and_fiis = window.document.createElement('script');
+    dt_and_fiis.setAttribute('type', 'module');
+    dt_and_fiis.setAttribute('src', '{% static "global/js/dt_and_fiis.js" %}');
+    body.appendChild(dt_and_fiis);
   </script>
     
 </body>
