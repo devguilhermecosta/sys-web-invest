@@ -27,8 +27,8 @@
           <td>{{ fii.unit_price|real_brl }}</td>
           <td>{{ fii.get_total_price|real_brl }}</td>
         </tr>
+        {% endfor %}
       </table>
-      {% endfor %}
     {% endif %}
   </section>
 {% endblock content %}
