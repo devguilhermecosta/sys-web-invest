@@ -2,7 +2,7 @@ from django.views import View
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.views.generic import ListView
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -128,7 +128,7 @@ class FIIManageIncomeReceipt(FIIsView):
         )
 
 
-class FIIManageIncomeReceiptXML(FIIsView):
+class FIIManageIncomeReceiptHistory(FIIsView):
     def get(self, *args, **kwargs) -> HttpResponse:
         history = UserFII.get_full_history(
             user=self.request.user,
@@ -137,3 +137,14 @@ class FIIManageIncomeReceiptXML(FIIsView):
         return JsonResponse(
             {'data': history}
         )
+
+    def post(self, *args, **kwargs) -> Http404:
+        raise Http404()
+
+
+class FIIManageIncomeReceiptDeleteHistory(FIIsView):
+    ...
+
+
+class FIIManageIncomeReceiptEditHistory(FIIsView):
+    ...
