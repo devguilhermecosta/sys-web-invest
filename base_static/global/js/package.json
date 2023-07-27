@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "name": "sys-web-invest",
+  "version": "1.0.0",
+  "description": "system for investing",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitbub.com/devguilhermecosta/sys-web-invest.git"
+  },
+  "author": "Guilherme Costa",
+  "license": "MIT"
+}
