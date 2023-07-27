@@ -1,5 +1,6 @@
 from django.views import View
 from django.urls import reverse
+from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -84,12 +85,13 @@ class FIIManageIncomeReceipt(FIIsView):
                 (product.product.id, str(product.product.code).upper()),
             )
 
-        form = FIIReceiptProfitsForm()
+        session = self.request.session.get('fiis_manage_income', None)
+        form = FIIReceiptProfitsForm(session)
         form.fields.get('product_id').widget.choices = choices
 
         return render(
             self.request,
-            'product/pages/fiis/fiis_income.html',
+            'product/pages/fiis/fiis_profits.html',
             context={
                 'url': reverse('product:fii_history_json'),
                 'form': form,
@@ -100,6 +102,7 @@ class FIIManageIncomeReceipt(FIIsView):
 
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
+        self.request.session['fiis_manage_income'] = post
         form = FIIReceiptProfitsForm(post)
 
         if form.is_valid():
@@ -116,7 +119,13 @@ class FIIManageIncomeReceipt(FIIsView):
                 date=date,
             )
 
-        return JsonResponse({'data': ''})
+            del self.request.session['fiis_manage_income']
+
+            return JsonResponse({'success': 'success request'})
+
+        return redirect(
+            reverse('product:fiis_manage_income')
+        )
 
 
 class FIIManageIncomeReceiptXML(FIIsView):
