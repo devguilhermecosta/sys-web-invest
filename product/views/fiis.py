@@ -187,11 +187,9 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
 
         if form.is_valid():
             data = form.cleaned_data
-            print(data)
 
-            history = FiiHistory.objects.filter(pk=pk).first()
+            history = FiiHistory.objects.get(pk=pk)
             user_product = UserFII.objects.get(pk=data['user_product_id'])
-            print(user_product)
 
             history.userproduct = user_product
             history.date = data['date']
