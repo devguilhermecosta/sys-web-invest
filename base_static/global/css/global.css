@@ -943,6 +943,18 @@ textarea.C-login_input {
 }
 /* end dashboard - actions */
 
+/* Google material icons */
+.icon_edit:hover {
+  color: var(--turquoise_6);
+  cursor: pointer;
+}
+
+.icon_delete:hover {
+  color: var(--dark_red);
+  cursor: pointer;
+}
+/* end Google material icons */
+
 /* start animation */
 @keyframes open-form-container {
   from {
