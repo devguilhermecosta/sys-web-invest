@@ -1,0 +1,27 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  FIIs
+{% endblock title %}
+
+{% block content %}
+  {% include 'global/partials/_messages.html' %}
+  <h1 class="C-dashboard_title">FIIs</h1>
+  <ul class="C-dashboard_list">
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="{% url 'product:fiis_list' %}">meus FIIs</a>
+    </li>
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="{% url 'product:fiis_buy' %}">comprar</a>
+    </li>
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="{% url 'product:fiis_sell' %}">vender</a>
+    </li>
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="{% url 'product:fiis_manage_income' %}">Gerenciar proventos</a>
+    </li>
+    <li class="C-dashboard_list_li">
+      <a class="C-dashboard_link" href="">Resumo de investimento</a>
+    </li>
+  </ul>
+{% endblock content %}
