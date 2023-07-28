@@ -102,7 +102,8 @@ class FIIManageIncomeReceipt(FIIsView):
                 'form_title': 'Receber Proventos',
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
-                'history_table': True,
+                'is_main_page': True,
+                'total_profits': UserFII.get_total_profits(self.request.user),
             }
         )
 
@@ -175,7 +176,7 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
                 'form': form,
                 'form_title': 'editar',
                 'button_submit_value': 'salvar',
-                'history_table': False,
+                'is_main_page': False,
             }
         )
 
