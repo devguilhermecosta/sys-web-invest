@@ -26,10 +26,6 @@ class UserFII(models.Model):
     unit_price = models.FloatField()
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     handler = models.CharField(max_length=255, default='buy')
-    earnings_accumulated = models.FloatField(default=0.0,
-                                             blank=True,
-                                             null=True,
-                                             )
 
     def __str__(self) -> str:
         return f'{self.product.code} de {self.user.username}'
@@ -83,7 +79,6 @@ class UserFII(models.Model):
             total_price=value,
         )
         new_history.save()
-        self.earnings_accumulated += value
         self.save()
 
     def get_partial_history(self, handler: str) -> QuerySet:
@@ -119,6 +114,17 @@ class UserFII(models.Model):
 
         return history
 
+    def get_partial_profits(self) -> float:
+        history = self.get_partial_history(handler='profits')
+        total = sum([h.total_price for h in history])
+        return total
+
+    @classmethod
+    def get_total_profits(cls, user: User) -> float:
+        products = UserFII.objects.filter(user=user)
+        total = sum([p.get_partial_profits() for p in products])
+        return total
+
 
 class FiiHistory(models.Model):
     upload = 'trading-notes/fiis/'
@@ -152,23 +158,5 @@ class FiiHistory(models.Model):
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
 
-# um field de acumulo de proventos será criado dentro de cada fii.
-# ao receber proventos, esse field será alteado.
-# na tela inicial, um relatório de recebimento de proventos será criado.
 # teremos duas informações: o total investido contendo o recebimento
 # de proventos, e um total sem considerar o recebimento de proventos.
-
-# quando o usuário clicar em lançar proventos, uma página inline será aberta.
-# nesta página, um form com os seguintes campos será criado:
-# - um select para o usuário escolher o fii;
-# - a data;
-# - o valor total;
-# - um botão para salvar;
-# - um botão para cancelar;
-# - um botão para fechar o form.
-# ao clicar em lançar proventos, caso tudo esteja ok, um form de confirmação
-# será criado.
-# se o usuário clicar em ok, o provento será lançado, senão, será cancelado.
-# uma mensagem de sucesso será criada.
-# se o form tiver erros, uma mensagem de erro será gerada.
-# um histório EDITÁVEL será criado;
