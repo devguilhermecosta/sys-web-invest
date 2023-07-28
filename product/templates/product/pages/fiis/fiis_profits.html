@@ -10,7 +10,7 @@
     {% if is_main_page %}
       <p class="detail">
         Total acumulado em proventos (FIIs): 
-        <span>{{ total_profits|real_brl }}</span>
+        <span id="total_profits_fiis"></span>
       </p>
     {% endif %}
 
@@ -20,7 +20,8 @@
   
   <div id="result"></div>
 
-  <p id="url" style="display: none" data-url={{ url }}></p>
+  <p id="url-history-profits" style="display: none" data-url-history-profits={{ url_history_profits }}></p>
+  <p id="url-total-profits" style="display: none" data-url-total-profits={{ url_total_profits }}></p>
   
   {% if is_main_page %}
     <section class="C-dashboard_table_details">
