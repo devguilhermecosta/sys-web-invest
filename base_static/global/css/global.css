@@ -715,6 +715,15 @@ textarea.C-login_input {
   row-gap: 0px;
 }
 
+.C-dashboard_table_details > .detail {
+  text-transform: none;
+  text-align: center;
+}
+
+.C-dashboard_table_details > .detail > span {
+  font-weight: 700;
+}
+
 .C-dashboard_table {
   align-self: center;
   display: block;

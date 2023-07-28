@@ -7,6 +7,13 @@
 
 {% block content %}
   <section class="C-dashboard_table_details">
+    {% if is_main_page %}
+      <p class="detail">
+        Total acumulado em proventos (FIIs): 
+        <span>{{ total_profits|real_brl }}</span>
+      </p>
+    {% endif %}
+
     {% include 'global/partials/_form.html' %}
     {% include 'global/partials/_messages.html' %}
   </section>
@@ -15,7 +22,7 @@
 
   <p id="url" style="display: none" data-url={{ url }}></p>
   
-  {% if history_table %}
+  {% if is_main_page %}
     <section class="C-dashboard_table_details">
       <table id="profits-table" class="C-dashboard_table">
         <thead>
