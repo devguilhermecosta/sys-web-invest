@@ -100,17 +100,59 @@ function createHistoryLinkEdit(id) {
   return link
 }
 
+function createHistoryLinkDelete(id) {
+  const path = `historico/${id}/deletar/`;
+  const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+  
+  const paramsTokenInput = {
+    type: 'hidden',
+    value: token,
+    name: 'csrfmiddlewaretoken',
+  }
+  let tokenInput = document.createElement('input');
+  for (const [k, v] of Object.entries(paramsTokenInput)) {
+    tokenInput.setAttribute(k, v);
+  }
+
+  const paramsForm = {
+    action: path,
+    method: 'POST',
+    enctype: 'multipart/form-data',
+  }
+  let form = document.createElement('form');
+  for (const [key, value] of Object.entries(paramsForm)) {
+    form.setAttribute(key, value);
+  }
+  form.appendChild(tokenInput);
+
+  return form;
+}
+
+
+function delHistory(event) {
+  event.preventDefault();
+  console.log('tem certeza que deseja deletar?');
+}
+
 
 // Create the earnings fii receipt table
 function createDataTable(date, code, value, handler, p_id) {
   const tableBody = document.querySelector('#table-body');
   let spanEdit;
   let linkEdit;
+  let spanDelete;
+  let linkDelete;
 
   if (tableBody) {
     linkEdit = createHistoryLinkEdit(p_id);
     spanEdit = createGoogleIcon('edit', 'icon_edit');
     linkEdit.appendChild(spanEdit);
+
+    linkDelete = createHistoryLinkDelete(p_id);
+    spanDelete = document.createElement('input');
+    spanDelete.setAttribute('type', 'submit');
+    spanDelete.addEventListener("click", delHistory);
+    linkDelete.appendChild(spanDelete);
 
     let tableRow = document.createElement('tr');
     let tableDate = document.createElement('td');
@@ -126,7 +168,7 @@ function createDataTable(date, code, value, handler, p_id) {
     tableHandler.innerHTML = handler;
     tableHandler.style.color = '#0f6e6a';
     tableEdit.appendChild(linkEdit);
-    tableDelete.appendChild(createGoogleIcon('delete_forever', 'icon_delete'));
+    tableDelete.appendChild(linkDelete);
 
     tableRow.appendChild(tableDate);
     tableRow.appendChild(tableCode);

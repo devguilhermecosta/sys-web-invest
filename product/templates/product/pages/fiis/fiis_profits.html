@@ -22,7 +22,8 @@
 
   <p id="url-history-profits" style="display: none" data-url-history-profits={{ url_history_profits }}></p>
   <p id="url-total-profits" style="display: none" data-url-total-profits={{ url_total_profits }}></p>
-  
+  {% csrf_token %}
+
   {% if is_main_page %}
     <section class="C-dashboard_table_details">
       <table id="profits-table" class="C-dashboard_table">
