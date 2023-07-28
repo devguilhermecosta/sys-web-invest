@@ -5,11 +5,13 @@ export function createDefaultContainer() {
   return divContainer;
 }
 
+
 export function createDefaultFrame() {
   const frame = document.createElement('div');
   frame.classList.add('C-product_form_confirm');
   return frame;
 }
+
 
 export function createButton(value) {
   const button = document.createElement('button');
@@ -18,11 +20,13 @@ export function createButton(value) {
   return button;
 }
 
+
 export function createDivFlexButton() {
   const divFlexButton = document.createElement('div');
   divFlexButton.classList.add('C-product_form_buttons');
   return divFlexButton;
 }
+
 
 export function createTextElement(color, message) {
   const text = document.createElement('p');
@@ -33,6 +37,21 @@ export function createTextElement(color, message) {
   text.innerHTML = message;
   return text;
 }
+
+
+// Google Icon
+export function createGoogleIcon(innerHTML, aditionalCssClass='') {
+  let span = document.createElement('span');
+  span.innerHTML = innerHTML;
+  span.classList.add('material-symbols-outlined');
+
+  if (aditionalCssClass) {
+    span.classList.add(aditionalCssClass);
+  }
+
+  return span;
+}
+
 
 // create message alert
 export function createMessageAlert(color, message) {

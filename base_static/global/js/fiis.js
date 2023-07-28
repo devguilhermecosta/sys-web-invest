@@ -4,6 +4,7 @@ import { createDivFlexButton } from './src/modules.js';
 import { createTextElement } from './src/modules.js';
 import { createButton } from './src/modules.js';
 import { createMessageAlert } from './src/modules.js';
+import { createGoogleIcon } from './src/modules.js';
 
 
 // form fiis receiv profis
@@ -90,31 +91,48 @@ import { createMessageAlert } from './src/modules.js';
 })();
 
 
+// create link for history edit
+function createHistoryLinkEdit(id) {
+  const path = `historico/${id}/editar/`;
+  let link = document.createElement('a');
+  link.setAttribute('href', path);
+  return link
+}
+
+
 // Create the earnings fii receipt table
 function createDataTable(date, code, value, handler, p_id) {
   const tableBody = document.querySelector('#table-body');
+  let spanEdit;
+  let linkEdit;
 
   if (tableBody) {
+    linkEdit = createHistoryLinkEdit(p_id);
+    spanEdit = createGoogleIcon('edit', 'icon_edit');
+    linkEdit.appendChild(spanEdit);
+
     let tableRow = document.createElement('tr');
     let tableDate = document.createElement('td');
     let tableCode = document.createElement('td');
     let tableValue = document.createElement('td');
     let tableHandler = document.createElement('td');
-    let tableId = document.createElement('td');
-
+    let tableEdit = document.createElement('td');
+    let tableDelete = document.createElement('td');
 
     tableDate.innerHTML = date;
     tableCode.innerHTML = code;
     tableValue.innerHTML = value;
     tableHandler.innerHTML = handler;
     tableHandler.style.color = '#0f6e6a';
-    tableId.innerHTML = p_id;
+    tableEdit.appendChild(linkEdit);
+    tableDelete.appendChild(createGoogleIcon('delete_forever', 'icon_delete'));
 
     tableRow.appendChild(tableDate);
     tableRow.appendChild(tableCode);
     tableRow.appendChild(tableValue);
     tableRow.appendChild(tableHandler);
-    tableRow.appendChild(tableId);
+    tableRow.appendChild(tableEdit);
+    tableRow.appendChild(tableDelete);
 
     tableBody.appendChild(tableRow);
   }
