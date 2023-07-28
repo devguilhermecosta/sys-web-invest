@@ -74,6 +74,7 @@ import { createGoogleIcon } from './src/modules.js';
               labels.forEach((l) => {l.classList.remove('C-login_input_active')});
 
               createProfitsTable(true);
+              getTotalProfitsFiis();
 
             }
           }
@@ -151,10 +152,11 @@ function cleanDataTable() {
 
 // populate the table 
 function createProfitsTable(refresh=false) {
-  const elem = document.querySelector('#url');
+  const elem = document.querySelector('#url-history-profits');
   
-  if (elem && elem.dataset.url) {
-    const path = elem.dataset.url;
+  if (elem && elem.dataset.urlHistoryProfits) {
+    const path = elem.dataset.urlHistoryProfits;
+    console.log(path);
 
     let request = new XMLHttpRequest();
 
@@ -194,3 +196,32 @@ function createProfitsTable(refresh=false) {
 }
 
 createProfitsTable();
+
+
+// get the total amount received in profits
+function getTotalProfitsFiis() {
+  const url = document.querySelector('#url-total-profits');
+
+  if (url) {
+    const path = url.dataset.urlTotalProfits;
+    let xmlrequest = new XMLHttpRequest()
+
+    xmlrequest.onreadystatechange = function() {
+      if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
+        const response = JSON.parse(xmlrequest.responseText);
+        let elem = document.querySelector('#total_profits_fiis');
+        elem.innerHTML = response.value.toLocaleString(
+          'pt-BR',
+          {
+            style: 'currency',
+            currency: 'BRL',
+          }
+        );
+      }
+    }
+    xmlrequest.open('GET', path);
+    xmlrequest.send();
+  }
+}
+
+getTotalProfitsFiis();

@@ -16,6 +16,7 @@ from .fiis import (
     FIIHistoryDetails,
     FIIManageIncomeReceiptHistory,
     FIIManageIncomeReceiptEditHistory,
+    GetTotalProfitsView,
     )
 from .fixed_income import (
     FixedIncomeView,

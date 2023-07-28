@@ -97,13 +97,13 @@ class FIIManageIncomeReceipt(FIIsView):
             self.request,
             'product/pages/fiis/fiis_profits.html',
             context={
-                'url': reverse('product:fii_history_json'),
+                'url_history_profits': reverse('product:fii_history_json'),
+                'url_total_profits': reverse('product:fii_total_profits_json'),
                 'form': form,
                 'form_title': 'Receber Proventos',
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
                 'is_main_page': True,
-                'total_profits': UserFII.get_total_profits(self.request.user),
             }
         )
 
@@ -137,7 +137,7 @@ class FIIManageIncomeReceipt(FIIsView):
 
 
 class FIIManageIncomeReceiptHistory(FIIsView):
-    def get(self, *args, **kwargs) -> HttpResponse:
+    def get(self, *args, **kwargs) -> JsonResponse:
         history = UserFII.get_full_history(
             user=self.request.user,
             handler='profits',
@@ -213,6 +213,15 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
                 'product:fii_manage_income_receipt_edit', args=(pk,)
                 )
         )
+
+
+class GetTotalProfitsView(FIIsView):
+    def get(self, *args, **kwargs) -> JsonResponse:
+        total = UserFII.get_total_profits(self.request.user)
+        return JsonResponse({'value': total})
+
+    def post(self, *args, **kwargs) -> None:
+        raise Http404()
 
 
 class FIIManageIncomeReceiptDeleteHistory(FIIsView):
