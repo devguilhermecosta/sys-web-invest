@@ -16,8 +16,8 @@ import { createGoogleIcon } from './src/modules.js';
       event.preventDefault();
 
       const form = new FormData(formFiisReceivProfis);
-      const product = parseInt(form.get('product_id'));
-      const select = formFiisReceivProfis.querySelector('#id_product_id');
+      const product = parseInt(form.get('user_product_id'));
+      const select = formFiisReceivProfis.querySelector('#id_user_product_id');
       const productDesc = select.options[select.selectedIndex].innerHTML;
       const date = form.get('date');
       const value = parseFloat(form.get('value'));
@@ -152,9 +152,10 @@ function cleanDataTable() {
 // populate the table 
 function createProfitsTable(refresh=false) {
   const elem = document.querySelector('#url');
-
-  if (elem) {
+  
+  if (elem && elem.dataset.url) {
     const path = elem.dataset.url;
+
     let request = new XMLHttpRequest();
 
     request.onreadystatechange = function() {
@@ -163,9 +164,7 @@ function createProfitsTable(refresh=false) {
         const data = result.data;
         let date = '';
 
-        if (refresh) {
-          cleanDataTable();
-        }
+        if (refresh) {cleanDataTable();}
 
         data.map((el) => {
           date = new Date(el.date);

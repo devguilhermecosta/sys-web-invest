@@ -77,21 +77,21 @@ class FIIHistoryDetails(History):
 
 class FIIManageIncomeReceipt(FIIsView):
     def choices(self) -> List[tuple]:
-        products = UserFII.objects.filter(
+        userfiis = UserFII.objects.filter(
             user=self.request.user
         )
 
         choices = [('---', '---')]
-        for product in products:
+        for userfii in userfiis:
             choices.append(
-                (product.product.id, str(product.product.code).upper()),
+                (userfii.id, str(userfii.product.code).upper()),
             )
         return choices
 
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('fiis_manage_income', None)
         form = FIIReceiptProfitsForm(session)
-        form.fields.get('product_id').widget.choices = self.choices()
+        form.fields.get('user_product_id').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -112,14 +112,15 @@ class FIIManageIncomeReceipt(FIIsView):
         form = FIIReceiptProfitsForm(post)
 
         if form.is_valid():
-            p_id = form.cleaned_data['product_id']
+            p_id = form.cleaned_data['user_product_id']
             value = form.cleaned_data['value']
             date = form.cleaned_data['date']
 
             product = UserFII.objects.get(
                 user=self.request.user,
-                product=p_id
+                pk=p_id,
             )
+
             product.receive_profits(
                 value=value,
                 date=date,
@@ -160,12 +161,12 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
         form = FIIReceiptProfitsForm(
             session,
             initial={
-                'product_id': history.userproduct.id,
+                'user_product_id': history.userproduct.id,
                 'date': str(history.date),
                 'value': f'{history.total_price:.2f}',
                 }
             )
-        form.fields.get('product_id').widget.choices = self.choices()
+        form.fields.get('user_product_id').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -186,8 +187,11 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
 
         if form.is_valid():
             data = form.cleaned_data
+            print(data)
+
             history = FiiHistory.objects.filter(pk=pk).first()
-            user_product = UserFII.objects.get(pk=data['product_id'])
+            user_product = UserFII.objects.get(pk=data['user_product_id'])
+            print(user_product)
 
             history.userproduct = user_product
             history.date = data['date']

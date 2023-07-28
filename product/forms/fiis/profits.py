@@ -7,7 +7,7 @@ default_input_class = 'C-login_input'
 
 
 class FIIReceiptProfitsForm(forms.Form):
-    product_id = forms.CharField(
+    user_product_id = forms.CharField(
         label='fii',
         widget=forms.Select()
     )
