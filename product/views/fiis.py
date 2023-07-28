@@ -3,12 +3,14 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.views.generic import ListView
 from django.http import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from product.forms import FIIBuyForm, FIIReceiptProfitsForm
 from product.models import FII, UserFII, FiiHistory
 from .base_views.variable_income import Buy, Sell, History
+from typing import List
 
 
 @method_decorator(
@@ -74,7 +76,7 @@ class FIIHistoryDetails(History):
 
 
 class FIIManageIncomeReceipt(FIIsView):
-    def get(self, *args, **kwargs) -> HttpResponse:
+    def choices(self) -> List[tuple]:
         products = UserFII.objects.filter(
             user=self.request.user
         )
@@ -84,10 +86,12 @@ class FIIManageIncomeReceipt(FIIsView):
             choices.append(
                 (product.product.id, str(product.product.code).upper()),
             )
+        return choices
 
+    def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('fiis_manage_income', None)
         form = FIIReceiptProfitsForm(session)
-        form.fields.get('product_id').widget.choices = choices
+        form.fields.get('product_id').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -95,8 +99,10 @@ class FIIManageIncomeReceipt(FIIsView):
             context={
                 'url': reverse('product:fii_history_json'),
                 'form': form,
+                'form_title': 'Receber Proventos',
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
+                'history_table': True,
             }
         )
 
@@ -142,9 +148,70 @@ class FIIManageIncomeReceiptHistory(FIIsView):
         raise Http404()
 
 
+class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = get_object_or_404(
+            FiiHistory,
+            pk=kwargs.get('id', None)
+        )
+
+        session = self.request.session.get('fiis-profits-edit', None)
+
+        form = FIIReceiptProfitsForm(
+            session,
+            initial={
+                'product_id': history.userproduct.id,
+                'date': str(history.date),
+                'value': f'{history.total_price:.2f}',
+                }
+            )
+        form.fields.get('product_id').widget.choices = self.choices()
+
+        return render(
+            self.request,
+            'product/pages/fiis/fiis_profits.html',
+            context={
+                'form': form,
+                'form_title': 'editar',
+                'button_submit_value': 'salvar',
+                'history_table': False,
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        pk = kwargs.get('id', None)
+        post = self.request.POST
+        self.request.session['fiis-profits-edit'] = post
+        form = FIIReceiptProfitsForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            history = FiiHistory.objects.filter(pk=pk).first()
+            user_product = UserFII.objects.get(pk=data['product_id'])
+
+            history.userproduct = user_product
+            history.date = data['date']
+            history.total_price = data['value']
+            history.save()
+
+            del self.request.session['fiis-profits-edit']
+
+            messages.success(
+                self.request,
+                'salvo com sucesso',
+            )
+
+            return redirect(
+                reverse('product:fiis_manage_income')
+            )
+
+        return redirect(
+            reverse(
+                'product:fii_manage_income_receipt_edit', args=(pk,)
+                )
+        )
+
+
 class FIIManageIncomeReceiptDeleteHistory(FIIsView):
     ...
-
-
-class FIIManageIncomeReceiptEditHistory(FIIsView):
-    ...
+    # criar o método para somar o total de proventos
