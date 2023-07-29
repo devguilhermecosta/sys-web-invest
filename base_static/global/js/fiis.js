@@ -129,12 +129,6 @@ function createHistoryLinkDelete(id) {
 }
 
 
-function delHistory(event) {
-  event.preventDefault();
-  console.log('tem certeza que deseja deletar?');
-}
-
-
 // Create the earnings fii receipt table
 function createDataTable(date, code, value, handler, p_id) {
   const tableBody = document.querySelector('#table-body');
@@ -149,9 +143,35 @@ function createDataTable(date, code, value, handler, p_id) {
     linkEdit.appendChild(spanEdit);
 
     linkDelete = createHistoryLinkDelete(p_id);
-    spanDelete = document.createElement('input');
-    spanDelete.setAttribute('type', 'submit');
-    spanDelete.addEventListener("click", delHistory);
+    spanDelete = createGoogleIcon('delete_forever', 'icon_edit');
+    spanDelete.addEventListener("click", function() {
+      const form = this.parentElement;
+      const container = createDefaultContainer();
+      const frame = createDefaultFrame()
+      const message = createTextElement(
+        'white', 
+        `<p>deseja mesmo deletar</p>
+        <p>este provento de ${code}?</p>`,
+        );
+      const buttonContainer = createDivFlexButton();
+      const buttonCancel = createButton('cancelar');
+      const buttonConfirm = createButton('confirmar');
+    
+      const body = document.body;
+      
+      buttonContainer.appendChild(buttonCancel);
+      buttonContainer.appendChild(buttonConfirm);
+
+      frame.appendChild(message);
+      frame.appendChild(buttonContainer);
+      
+      container.appendChild(frame)
+
+      body.appendChild(container);
+      
+      buttonCancel.addEventListener("click", () => {body.removeChild(container)});
+      buttonConfirm.addEventListener("click", () => {form.submit()});
+    })
     linkDelete.appendChild(spanDelete);
 
     let tableRow = document.createElement('tr');
