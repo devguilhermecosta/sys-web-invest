@@ -1,9 +1,10 @@
 from django.urls import resolve, reverse
-from product import views
-from product.tests.base_tests import make_user_fii
-from product.models import UserFII
-from utils.mixins.auth import TestCaseWithLogin
 from parameterized import parameterized
+
+from product import views
+from product.models import UserFII
+from product.tests.base_tests import make_user_fii
+from utils.mixins.auth import TestCaseWithLogin
 
 
 class FIIsProfitsTests(TestCaseWithLogin):
@@ -50,12 +51,13 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('Receber Proventos',),
-        ('fii',),
-        ('MXRF11',),
-        ('data',),
-        ('valor',),
-        ('salvar',)
+        ('Receber Proventos'),
+        ('fii'),
+        ('MXRF11'),
+        ('data'),
+        ('valor'),
+        ('salvar'),
+        ('Total acumulado em proventos (FIIs):'),
     ])
     def test_fiis_profits_loads_correct_content_when_not_profits(self, text: str) -> None:  # noqa: E501
         # make login
