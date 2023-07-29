@@ -20,8 +20,8 @@
   
   <div id="result"></div>
 
-  <p id="url-history-profits" style="display: none" data-url-history-profits={{ url_history_profits }}></p>
-  <p id="url-total-profits" style="display: none" data-url-total-profits={{ url_total_profits }}></p>
+  <input type="hidden" id="url-history-profits" data-url-history-profits="{{ url_history_profits }}">
+  <input type="hidden" id="url-total-profits" data-url-total-profits="{{ url_total_profits }}">
   {% csrf_token %}
 
   {% if is_main_page %}
