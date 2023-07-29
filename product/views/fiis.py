@@ -142,9 +142,7 @@ class FIIManageIncomeReceiptHistory(FIIsView):
             user=self.request.user,
             handler='profits',
             )
-        return JsonResponse(
-            {'data': history}
-        )
+        return JsonResponse({'data': history})
 
     def post(self, *args, **kwargs) -> Http404:
         raise Http404()
@@ -225,5 +223,22 @@ class GetTotalProfitsView(FIIsView):
 
 
 class FIIManageIncomeReceiptDeleteHistory(FIIsView):
-    ...
-    # criar o método para somar o total de proventos
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = get_object_or_404(
+            FiiHistory,
+            pk=kwargs.get('id', None)
+        )
+
+        history.delete()
+
+        messages.success(
+            self.request,
+            'provento deletado com sucesso'
+        )
+
+        return redirect(
+            reverse('product:fiis_manage_income')
+        )
+
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()

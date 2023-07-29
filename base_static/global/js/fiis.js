@@ -45,10 +45,12 @@ import { createGoogleIcon } from './src/modules.js';
         const buttonConfirm = createButton('confirmar');
         const buttonCancel = createButton('cancelar');
 
-        buttonContainer.appendChild(buttonConfirm);
         buttonContainer.appendChild(buttonCancel);
+        buttonContainer.appendChild(buttonConfirm);
+
         frame.appendChild(message);
         frame.appendChild(buttonContainer);
+
         container.appendChild(frame)
         body.appendChild(container);
 
@@ -75,7 +77,6 @@ import { createGoogleIcon } from './src/modules.js';
 
               createProfitsTable(true);
               getTotalProfitsFiis();
-
             }
           }
           xmlr.open('POST', urlPath);
@@ -129,12 +130,12 @@ function createHistoryLinkDelete(id) {
 }
 
 
-// Create the earnings fii receipt table
+// Create the profits fii receipt table
 function createDataTable(date, code, value, handler, p_id) {
   const tableBody = document.querySelector('#table-body');
   let spanEdit;
-  let linkEdit;
   let spanDelete;
+  let linkEdit;
   let linkDelete;
 
   if (tableBody) {
@@ -170,7 +171,7 @@ function createDataTable(date, code, value, handler, p_id) {
       body.appendChild(container);
       
       buttonCancel.addEventListener("click", () => {body.removeChild(container)});
-      buttonConfirm.addEventListener("click", () => {form.submit()});
+      buttonConfirm.addEventListener("click", function() {form.submit();});
     })
     linkDelete.appendChild(spanDelete);
 
@@ -218,18 +219,17 @@ function createProfitsTable(refresh=false) {
   
   if (elem && elem.dataset.urlHistoryProfits) {
     const path = elem.dataset.urlHistoryProfits;
-    console.log(path);
 
     let request = new XMLHttpRequest();
-
+    
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
         const result = JSON.parse(request.responseText);
         const data = result.data;
         let date = '';
-
+        
         if (refresh) {cleanDataTable();}
-
+        
         data.map((el) => {
           date = new Date(el.date);
 
