@@ -144,7 +144,7 @@ function createDataTable(date, code, value, handler, p_id) {
     linkEdit.appendChild(spanEdit);
 
     linkDelete = createHistoryLinkDelete(p_id);
-    spanDelete = createGoogleIcon('delete_forever', 'icon_edit');
+    spanDelete = createGoogleIcon('delete_forever', 'icon_delete');
     spanDelete.addEventListener("click", function() {
       const form = this.parentElement;
       const container = createDefaultContainer();
