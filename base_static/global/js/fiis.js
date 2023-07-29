@@ -59,7 +59,7 @@ import { createGoogleIcon } from './src/modules.js';
         });
 
         buttonConfirm.addEventListener("click", function() {
-          let urlPath = `/ativos/fiis/gerenciar-proventos/${product}/receber/`;
+          let urlPath = `/ativos/fiis/gerenciar-proventos/receber/`;
           let token = formFiisReceivProfis.querySelectorAll('input')[0].value;
           let labels = formFiisReceivProfis.querySelectorAll('.C-login_label');
 

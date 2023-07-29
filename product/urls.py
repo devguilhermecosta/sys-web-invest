@@ -57,7 +57,7 @@ urlpatterns = [
          views.GetTotalProfitsView.as_view(),
          name='fii_total_profits_json',
          ),
-    path('fiis/gerenciar-proventos/<int:id>/receber/',
+    path('fiis/gerenciar-proventos/receber/',
          views.FIIManageIncomeReceipt.as_view(),
          name='fiis_manage_income_receipt',
          ),
