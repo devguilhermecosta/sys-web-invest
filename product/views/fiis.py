@@ -231,11 +231,6 @@ class FIIManageIncomeReceiptDeleteHistory(FIIsView):
 
         history.delete()
 
-        messages.success(
-            self.request,
-            'provento deletado com sucesso'
-        )
-
         return redirect(
             reverse('product:fiis_manage_income')
         )
