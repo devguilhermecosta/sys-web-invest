@@ -80,7 +80,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('fii', 'Campo obrigatório'),
+        ('user_product_id', 'Campo obrigatório'),
         ('date', 'Campo obrigatório'),
         ('value', 'Campo obrigatório'),
     ])
@@ -125,7 +125,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         # data
         data = {
-            'product_id': user_fii.pk,
+            'user_product_id': user_fii.pk,
             'date': '2023-07-02',
             'value': 4.96,
         }
@@ -156,7 +156,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         # data
         data = {
-            'product_id': user_fii.pk,
+            'user_product_id': user_fii.pk,
             'date': '2023-07-02',
             'value': 4.96,
         }

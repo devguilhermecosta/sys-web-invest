@@ -61,7 +61,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
 
         # data
         data = {
-            'product_id': user_fii.pk,
+            'user_product_id': user_fii.pk,
             'date': '2023-07-02',
             'value': 4.96,
         }
