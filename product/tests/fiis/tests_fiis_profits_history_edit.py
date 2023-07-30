@@ -266,7 +266,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         response_post = self.client.post(
             self.url,
             data={
-                'user_product_id': u['user_fii'],
+                'user_product_id': u['user_fii'].id,
                 'date': '2024-12-31',
                 'value': 14,
             },
