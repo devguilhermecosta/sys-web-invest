@@ -74,5 +74,6 @@ class ActionHistoryDetails(History):
     history_model = ActionHistory
 
 
-class ActionManageIncomeView(ActionsView):
-    ...
+class ActionsManageIncomeView(ActionsView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        ...
