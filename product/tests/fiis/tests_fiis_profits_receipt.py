@@ -3,7 +3,10 @@ from parameterized import parameterized
 
 from product import views
 from product.models import UserFII
-from product.tests.base_tests import make_user_fii
+from product.tests.base_tests import (
+    make_user_fii,
+    create_profits_history,
+    )
 from utils.mixins.auth import TestCaseWithLogin
 
 
@@ -78,6 +81,59 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         self.assertIn(
             text,
+            content
+        )
+
+    def test_fiis_profits_loads_in_the_select_input_only_the_userfiis_of_the_logged_in_user(self) -> None:  # noqa: E501
+        # create another user
+        another_user = self.create_user(
+            username='jhondoe',
+            email='jhondoe@email.com',
+        )
+
+        # create the user_fii for another_user
+        make_user_fii(another_user,
+                      1,
+                      1,
+                      'brcr11',
+                      'bresco',
+                      )
+
+        # checks if the user_fii for another_user exists
+        another_user_userfii = UserFII.objects.filter(
+            user=another_user,
+        )
+        self.assertEqual(
+            len(another_user_userfii),
+            1
+        )
+        self.assertEqual(
+            str(another_user_userfii.first()),
+            'brcr11 de jhondoe',
+        )
+
+        ######
+
+        # make login with user=user and create a new user_fii
+        create_profits_history(self.client,
+                               self.make_login,
+                               code='mxrf11',
+                               desc='maxi renda',
+                               )
+
+        # make get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        # checks if the mxrf11 of user is in the select input
+        self.assertIn(
+            'MXRF11',
+            content
+        )
+
+        # checks if the brcr11 of another_user is not in the select input
+        self.assertNotIn(
+            'BRCR11',
             content
         )
 
