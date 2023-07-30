@@ -94,6 +94,3 @@ class DirectTreasureTests(TestCaseWithLogin):
 
         # the products length should be 1
         self.assertEqual(len(products), 1)
-        self.fail('criar um template comum para o tesouro '
-                  'direto e a renda fixa.'
-                  )
