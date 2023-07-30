@@ -7,6 +7,7 @@ from pathlib import Path
 from product.models import (
     Action,
     FII,
+    UserAction,
     UserFII,
     FiiHistory,
     ProductFixedIncome,
@@ -30,6 +31,25 @@ def make_action(code: str, desc: str, cnpj: str = None) -> Action:
     new_action.save()
 
     return new_action
+
+
+def make_user_action(user: User,
+                     qty: int,
+                     unit_price: float,
+                     code: str,
+                     desc: str,
+                     **kwargs,
+                     ) -> UserAction:
+    new_obj = UserAction.objects.create(
+        user=user,
+        product=make_action(code, desc, cnpj=c2.create_cnpj()),
+        quantity=qty,
+        unit_price=unit_price,
+        date=date.today().strftime('%Y-%m-%d'),
+        handler=kwargs.get('handler', 'buy'),
+    )
+    new_obj.save()
+    return new_obj
 
 
 def make_fii(code: str, desc: str, cnpj: str = None) -> FII:
