@@ -155,28 +155,31 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
             pk=kwargs.get('id', None)
         )
 
-        session = self.request.session.get('fiis-profits-edit', None)
+        if history.userproduct.user == self.request.user:
+            session = self.request.session.get('fiis-profits-edit', None)
 
-        form = FIIReceiptProfitsForm(
-            session,
-            initial={
-                'user_product_id': history.userproduct.id,
-                'date': str(history.date),
-                'value': f'{history.total_price:.2f}',
+            form = FIIReceiptProfitsForm(
+                session,
+                initial={
+                    'user_product_id': history.userproduct.id,
+                    'date': str(history.date),
+                    'value': f'{history.total_price:.2f}',
+                    }
+                )
+            form.fields.get('user_product_id').widget.choices = self.choices()
+
+            return render(
+                self.request,
+                'product/pages/fiis/fiis_profits.html',
+                context={
+                    'form': form,
+                    'form_title': 'editar',
+                    'button_submit_value': 'salvar',
+                    'is_main_page': False,
                 }
             )
-        form.fields.get('user_product_id').widget.choices = self.choices()
 
-        return render(
-            self.request,
-            'product/pages/fiis/fiis_profits.html',
-            context={
-                'form': form,
-                'form_title': 'editar',
-                'button_submit_value': 'salvar',
-                'is_main_page': False,
-            }
-        )
+        raise Http404()
 
     def post(self, *args, **kwargs) -> HttpResponse:
         pk = kwargs.get('id', None)
@@ -188,23 +191,27 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
             data = form.cleaned_data
 
             history = FiiHistory.objects.get(pk=pk)
-            user_product = UserFII.objects.get(pk=data['user_product_id'])
 
-            history.userproduct = user_product
-            history.date = data['date']
-            history.total_price = data['value']
-            history.save()
+            if history.userproduct.user == self.request.user:
+                user_product = UserFII.objects.get(pk=data['user_product_id'])
 
-            del self.request.session['fiis-profits-edit']
+                history.userproduct = user_product
+                history.date = data['date']
+                history.total_price = data['value']
+                history.save()
 
-            messages.success(
-                self.request,
-                'salvo com sucesso',
-            )
+                del self.request.session['fiis-profits-edit']
 
-            return redirect(
-                reverse('product:fiis_manage_income')
-            )
+                messages.success(
+                    self.request,
+                    'salvo com sucesso',
+                )
+
+                return redirect(
+                    reverse('product:fiis_manage_income')
+                )
+
+            raise Http404()
 
         return redirect(
             reverse(
