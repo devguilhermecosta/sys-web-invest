@@ -1,7 +1,10 @@
 from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product import views
-from product.tests.base_tests import create_profits_history
+from product.tests.base_tests import (
+    create_profits_history,
+    make_user_fii,
+    )
 from product.models import FiiHistory
 
 
@@ -48,6 +51,85 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
         # make post request without the history
         response = self.client.post(self.url)
 
+        self.assertEqual(
+            response.status_code,
+            404
+        )
+
+    def test_fii_profits_receipt_delete_returns_status_code_404_if_the_logged_in_user_is_different_from_the_history_owner_user(self) -> None:  # noqa: E501
+        # create another user
+        another_user = self.create_user(
+            username='jhondoe',
+            email='jhondoe@email.com',
+        )
+
+        # create the UserFII for another_user
+        another_userfii = make_user_fii(
+            another_user,
+            1,
+            1,
+            'pvbi11',
+            'teste',
+        )
+
+        # make login with the another_user
+        self.make_login(create_user=False, username=another_user)
+
+        # make post request for create the history for another_userfii
+        r_post = self.client.post(
+            reverse('product:fiis_manage_income_receipt'),
+            {
+                'user_product_id': another_userfii.id,
+                'value': 50,
+                'date': '2023-07-02',
+            },
+            follow=True,
+        )
+
+        # checks if the history has been created
+        self.assertEqual(
+            r_post.content.decode('utf-8'),
+            '{"success": "success request"}',
+        )
+
+        # get the history id
+        another_user_history = FiiHistory.objects.filter(
+            userproduct=another_userfii,
+            handler='profits',
+        )
+
+        # checks if the history_id of another_user is 1
+        self.assertEqual(
+            another_user_history.first().id,
+            1
+        )
+
+        # make logout with the another_user
+        self.client.logout()
+
+        # create the profits history and make login with user=user
+        u = create_profits_history(self.client,
+                                   self.make_login,
+                                   value=150,
+                                   )
+
+        # get the history id of user
+        history_id_user = FiiHistory.objects.filter(
+            userproduct=u['user_fii'],
+            handler='profits'
+        )
+
+        # checks if the history_id_user is 2
+        self.assertEqual(
+            history_id_user.first().id,
+            2
+        )
+
+        # now i am logged in with the user
+        # i will try to delete the history of id 1 whose another_user owns
+        response = self.client.post(self.url)
+
+        # the status code must be 404
         self.assertEqual(
             response.status_code,
             404
@@ -105,7 +187,3 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
             len(history),
             0
         )
-
-# criar um hash para o id de cada produto
-# pois podemos deletar produtos de outros
-# usuários através do console do Google
