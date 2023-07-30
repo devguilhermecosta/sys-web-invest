@@ -68,4 +68,4 @@ class ProductActionsTests(TestCaseWithLogin):
         self.assertIn('minhas ações', content)
         self.assertIn('comprar', content)
         self.assertIn('vender', content)
-        self.assertIn('lançar proventos', content)
+        self.assertIn('gerenciar proventos', content)
