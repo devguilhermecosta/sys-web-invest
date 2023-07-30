@@ -74,11 +74,14 @@ class ActionHistory(models.Model):
     handler = models.CharField(max_length=255, choices=(
         ('B', 'buy'),
         ('S', 'sell'),
+        ('D', 'dividends'),
         ('J', 'jscp'),
-        ('P', 'proceeds'),
+        ('R', 'remuneration'),
+        ('rnt', 'renting'),
     ))
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
+    tax_and_irpf = models.FloatField(blank=True, null=True)
     unit_price = models.FloatField()
     total_price = models.FloatField()
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
@@ -90,10 +93,14 @@ class ActionHistory(models.Model):
                 handler = 'compra'
             case 'sell':
                 handler = 'venda'
+            case 'dividends':
+                handler = 'dividendos'
             case 'jscp':
                 handler = 'jscp'
-            case 'proceeds':
-                handler = 'proventos'
+            case 'remuneration':
+                handler = 'remuneração'
+            case 'renting':
+                handler = 'aluguel'
             case _:
                 ''
 
