@@ -72,3 +72,7 @@ class ActionHistoryDetails(History):
     product_model = Action
     user_product_model = UserAction
     history_model = ActionHistory
+
+
+class ActionManageIncomeView(ActionsView):
+    ...

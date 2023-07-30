@@ -6,6 +6,7 @@ from .actions import (
     ActionsView,
     AllActionsView,
     ActionHistoryDetails,
+    ActionManageIncomeView,
     )
 from .fiis import (
     FIIsView,
