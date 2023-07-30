@@ -1,5 +1,8 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
+from django.http import HttpRequest
+from django.urls import reverse
+from django.test.client import Client
 from pathlib import Path
 from product.models import (
     Action,
@@ -9,7 +12,11 @@ from product.models import (
     DirectTreasure,
     )
 from datetime import date
+from typing import NewType, Dict
 import c2validator as c2
+
+
+LoginFunction = NewType('LoginFunction', HttpRequest)
 
 
 def make_action(code: str, desc: str, cnpj: str = None) -> Action:
@@ -106,3 +113,48 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     )
     new_object.save()
     return new_object
+
+
+def create_profits_history(client: Client,
+                           login_function: LoginFunction,
+                           **kwargs) -> Dict:  # noqa: E501
+    """ this function creates a new user, user_fii and
+        a new profits history.
+
+        if you need create a custom history, set the following
+        kwargs.
+
+        kwargs:
+            code: make a new UserFII with this code
+            desc: make a new UserFII with this description
+            value: make a new UserFII with this value
+
+        returns a instance of User, UserFII and HttpResponse
+    """
+    # make login
+    _, user = login_function()
+
+    # create the user fii
+    user_product = make_user_fii(user,
+                                 1,
+                                 1,
+                                 kwargs.get('code', 'mxrf11'),
+                                 kwargs.get('desc', 'maxi renda'),
+                                 )
+
+    # add a profits
+    response = client.post(
+        reverse('product:fiis_manage_income_receipt'),
+        {
+            'user_product_id': user_product.id,
+            'value': kwargs.get('value', 10),
+            'date': '2023-07-02',
+        },
+        follow=True,
+    )
+
+    return {
+        'user': user,
+        'user_fii': user_product,
+        'response': response,
+    }

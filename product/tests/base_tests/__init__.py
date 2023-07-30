@@ -7,4 +7,5 @@ from .base_test import (
     make_simple_file,
     make_fixed_income_product,
     make_direct_treasure,
+    create_profits_history,
     )

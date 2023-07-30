@@ -1,31 +1,12 @@
 from django.urls import reverse, resolve
-from django.http import HttpResponse
-from django.contrib.auth.models import User
 from utils.mixins.auth import TestCaseWithLogin
 from product import views
-from product.tests.base_tests import make_user_fii
+from product.tests.base_tests import make_user_fii, create_profits_history
 from parameterized import parameterized
 
 
 class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
     url = reverse('product:fii_manage_income_receipt_edit', args=(1,))
-
-    def create_profits_history(self, user: User) -> HttpResponse:
-        # create the user fii
-        make_user_fii(user, 1, 1, 'mxrf11', 'maxi renda')
-
-        # add a profits
-        response = self.client.post(
-            reverse('product:fiis_manage_income_receipt'),
-            {
-                'user_product_id': 1,
-                'value': 10,
-                'date': '2023-07-02',
-            },
-            follow=True,
-        )
-
-        return response
 
     def test_fiis_profits_history_edit_url_is_correct(self) -> None:
         self.assertEqual(
@@ -56,11 +37,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         self.assertEqual(response.status_code, 404)
 
     def test_fiis_profits_history_returns_status_code_200_if_user_is_authenticated(self) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        create_profits_history(self.client, self.make_login)
 
         # make get request
         response = self.client.get(self.url)
@@ -68,11 +46,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         self.assertEqual(response.status_code, 200)
 
     def test_profits_history_edit_loads_correct_template(self) -> None:
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        create_profits_history(self.client, self.make_login)
 
         # make get request
         response = self.client.get(self.url)
@@ -93,11 +68,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         ('10.00'),
     ])
     def test_profits_history_edit_loads_correct_content(self, text: str) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        create_profits_history(self.client, self.make_login)
 
         response = self.client.get(self.url)
         content = response.content.decode('utf-8')
@@ -113,11 +85,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         ('value', 'Campo obrigatório'),
     ])
     def test_profits_history_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        create_profits_history(self.client, self.make_login)
 
         # history data
         history_data = {
@@ -148,11 +117,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         ('value', 10, ''),
     ])
     def test_profits_history_edit_returns_error_message_if_data_has_a_invalid_format(self, field: str, value: str | int, message: str) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        create_profits_history(self.client, self.make_login)
 
         # history data
         history_data = {
@@ -178,14 +144,11 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         )
 
     def test_profits_history_edit_modify_the_history_if_the_form_is_ok(self) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        r = create_profits_history(self.client, self.make_login)
 
         # create the new userfii
-        new_user_fii = make_user_fii(user, 1, 1, 'pvbi11', 'desc')
+        new_user_fii = make_user_fii(r['user'], 1, 1, 'pvbi11', 'desc')
 
         # create the profit for the new userfii
         self.client.post(
@@ -228,14 +191,11 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         )
 
     def test_profits_history_edit_returns_success_message_if_the_history_has_been_modified(self) -> None:  # noqa: E501
-        # make login
-        _, user = self.make_login()
-
         # create the profits history
-        self.create_profits_history(user)
+        r = create_profits_history(self.client, self.make_login)
 
         # create the new userfii
-        new_user_fii = make_user_fii(user, 1, 1, 'pvbi11', 'desc')
+        new_user_fii = make_user_fii(r['user'], 1, 1, 'pvbi11', 'desc')
 
         # create the profit for the new userfii
         self.client.post(
