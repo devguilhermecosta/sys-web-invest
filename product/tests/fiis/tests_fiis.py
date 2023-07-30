@@ -1,6 +1,7 @@
 from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product.views import FIIsView
+from product.tests.base_tests import create_profits_history
 from parameterized import parameterized
 
 
@@ -50,7 +51,7 @@ class FIIsTests(TestCaseWithLogin):
         ('meus FIIs'),
         ('comprar'),
         ('vender'),
-        ('lançar proventos'),
+        ('gerenciar proventos'),
     ])
     def test_fiis_loads_correct_content(self, text) -> None:
         # make login
@@ -60,3 +61,26 @@ class FIIsTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(text, content)
+
+    @parameterized.expand([
+        ('Aplicação total'),
+        ('R$ 100,00'),
+        ('Total recebido em proventos'),
+        ('R$ 200,00'),
+    ])
+    def test_fiis_loads_the_summary_of_investments(self, text: str) -> None:
+        # make login and create a user_fii and a user history profits
+        create_profits_history(
+            self.client,
+            self.make_login,
+            value_aplication=100,
+            profits_value=200,
+        )
+
+        # make get request
+        response = self.client.get(self.url)
+
+        self.assertIn(
+            text,
+            response.content.decode('utf-8'),
+        )
