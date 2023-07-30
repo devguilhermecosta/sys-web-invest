@@ -88,6 +88,25 @@ class UserFII(models.Model):
         )
         return history
 
+    def get_partial_profits(self) -> float:
+        history = self.get_partial_history(handler='profits')
+        total = sum([h.total_price for h in history])
+        return total
+
+    @classmethod
+    def get_total_amount_invested(cls, user: User) -> float:
+        uf_query_set = cls.objects.filter(
+            user=user
+        )
+        total = sum([uf.get_total_price() for uf in uf_query_set])
+        return total
+
+    @classmethod
+    def get_total_profits(cls, user: User) -> float:
+        products = UserFII.objects.filter(user=user)
+        total = sum([p.get_partial_profits() for p in products])
+        return total
+
     @classmethod
     def get_full_history(cls, user: User, handler: str) -> List[dict] | None:
         ''' handler: buy, redeem or profits  '''
@@ -113,17 +132,6 @@ class UserFII(models.Model):
         )
 
         return history
-
-    def get_partial_profits(self) -> float:
-        history = self.get_partial_history(handler='profits')
-        total = sum([h.total_price for h in history])
-        return total
-
-    @classmethod
-    def get_total_profits(cls, user: User) -> float:
-        products = UserFII.objects.filter(user=user)
-        total = sum([p.get_partial_profits() for p in products])
-        return total
 
 
 class FiiHistory(models.Model):

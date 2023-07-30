@@ -22,9 +22,19 @@ from typing import List
 )
 class FIIsView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
+        total_applied = UserFII.get_total_amount_invested(
+            user=self.request.user
+        )
+        total_profits = UserFII.get_total_profits(
+            user=self.request.user,
+        )
         return render(
             self.request,
             'product/pages/fiis/fiis.html',
+            context={
+                'total_applied': total_applied,
+                'total_received_in_profits': total_profits,
+            }
         )
 
 
