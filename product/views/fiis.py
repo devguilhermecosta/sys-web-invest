@@ -229,11 +229,14 @@ class FIIManageIncomeReceiptDeleteHistory(FIIsView):
             pk=kwargs.get('id', None)
         )
 
-        history.delete()
+        if history.userproduct.user == self.request.user:
+            history.delete()
 
-        return redirect(
-            reverse('product:fiis_manage_income')
-        )
+            return redirect(
+                reverse('product:fiis_manage_income')
+            )
+
+        raise Http404()
 
     def get(self, *args, **kwargs) -> None:
         raise Http404()
