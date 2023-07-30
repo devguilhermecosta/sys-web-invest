@@ -1,4 +1,5 @@
 {% extends 'global/pages/base.html' %}
+{% load money %}
 
 {% block title %}
   FIIs
@@ -20,8 +21,19 @@
     <li class="C-dashboard_list_li">
       <a class="C-dashboard_link" href="{% url 'product:fiis_manage_income' %}">Gerenciar proventos</a>
     </li>
-    <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="">Resumo de investimento</a>
-    </li>
   </ul>
+
+  <!-- summary -->
+  <section class="C-fiis_summary">
+    <div>
+      <div class="C-fiis_summary_detail" >
+        <p>Aplicação total:</p>
+        <span>{{ total_applied|real_brl }}</span>
+      </div>
+      <div class="C-fiis_summary_detail" >
+        <p>Total recebido em proventos:</p>
+        <span>{{ total_received_in_profits|real_brl }}</span>
+      </div>
+    </div>
+  </section>
 {% endblock content %}
