@@ -110,7 +110,7 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
         # create the profits history and make login with user=user
         u = create_profits_history(self.client,
                                    self.make_login,
-                                   value=150,
+                                   profits_value=150,
                                    )
 
         # get the history id of user
@@ -142,7 +142,7 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
             self.make_login,
             code='brcr11',
             desc='brcr11',
-            value=150,
+            profits_value=150,
             )
 
         # checks if the history has been created

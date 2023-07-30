@@ -8,6 +8,7 @@ from product.models import (
     Action,
     FII,
     UserFII,
+    FiiHistory,
     ProductFixedIncome,
     DirectTreasure,
     )
@@ -127,9 +128,13 @@ def create_profits_history(client: Client,
         kwargs:
             code: make a new UserFII with this code
             desc: make a new UserFII with this description
-            value: make a new UserFII with this value
+            value_aplication: make a new UserFII with
+            this unit_price
+            profits_value: make a new History Profits
+            with this value
 
-        returns a instance of User, UserFII and HttpResponse
+    returns a instance of User, UserFII, FiiHistory(QuerySet)
+    and a HttpResponse
     """
     # make login
     _, user = login_function()
@@ -137,7 +142,7 @@ def create_profits_history(client: Client,
     # create the user fii
     user_product = make_user_fii(user,
                                  1,
-                                 1,
+                                 kwargs.get('value_aplication', 1),
                                  kwargs.get('code', 'mxrf11'),
                                  kwargs.get('desc', 'maxi renda'),
                                  )
@@ -147,14 +152,20 @@ def create_profits_history(client: Client,
         reverse('product:fiis_manage_income_receipt'),
         {
             'user_product_id': user_product.id,
-            'value': kwargs.get('value', 10),
+            'value': kwargs.get('profits_value', 10),
             'date': '2023-07-02',
         },
         follow=True,
     )
 
+    history = FiiHistory.objects.filter(
+        userproduct=user_product,
+        handler='profits',
+    )
+
     return {
         'user': user,
         'user_fii': user_product,
+        'history': history,
         'response': response,
     }

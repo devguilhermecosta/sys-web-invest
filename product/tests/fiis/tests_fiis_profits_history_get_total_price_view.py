@@ -113,7 +113,7 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
         # create the profits history and make login with user=user
         create_profits_history(self.client,
                                self.make_login,
-                               value=150,
+                               profits_value=150,
                                )
 
         # make get request with the user logged in
