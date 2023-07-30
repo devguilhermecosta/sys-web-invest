@@ -64,6 +64,23 @@ class UserAction(models.Model):
         self.unit_price = (self.unit_price + unit_price) / 2
         self.save()
 
+    def receiv_profits(self,
+                       handler: str,
+                       date: str,
+                       total_price: float,
+                       tax_and_irpf: float | None = '',
+                       ) -> None:
+        new_history = ActionHistory.objects.create(
+            userproduct=self,
+            handler=handler,
+            date=date,
+            quantity=1,
+            tax_and_irpf=tax_and_irpf,
+            unit_price=total_price,
+            total_price=total_price,
+        )
+        new_history.save()
+
     def get_total_price(self) -> float:
         return round(self.quantity * float(self.unit_price), 2)
 
