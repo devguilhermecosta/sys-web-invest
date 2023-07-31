@@ -41,8 +41,8 @@ class ActionsReceivProfitsForm(forms.Form):
         label='taxas e irpf',
         widget=forms.NumberInput(
             attrs={
-                'min': 0.1,
-                'step': 0.1,
+                'min': 0.01,
+                'step': 0.01,
             }
         )
     )
@@ -50,8 +50,8 @@ class ActionsReceivProfitsForm(forms.Form):
         label='valor recebido',
         widget=forms.NumberInput(
             attrs={
-                'min': 0.1,
-                'step': 0.1,
+                'min': 0.01,
+                'step': 0.01,
             }
         )
     )
