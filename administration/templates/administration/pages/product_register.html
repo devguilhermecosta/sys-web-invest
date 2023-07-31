@@ -12,8 +12,8 @@
   {% include 'global/partials/_messages.html' %}
 
   <section class="C-dashboard_table_details">
-    {% if fiis|length == 0 %}
-      <p class="C-dashboard_table_empty_message">nenhum fii cadastrado</p>
+    {% if products|length == 0 %}
+      <p class="C-dashboard_table_empty_message">{{ default_message }}</p>
     {% else %}
       <table class="C-dashboard_table">
         <tr>
@@ -21,11 +21,11 @@
           <th>nome</th>
           <th>cnpj</th>
         </tr>
-      {% for fii in fiis %}
+      {% for product in products %}
         <tr>
-          <td>{{ fii.code }}</td>
-          <td>{{ fii.description }}</td>
-          <td>{{ fii.cnpj }}</td>
+          <td>{{ product.code }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.cnpj }}</td>
         </tr>
       {% endfor %}
       </table>

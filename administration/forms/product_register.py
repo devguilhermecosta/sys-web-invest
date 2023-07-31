@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from product.models import FII
+from product.models import FII, Action
 from utils.forms.style import add_css_class
 import c2validator as c2
 
@@ -51,9 +51,9 @@ class FIIRegisterForm(forms.ModelForm):
     def clean_description(self):
         description = self.cleaned_data["description"]
 
-        if not description or len(description) < 6:
+        if not description or len(description) < 3:
             raise ValidationError(
-                ('A descrição deve ter pelo menos 6 caracteres'),
+                ('A descrição deve ter pelo menos 3 caracteres'),
                 code='invalid'
             )
         return description
@@ -86,3 +86,38 @@ class FIIRegisterForm(forms.ModelForm):
             )
 
         return cpf_valid
+
+
+class ActionRegisterForm(FIIRegisterForm):
+    class Meta:
+        model = Action
+        fields = [
+            'code',
+            'description',
+            'cnpj',
+        ]
+
+        labels = {
+            'code': 'código',
+            'description': 'descrição',
+            'cnpj': 'cnpj',
+        }
+
+    def clean_code(self):
+        code = self.cleaned_data["code"]
+
+        if not code or len(code) != 5:
+            raise ValidationError(
+                ('O código deve ter 5 caracteres'),
+                code='invalid'
+            )
+
+        product = Action.objects.filter(code=code)
+
+        if product.exists():
+            raise ValidationError(
+                ('Ação já registrado'),
+                code='invalid'
+            )
+
+        return code
