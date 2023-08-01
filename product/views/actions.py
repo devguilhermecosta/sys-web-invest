@@ -1,6 +1,6 @@
 from django.views import View
 from django.views.generic import ListView
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -86,7 +86,7 @@ class ActionsManageProfitsView(ActionsView):
 
         for user_action in objects:
             choices.append(
-                (user_action.id, user_action.product.code)
+                (user_action.id, user_action.product.code.upper())
             )
 
         return choices
@@ -103,6 +103,7 @@ class ActionsManageProfitsView(ActionsView):
                 'form': form,
                 'form_title': 'lançar rendimento',
                 'button_submit_value': 'salvar',
+                'main_page': True,
             }
         )
 
@@ -133,12 +134,21 @@ class ActionsManageProfitsView(ActionsView):
 
             messages.success(
                 self.request,
-                (
-                    f'rendimento para {user_action.product.code} '
-                    f'lançado com sucesso',
-                )
+                f'rendimento para {user_action.product.code} '
+                'lançado com sucesso',
             )
 
         return redirect(
             reverse('product:actions_manage_profits')
         )
+
+
+class ActionsManageProfitsHistoryView(ActionsView):
+    def get(self, *args, **kwargs) -> JsonResponse:
+        history = UserAction.get_full_profits_history(
+            user=self.request.user
+        )
+        return JsonResponse({'data': history})
+
+    def post(self, *args, **kwargs) -> None:
+        raise Http404()
