@@ -1,11 +1,10 @@
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse, Http404, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from product.forms import ActionBuyAndSellForm, ActionsReceivProfitsForm
 from product.models import Action, UserAction, ActionHistory
 from .base_views.variable_income import Buy, Sell, History
@@ -92,8 +91,7 @@ class ActionsManageProfitsView(ActionsView):
         return choices
 
     def get(self, *args, **kwargs) -> HttpResponse:
-        session = self.request.session.get('action-receiv-profits', None)
-        form = ActionsReceivProfitsForm(session)
+        form = ActionsReceivProfitsForm()
         form.fields.get('user_product_id').widget.choices = self.choices()
 
         return render(
@@ -102,17 +100,20 @@ class ActionsManageProfitsView(ActionsView):
             context={
                 'form': form,
                 'form_title': 'lançar rendimento',
+                'custom_id': 'actions-receive-profits-form',
                 'button_submit_value': 'salvar',
                 'url_history_profits': reverse(
                     'product:action_history_json'
                 ),
-                'main_page': True,
+                'url_receive_profits': reverse(
+                    'product:actions_manage_profits',
+                ),
+                'is_main_page': True,
             }
         )
 
-    def post(self, *args, **kwargs) -> HttpResponse:
+    def post(self, *args, **kwargs) -> JsonResponse:
         post = self.request.POST
-        self.request.session['action-receiv-profits'] = post
         form = ActionsReceivProfitsForm(post)
 
         if form.is_valid():
@@ -133,17 +134,9 @@ class ActionsManageProfitsView(ActionsView):
                 tax_and_irpf=data.get('tax_and_irpf', ''),
             )
 
-            del self.request.session['action-receiv-profits']
+            return JsonResponse({'data': 'success request'})
 
-            messages.success(
-                self.request,
-                f'rendimento para {user_action.product.code} '
-                'lançado com sucesso',
-            )
-
-        return redirect(
-            reverse('product:actions_manage_profits')
-        )
+        return JsonResponse({'error': 'form errors'})
 
 
 class ActionsManageProfitsHistoryView(ActionsView):
