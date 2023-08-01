@@ -47,7 +47,7 @@ class ActionsReceivProfitsForm(forms.Form):
         )
     )
     total_price = forms.FloatField(
-        label='valor recebido',
+        label='valor bruto',
         widget=forms.NumberInput(
             attrs={
                 'min': 0.01,
