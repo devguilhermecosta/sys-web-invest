@@ -103,6 +103,9 @@ class ActionsManageProfitsView(ActionsView):
                 'form': form,
                 'form_title': 'lançar rendimento',
                 'button_submit_value': 'salvar',
+                'url_history_profits': reverse(
+                    'product:action_history_json'
+                ),
                 'main_page': True,
             }
         )
