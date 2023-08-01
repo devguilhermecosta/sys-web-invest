@@ -5,7 +5,7 @@ import { createTextElement } from './src/modules.js';
 import { createButton } from './src/modules.js';
 import { createMessageAlert } from './src/modules.js';
 import { createGoogleIcon } from './src/modules.js';
-import { convertToBRL, convertToLocaleDateString } from './src/modules.js';
+import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modules.js';
 
 
 // form fiis receiv profis
@@ -235,7 +235,7 @@ function createProfitsTable(refresh=false) {
             convertToLocaleDateString(el.date),
             el.product,
             convertToBRL(el.value),
-            el.handler === 'profits' ? 'PROVENTOS' : '',
+            makeHandler(el.handler),
             el.history_id);
         }
         )

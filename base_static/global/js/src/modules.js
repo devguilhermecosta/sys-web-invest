@@ -92,3 +92,22 @@ export function convertToLocaleDateString(date) {
     {'timeZone': 'UTC'},
   )
 }
+
+
+// translate the data handler to pt-br
+export function makeHandler(handler) {
+  switch(handler) {
+    case 'profits':
+      return 'proventos'
+    case 'dividends':
+      return 'dividendos'
+    case 'jscp':
+      return 'jscp'
+    case 'remuneration':
+      return 'remuneração'
+    case 'renting':
+      return 'aluguel'
+    case _:
+      return ''
+  }
+}
