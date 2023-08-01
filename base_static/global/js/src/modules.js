@@ -70,3 +70,25 @@ export function createMessageAlert(color, message) {
     body.removeChild(container);
   })
 }
+
+
+// converto to BRL money
+export function convertToBRL(value) {
+  return value.toLocaleString(
+    'pt-BR',
+    {
+      style: 'currency',
+      currency: 'BRL',
+    }
+  )
+}
+
+
+// convert to local date
+export function convertToLocaleDateString(date) {
+  let newDate = new Date(date);
+  return newDate.toLocaleDateString(
+    'pt-BR',
+    {'timeZone': 'UTC'},
+  )
+}

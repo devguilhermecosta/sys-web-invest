@@ -5,6 +5,7 @@ import { createTextElement } from './src/modules.js';
 import { createButton } from './src/modules.js';
 import { createMessageAlert } from './src/modules.js';
 import { createGoogleIcon } from './src/modules.js';
+import { convertToBRL, convertToLocaleDateString } from './src/modules.js';
 
 
 // form fiis receiv profis
@@ -226,26 +227,14 @@ function createProfitsTable(refresh=false) {
       if (request.readyState == 4 && request.status == 200) {
         const result = JSON.parse(request.responseText);
         const data = result.data;
-        let date = '';
         
         if (refresh) {cleanDataTable();}
         
         data.map((el) => {
-          date = new Date(el.date);
-
           createDataTable(
-            date.toLocaleDateString(
-              'pt-BR',
-              {'timeZone': 'UTC'},
-            ),
+            convertToLocaleDateString(el.date),
             el.product,
-            el.value.toLocaleString(
-              'pt-BR',
-              {
-                style: 'currency',
-                currency: 'BRL',
-              },
-            ),
+            convertToBRL(el.value),
             el.handler === 'profits' ? 'PROVENTOS' : '',
             el.history_id);
         }
