@@ -6,7 +6,7 @@ import { createDivFlexButton } from "./src/modules.js";
 import { createTextElement } from "./src/modules.js";
 import { createButton } from "./src/modules.js";
 import { cleanDataTable } from "./src/modules.js";
-import { createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
+import { createHistoryLinkEdit , createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
 import { createGoogleIcon } from "./src/modules.js";
 
 
@@ -86,15 +86,15 @@ import { createGoogleIcon } from "./src/modules.js";
 // Create the profits actions receipt table
 function createDataTable(date, code, handler, tax, gross_value, final_value, h_id) {
   const tableBody = document.querySelector('#table-body');
-  // let spanEdit;
+  let spanEdit;
   let spanDelete;
-  // let linkEdit;
+  let linkEdit;
   let linkDelete;
 
   if (tableBody) {
-    // linkEdit = createHistoryLinkEdit(p_id);
-    // spanEdit = createGoogleIcon('edit', 'icon_edit');
-    // linkEdit.appendChild(spanEdit);
+    linkEdit = createHistoryLinkEdit(h_id);
+    spanEdit = createGoogleIcon('edit', 'icon_edit');
+    linkEdit.appendChild(spanEdit);
 
     linkDelete = createHistoryLinkDelete(h_id);
     spanDelete = createGoogleIcon('delete_forever', 'icon_delete');
@@ -108,6 +108,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     let tableTax = document.createElement('td');
     let tableGrossValue = document.createElement('td');
     let tableFinalValue = document.createElement('td');
+    let tableEdit = document.createElement('td');
     let tableDelete = document.createElement('td');
 
     tableDate.innerHTML = date;
@@ -118,7 +119,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     tableFinalValue.innerHTML = final_value;
     tableHandler.style.color = '#0f6e6a';
 
-    // tableEdit.appendChild(linkEdit);
+    tableEdit.appendChild(linkEdit);
     tableDelete.appendChild(linkDelete);
 
     tableRow.appendChild(tableDate);
@@ -127,6 +128,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     tableRow.appendChild(tableTax);
     tableRow.appendChild(tableGrossValue);
     tableRow.appendChild(tableFinalValue);
+    tableRow.appendChild(tableEdit);
     tableRow.appendChild(tableDelete);
 
     tableBody.appendChild(tableRow);
