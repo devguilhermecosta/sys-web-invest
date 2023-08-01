@@ -104,13 +104,15 @@ class UserAction(models.Model):
         for product in products:
             for h in product.get_history():
                 if h.handler in handler:
+                    tax = h.tax_and_irpf
+                    total = h.total_price
                     history.append({
                         'date': h.date,
                         'product': product.product.code,
                         'handler': h.handler,
-                        'tax': h.tax_and_irpf,
+                        'tax': tax if tax else 0,
                         'gross_value': h.total_price,
-                        'final_value': h.total_price - h.tax_and_irpf,
+                        'final_value': (total - tax) if tax else total,
                         'history_id': h.pk,
                     })
 
