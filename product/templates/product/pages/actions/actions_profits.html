@@ -1,8 +1,30 @@
 {% extends 'global/pages/base.html' %}
 
 {% block content %}
-<section class="C-actions center_x_y_flex">
-  {% include 'global/partials/_form.html' %}
-  {% include 'global/partials/_messages.html' %}
-</section>
+  <section class="C-dashboard_table_details">
+    {% include 'global/partials/_form.html' %}
+    {% include 'global/partials/_messages.html' %}
+  </section>
+
+  <input type="hidden" id="url-actions-history-profits" data-url-history-profits="{{ url_history_profits }}">
+  {% comment %} <input type="hidden" id="url-total-profits" data-url-total-profits="{{ url_total_profits }}">
+  {% csrf_token %} {% endcomment %}
+
+  {% comment %} {% if is_main_page %} {% endcomment %}
+  <section class="C-dashboard_table_details">
+    <table id="profits-table" class="C-dashboard_table">
+      <thead>
+        <th>data</th>
+        <th>código</th>
+        <th>mov</th>
+        <th>impostos e taxas</th>
+        <th>valor bruto</th>
+        <th>valor líquido</th>
+        <th>edit.</th>
+        <th>del.</th>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </section>
+  {% comment %} {% endif %} {% endcomment %}
 {% endblock content %}
