@@ -1,11 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from typing import TypeVar
+from typing import TypeVar, List
+from datetime import datetime as dt
 
 
 date = '2023-07-04'
 PDF = TypeVar('PDF', bytes, None)
+QuerySet = TypeVar('QuerySet', list, None)
 
 
 class Action(models.Model):
@@ -83,6 +85,41 @@ class UserAction(models.Model):
 
     def get_total_price(self) -> float:
         return round(self.quantity * float(self.unit_price), 2)
+
+    def get_history(self) -> QuerySet | None:
+        '''
+            param: handler
+        '''
+        history = ActionHistory.objects.filter(
+            userproduct=self,
+        )
+        return history
+
+    @classmethod
+    def get_full_profits_history(cls, user: User) -> List[dict]:
+        handler = ('dividends', 'jscp', 'remuneration', 'renting')
+        history = []
+        products = cls.objects.filter(user=user)
+
+        for product in products:
+            for h in product.get_history():
+                if h.handler in handler:
+                    history.append({
+                        'date': h.date,
+                        'product': product.product.code,
+                        'handler': h.handler,
+                        'tax': h.tax_and_irpf,
+                        'gross_value': h.total_price,
+                        'final_value': h.total_price - h.tax_and_irpf,
+                        'history_id': h.pk,
+                    })
+
+        history.sort(
+            key=lambda item: dt.strptime(str(item['date']), '%Y-%m-%d',),
+            reverse=True,
+        )
+
+        return history
 
 
 class ActionHistory(models.Model):
