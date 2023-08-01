@@ -1,4 +1,85 @@
 import { convertToBRL, convertToLocaleDateString, makeHandler } from "./src/modules.js";
+import { createMessageAlert } from "./src/modules.js";
+import { createDefaultContainer } from "./src/modules.js";
+import { createDefaultFrame } from "./src/modules.js";
+import { createDivFlexButton } from "./src/modules.js";
+import { createTextElement } from "./src/modules.js";
+import { createButton } from "./src/modules.js";
+import { cleanDataTable } from "./src/modules.js";
+
+
+// function for receive profits
+(() => {
+  const form = document.querySelector('#actions-receive-profits-form');
+
+  if (form) {
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const dataForm = new FormData(form);
+      const productInput = form.querySelector("#id_user_product_id");
+      const profitsTypeInput = form.querySelector('#id_profits_type');
+
+      const product_id = parseInt(dataForm.get('user_product_id'));
+      const productDesc = productInput.options[productInput.selectedIndex].innerHTML;
+      const handler = profitsTypeInput.options[profitsTypeInput.selectedIndex].innerHTML;
+      const date = dataForm.get('date');
+      const totalValue = convertToBRL(parseFloat(dataForm.get('total_price')));
+
+      if (!product_id || !handler || !date || !totalValue) {
+        createMessageAlert('white', 'informe todos os dados');
+        return
+      }
+
+      const body = document.body;
+      const container = createDefaultContainer();
+      const frame = createDefaultFrame();
+      const text = createTextElement(
+        'white', 
+        `<p>deseja salvar o recebimento de</p> <p>${totalValue} para ${productDesc}?</p>` );
+      const buttonFrame = createDivFlexButton();
+      const buttonConfirm = createButton('confirmar');
+      const buttonCancel = createButton('cancelar');
+
+      buttonFrame.appendChild(buttonCancel);
+      buttonFrame.appendChild(buttonConfirm);
+
+      frame.appendChild(text);
+      frame.appendChild(buttonFrame);
+
+      container.appendChild(frame);
+      body.appendChild(container);
+
+      buttonCancel.addEventListener("click", () => {body.removeChild(container)});
+      buttonConfirm.addEventListener("click", function() {
+        const inputPath = document.querySelector('#url-actions-receive-profits');
+        const path = inputPath.dataset.urlReceiveProfits;
+        const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        const labels = form.querySelectorAll('.C-login_label');
+
+        const xmlrequest = new XMLHttpRequest();
+
+        xmlrequest.onreadystatechange = function() {
+          if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
+            let result = document.querySelector('#result');
+            result.classList.add('messages');
+            result.classList.add('message_success');
+            result.innerHTML = `Recebimento de ${totalValue} lançado com sucesso para ${productDesc}`;
+            
+            form.reset();
+            labels.forEach((l) => {l.classList.remove('C-login_input_active')});
+            body.removeChild(container);
+            createDataTableProfits(true);
+          }
+        }
+        xmlrequest.open('POST', path, true);
+        xmlrequest.setRequestHeader('X-CSRF-TOKEN', token);
+        xmlrequest.send(dataForm);
+      })
+    })
+  }
+})();
+
 
 // Create the profits actions receipt table
 function createDataTable(date, code, handler, tax, gross_value, final_value, h_id) {
@@ -75,7 +156,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
 }
 
 
-function createDataTableProfits() {
+function createDataTableProfits(refresh=false) {
   const inputPath = document.querySelector('#url-actions-history-profits');
 
   if (inputPath) {
@@ -86,6 +167,8 @@ function createDataTableProfits() {
       if (xmlrRequest.readyState === 4 && xmlrRequest.status === 200) {
         const response = JSON.parse(xmlrRequest.responseText);
         const data = response.data;
+
+        if (refresh) {cleanDataTable();}
 
         data.map((history) => {
           createDataTable(

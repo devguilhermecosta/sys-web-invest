@@ -6,6 +6,7 @@ import { createButton } from './src/modules.js';
 import { createMessageAlert } from './src/modules.js';
 import { createGoogleIcon } from './src/modules.js';
 import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modules.js';
+import { cleanDataTable } from './src/modules.js';
 
 
 // form fiis receiv profis
@@ -24,15 +25,10 @@ import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modu
       const value = parseFloat(form.get('value'));
 
       const body = document.body;
-      let container = createDefaultContainer();
+      const container = createDefaultContainer();
 
       if (product >= 1 && date.length > 0 && value > 0) {
-        const formatedValue = value.toLocaleString(
-          'pt-br',
-          {
-            style: 'currency',
-            currency: 'BRL'
-          });
+        const formatedValue = convertToLocaleDateString(value);
         const frame = createDefaultFrame();
         const buttonContainer = createDivFlexButton();
 
@@ -55,9 +51,7 @@ import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modu
         container.appendChild(frame)
         body.appendChild(container);
 
-        buttonContainer.addEventListener("click", () => {
-          body.removeChild(container);
-        });
+        buttonContainer.addEventListener("click", () => {body.removeChild(container);});
 
         buttonConfirm.addEventListener("click", function() {
           let urlPath = `/ativos/fiis/gerenciar-proventos/receber/`;
@@ -73,9 +67,9 @@ import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modu
               result.classList.add('message_success');
               result.innerHTML = 
               `Recebimento de ${formatedValue} lançado com sucesso para ${productDesc}`;
+
               formFiisReceivProfis.reset();
               labels.forEach((l) => {l.classList.remove('C-login_input_active')});
-
               createProfitsTable(true);
               getTotalProfitsFiis();
             }
@@ -200,16 +194,6 @@ function createDataTable(date, code, value, handler, p_id) {
     tableRow.appendChild(tableDelete);
 
     tableBody.appendChild(tableRow);
-  }
-}
-
-
-// clean the tbody
-function cleanDataTable() {
-  const tableBody = document.querySelector('#table-body');
-  if (tableBody) {
-    const tableData = tableBody.querySelectorAll('tr');
-    tableData.forEach((tr) => {tableBody.removeChild(tr)});
   }
 }
 

@@ -72,6 +72,16 @@ export function createMessageAlert(color, message) {
 }
 
 
+// clean the tbody
+export function cleanDataTable() {
+  const tableBody = document.querySelector('#table-body');
+  if (tableBody) {
+    const tableData = tableBody.querySelectorAll('tr');
+    tableData.forEach((tr) => {tableBody.removeChild(tr)});
+  }
+}
+
+
 // converto to BRL money
 export function convertToBRL(value) {
   return value.toLocaleString(
