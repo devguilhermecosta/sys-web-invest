@@ -7,6 +7,7 @@ import { createMessageAlert } from './src/modules.js';
 import { createGoogleIcon } from './src/modules.js';
 import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modules.js';
 import { cleanDataTable } from './src/modules.js';
+import { createHistoryLinkDelete, confirmationBoxDeleteHistory, createHistoryLinkEdit } from './src/utils.js';
 
 
 // form fiis receiv profis
@@ -88,43 +89,6 @@ import { cleanDataTable } from './src/modules.js';
 })();
 
 
-// create link for history edit
-function createHistoryLinkEdit(id) {
-  const path = `historico/${id}/editar/`;
-  let link = document.createElement('a');
-  link.setAttribute('href', path);
-  return link
-}
-
-function createHistoryLinkDelete(id) {
-  const path = `historico/${id}/deletar/`;
-  const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-  
-  const paramsTokenInput = {
-    type: 'hidden',
-    value: token,
-    name: 'csrfmiddlewaretoken',
-  }
-  let tokenInput = document.createElement('input');
-  for (const [k, v] of Object.entries(paramsTokenInput)) {
-    tokenInput.setAttribute(k, v);
-  }
-
-  const paramsForm = {
-    action: path,
-    method: 'POST',
-    enctype: 'multipart/form-data',
-  }
-  let form = document.createElement('form');
-  for (const [key, value] of Object.entries(paramsForm)) {
-    form.setAttribute(key, value);
-  }
-  form.appendChild(tokenInput);
-
-  return form;
-}
-
-
 // Create the profits fii receipt table
 function createDataTable(date, code, value, handler, p_id) {
   const tableBody = document.querySelector('#table-body');
@@ -140,34 +104,7 @@ function createDataTable(date, code, value, handler, p_id) {
 
     linkDelete = createHistoryLinkDelete(p_id);
     spanDelete = createGoogleIcon('delete_forever', 'icon_delete');
-    spanDelete.addEventListener("click", function() {
-      const form = this.parentElement;
-      const container = createDefaultContainer();
-      const frame = createDefaultFrame()
-      const message = createTextElement(
-        'white', 
-        `<p>deseja mesmo deletar</p>
-        <p>este provento de ${code}?</p>`,
-        );
-      const buttonContainer = createDivFlexButton();
-      const buttonCancel = createButton('cancelar');
-      const buttonConfirm = createButton('confirmar');
-    
-      const body = document.body;
-      
-      buttonContainer.appendChild(buttonCancel);
-      buttonContainer.appendChild(buttonConfirm);
-
-      frame.appendChild(message);
-      frame.appendChild(buttonContainer);
-      
-      container.appendChild(frame)
-
-      body.appendChild(container);
-      
-      buttonCancel.addEventListener("click", () => {body.removeChild(container)});
-      buttonConfirm.addEventListener("click", function() {form.submit();});
-    })
+    spanDelete.addEventListener("click", () => {confirmationBoxDeleteHistory(spanDelete, code)});
     linkDelete.appendChild(spanDelete);
 
     let tableRow = document.createElement('tr');
