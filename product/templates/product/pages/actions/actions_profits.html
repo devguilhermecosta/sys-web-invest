@@ -1,5 +1,9 @@
 {% extends 'global/pages/base.html' %}
 
+{% block title %}
+  Gerenciar proventos
+{% endblock title %}
+
 {% block content %}
   <section class="C-dashboard_table_details">
     {% include 'global/partials/_form.html' %}
@@ -7,10 +11,13 @@
   </section>
 
   <input type="hidden" id="url-actions-history-profits" data-url-history-profits="{{ url_history_profits }}">
-  {% comment %} <input type="hidden" id="url-total-profits" data-url-total-profits="{{ url_total_profits }}">
-  {% csrf_token %} {% endcomment %}
+  <input type="hidden" id="url-actions-receive-profits" data-url-receive-profits="{{ url_receive_profits }}">
+  {% comment %} <input type="hidden" id="url-total-profits" data-url-total-profits="{{ url_total_profits }}"> {% endcomment %}
+  {% csrf_token %}
 
-  {% comment %} {% if is_main_page %} {% endcomment %}
+  <div id="result"></div>
+
+  {% if is_main_page %}
   <section class="C-dashboard_table_details">
     <table id="profits-table" class="C-dashboard_table">
       <thead>
@@ -26,5 +33,5 @@
       <tbody id="table-body"></tbody>
     </table>
   </section>
-  {% comment %} {% endif %} {% endcomment %}
+  {% endif %}
 {% endblock content %}
