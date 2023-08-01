@@ -148,3 +148,21 @@ class ActionsManageProfitsHistoryView(ActionsView):
 
     def post(self, *args, **kwargs) -> None:
         raise Http404()
+
+
+class ActionsManageProfitsHistoryDeleteView(ActionsView):
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> JsonResponse:
+        history = get_object_or_404(
+            ActionHistory,
+            pk=kwargs.get('id', None)
+        )
+
+        if history.userproduct.user != self.request.user:
+            raise Http404()
+
+        history.delete()
+
+        return JsonResponse({"data": "history deleted successfully"})
