@@ -208,6 +208,7 @@ def create_actions_history(client: Client,
             this unit_price
 
 
+            date: received date
             handler: name of handler: ex: 'dividends, jscp...'
             tax_and_irpf: value of tax
             gross_value: total value received
@@ -232,7 +233,7 @@ def create_actions_history(client: Client,
         {
             'user_product_id': user_product.id,
             'profits_type': kwargs.get('handler', 'dividends'),
-            'date': '2023-07-02',
+            'date': kwargs.get('date', '2023-07-02'),
             'tax_and_irpf': kwargs.get('tax_and_irpf', 0),
             'total_price': kwargs.get('gross_value', 10),
         },
