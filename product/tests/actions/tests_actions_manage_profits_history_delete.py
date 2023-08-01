@@ -130,12 +130,10 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         # make post request for delete the history
         response = self.client.post(self.url)
 
-        # checks it the history has been deleted
-        self.assertIn(
-            '{"data": "history deleted successfully"}',
-            response.content.decode('utf-8')
-        )
-
-        # checks again the history length
         history = ActionHistory.objects.filter(userproduct=u['user_action'])
         self.assertEqual(len(history), 0)
+        self.assertRedirects(
+            response,
+            '/ativos/acoes/gerenciar-proventos/',
+            302,
+        )

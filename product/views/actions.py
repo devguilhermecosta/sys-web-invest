@@ -1,7 +1,7 @@
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse, Http404, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -154,7 +154,7 @@ class ActionsManageProfitsHistoryDeleteView(ActionsView):
     def get(self, *args, **kwargs) -> None:
         raise Http404()
 
-    def post(self, *args, **kwargs) -> JsonResponse:
+    def post(self, *args, **kwargs) -> HttpResponse:
         history = get_object_or_404(
             ActionHistory,
             pk=kwargs.get('id', None)
@@ -165,4 +165,6 @@ class ActionsManageProfitsHistoryDeleteView(ActionsView):
 
         history.delete()
 
-        return JsonResponse({"data": "history deleted successfully"})
+        return redirect(
+            reverse('product:actions_manage_profits')
+        )
