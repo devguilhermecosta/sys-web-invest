@@ -171,7 +171,7 @@ class ActionsManageProfitsHistoryDeleteView(ActionsView):
 
 
 class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
-    def get_userproduct_or_404(self, id: int) -> ActionHistory:
+    def get_product_history_or_404(self, id: int) -> ActionHistory:
         history = get_object_or_404(
             ActionHistory,
             pk=id
@@ -209,4 +209,4 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
         )
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        history = self.get_userproduct_or_404(kwargs.get('id', None))
+        history = self.get_product_history_or_404(kwargs.get('id', None))
