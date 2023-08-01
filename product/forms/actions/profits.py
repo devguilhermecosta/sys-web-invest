@@ -8,6 +8,7 @@ import re
 default_input_class = 'C-login_input'
 
 profitys_type_choices = (
+    ('---', '---'),
     ('dividends', 'dividendos'),
     ('jscp', 'jscp'),
     ('remuneration', 'remuneração'),
@@ -84,7 +85,7 @@ class ActionsReceivProfitsForm(forms.Form):
     def clean_profits_type(self):
         profits_type = self.cleaned_data["profits_type"]
 
-        if not profits_type:
+        if not profits_type or profits_type == '---':
             raise ValidationError(
                 ('selecione um tipo de rendimento'),
                 code='required',
