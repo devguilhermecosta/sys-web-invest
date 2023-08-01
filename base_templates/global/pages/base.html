@@ -48,6 +48,12 @@
     dt_and_fiis.setAttribute('type', 'module');
     dt_and_fiis.setAttribute('src', '{% static "global/js/dt_and_fiis.js" %}');
     body.appendChild(dt_and_fiis);
+
+    // create script for actions
+    const actions = window.document.createElement('script');
+    actions.setAttribute('type', 'module');
+    actions.setAttribute('src', '{% static "global/js/actions.js" %}');
+    body.appendChild(actions);
   </script>
     
 </body>
