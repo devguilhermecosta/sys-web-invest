@@ -6,6 +6,8 @@ import { createDivFlexButton } from "./src/modules.js";
 import { createTextElement } from "./src/modules.js";
 import { createButton } from "./src/modules.js";
 import { cleanDataTable } from "./src/modules.js";
+import { createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
+import { createGoogleIcon } from "./src/modules.js";
 
 
 // function for receive profits
@@ -85,46 +87,19 @@ import { cleanDataTable } from "./src/modules.js";
 function createDataTable(date, code, handler, tax, gross_value, final_value, h_id) {
   const tableBody = document.querySelector('#table-body');
   // let spanEdit;
-  // let spanDelete;
+  let spanDelete;
   // let linkEdit;
-  // let linkDelete;
+  let linkDelete;
 
-  // if (tableBody) {
+  if (tableBody) {
     // linkEdit = createHistoryLinkEdit(p_id);
     // spanEdit = createGoogleIcon('edit', 'icon_edit');
     // linkEdit.appendChild(spanEdit);
 
-    // linkDelete = createHistoryLinkDelete(p_id);
-    // spanDelete = createGoogleIcon('delete_forever', 'icon_delete');
-    // spanDelete.addEventListener("click", function() {
-    //   const form = this.parentElement;
-    //   const container = createDefaultContainer();
-    //   const frame = createDefaultFrame()
-    //   const message = createTextElement(
-    //     'white', 
-    //     `<p>deseja mesmo deletar</p>
-    //     <p>este provento de ${code}?</p>`,
-    //     );
-    //   const buttonContainer = createDivFlexButton();
-    //   const buttonCancel = createButton('cancelar');
-    //   const buttonConfirm = createButton('confirmar');
-    
-    //   const body = document.body;
-      
-    //   buttonContainer.appendChild(buttonCancel);
-    //   buttonContainer.appendChild(buttonConfirm);
-
-    //   frame.appendChild(message);
-    //   frame.appendChild(buttonContainer);
-      
-    //   container.appendChild(frame)
-
-    //   body.appendChild(container);
-      
-    //   buttonCancel.addEventListener("click", () => {body.removeChild(container)});
-    //   buttonConfirm.addEventListener("click", function() {form.submit();});
-    // })
-    // linkDelete.appendChild(spanDelete);
+    linkDelete = createHistoryLinkDelete(h_id);
+    spanDelete = createGoogleIcon('delete_forever', 'icon_delete');
+    spanDelete.addEventListener("click", () => {confirmationBoxDeleteHistory(spanDelete, code)});
+    linkDelete.appendChild(spanDelete);
   
     let tableRow = document.createElement('tr');
     let tableDate = document.createElement('td');
@@ -133,6 +108,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     let tableTax = document.createElement('td');
     let tableGrossValue = document.createElement('td');
     let tableFinalValue = document.createElement('td');
+    let tableDelete = document.createElement('td');
 
     tableDate.innerHTML = date;
     tableCode.innerHTML = code;
@@ -143,7 +119,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     tableHandler.style.color = '#0f6e6a';
 
     // tableEdit.appendChild(linkEdit);
-    // tableDelete.appendChild(linkDelete);
+    tableDelete.appendChild(linkDelete);
 
     tableRow.appendChild(tableDate);
     tableRow.appendChild(tableCode);
@@ -151,8 +127,10 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
     tableRow.appendChild(tableTax);
     tableRow.appendChild(tableGrossValue);
     tableRow.appendChild(tableFinalValue);
+    tableRow.appendChild(tableDelete);
 
     tableBody.appendChild(tableRow);
+  }
 }
 
 
@@ -178,9 +156,9 @@ function createDataTableProfits(refresh=false) {
             convertToBRL(history.tax),
             convertToBRL(history.gross_value),
             convertToBRL(history.final_value),
+            history.history_id,
           )
         })
-
       }
     }
     xmlrRequest.open('GET', path);
