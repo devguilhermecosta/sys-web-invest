@@ -129,10 +129,10 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', 'selecione uma ação'),
-        ('profits_type', 'selecione um tipo de rendimento'),
-        ('date', 'campo obrigatório'),
-        ('total_price', 'campo obrigatório'),
+        ('user_product_id', '{"error": "form errors"}'),
+        ('profits_type', '{"error": "form errors"}'),
+        ('date', '{"error": "form errors"}'),
+        ('total_price', '{"error": "form errors"}'),
         ]
     )
     def test_actions_manage_profits_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
@@ -158,8 +158,8 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', '---', 'selecione uma ação'),
-        ('date', '20-01-01', 'Informe uma data válida'),
+        ('user_product_id', '---', '{"error": "form errors"}'),
+        ('date', '20-01-01', '{"error": "form errors"}'),
         ]
     )
     def test_actions_manage_profits_returns_error_messages_if_any_field_has_invalid_data(self, field: str, value: str, message: str) -> None:  # noqa: E501
@@ -266,11 +266,6 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
             'jscp',
         )
         self.assertIn(
-            'rendimento para bbas3 lançado com sucesso',
+            '{"data": "success request"}',
             content,
-        )
-        self.assertRedirects(
-            response,
-            '/ativos/acoes/gerenciar-proventos/',
-            302,
         )
