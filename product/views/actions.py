@@ -168,3 +168,45 @@ class ActionsManageProfitsHistoryDeleteView(ActionsView):
         return redirect(
             reverse('product:actions_manage_profits')
         )
+
+
+class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
+    def get_userproduct_or_404(self, id: int) -> ActionHistory:
+        history = get_object_or_404(
+            ActionHistory,
+            pk=id
+        )
+
+        if history.userproduct.user != self.request.user:
+            raise Http404()
+
+        return history
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_userproduct_or_404(kwargs.get('id', None))
+        tax = history.tax_and_irpf
+        form = ActionsReceivProfitsForm(
+            initial={
+                'user_product_id': history.userproduct.id,
+                'profits_type': history.handler,
+                'date': history.date,
+                'tax_and_irpf': f'{tax:.2f}' if tax else '',
+                'total_price': f'{history.total_price:.2f}',
+            }
+            )
+        form.fields.get('user_product_id').widget.choices = self.choices()
+
+        return render(
+            self.request,
+            'product/pages/actions/actions_profits.html',
+            context={
+                'form': form,
+                'form_title': 'editar rendimento',
+                'custom_id': 'actions-receive-profits-form',
+                'button_submit_value': 'salvar',
+                'is_main_page': False,
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_userproduct_or_404(kwargs.get('id', None))
