@@ -6,7 +6,7 @@ from product.tests.base_tests import create_actions_history, make_user_action
 
 
 class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
-    url = reverse('product:action_manage_income_receipt_delete', args=(1,))
+    url = reverse('product:action_manage_profits_delete', args=(1,))
 
     def test_actions_manage_income_history_delete_url_is_correct(self) -> None:
         self.assertEqual(
