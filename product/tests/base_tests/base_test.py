@@ -9,6 +9,7 @@ from product.models import (
     FII,
     UserAction,
     UserFII,
+    ActionHistory,
     FiiHistory,
     ProductFixedIncome,
     DirectTreasure,
@@ -186,6 +187,65 @@ def create_profits_history(client: Client,
     return {
         'user': user,
         'user_fii': user_product,
+        'history': history,
+        'response': response,
+    }
+
+
+def create_actions_history(client: Client,
+                           login_function: LoginFunction,
+                           **kwargs) -> Dict:  # noqa: E501
+    """ this function creates a new user, user_action and
+        a new profits history.
+
+        if you need create a custom history, set the following
+        kwargs.
+
+        kwargs:
+            code: make a new UserAction with this code
+            desc: make a new UserAction with this description
+            value_aplication: make a new UserAction with
+            this unit_price
+
+
+            handler: name of handler: ex: 'dividends, jscp...'
+            tax_and_irpf: value of tax
+            gross_value: total value received
+
+    returns a instance of User, UserAction, FiiHistory(QuerySet)
+    and a HttpResponse
+    """
+    # make login
+    _, user = login_function()
+
+    # create the user fii
+    user_product = make_user_action(user,
+                                    1,
+                                    kwargs.get('value_aplication', 1),
+                                    kwargs.get('code', 'bbas3'),
+                                    kwargs.get('desc', 'banco do brasil'),
+                                    )
+
+    # add a profits
+    response = client.post(
+        reverse('product:actions_manage_profits'),
+        {
+            'user_product_id': user_product.id,
+            'profits_type': kwargs.get('handler', 'dividends'),
+            'date': '2023-07-02',
+            'tax_and_irpf': kwargs.get('tax_and_irpf', 0),
+            'total_price': kwargs.get('gross_value', 10),
+        },
+        follow=True,
+    )
+
+    history = ActionHistory.objects.filter(
+        userproduct=user_product,
+    )
+
+    return {
+        'user': user,
+        'user_action': user_product,
         'history': history,
         'response': response,
     }
