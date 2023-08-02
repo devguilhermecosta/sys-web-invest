@@ -7,6 +7,7 @@ from .actions import (
     AllActionsView,
     ActionHistoryDetails,
     ActionsManageProfitsView,
+    ActionsGetTotalProfitsView,
     ActionsManageProfitsHistoryView,
     ActionsManageProfitsHistoryEditView,
     ActionsManageProfitsHistoryDeleteView,

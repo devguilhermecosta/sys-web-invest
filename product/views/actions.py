@@ -244,3 +244,12 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
         return redirect(
             reverse('product:action_manage_profits_edit', args=(history.id,))
         )
+
+
+class ActionsGetTotalProfitsView(ActionsView):
+    def get(self, *args, **kwargs) -> JsonResponse:
+        total = UserAction.get_total_profits(user=self.request.user)
+        return JsonResponse({"total_profits": total})
+
+    def post(self, *args, **kwargs) -> None:
+        raise Http404()
