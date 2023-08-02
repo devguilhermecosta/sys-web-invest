@@ -109,6 +109,9 @@ class ActionsManageProfitsView(ActionsView):
                 'url_receive_profits': reverse(
                     'product:actions_manage_profits',
                 ),
+                'url_total_profits': reverse(
+                    'product:action_total_profits_json',
+                ),
                 'is_main_page': True,
             }
         )
@@ -249,7 +252,7 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
 class ActionsGetTotalProfitsView(ActionsView):
     def get(self, *args, **kwargs) -> JsonResponse:
         total = UserAction.get_total_profits(user=self.request.user)
-        return JsonResponse({"total_profits": total})
+        return JsonResponse({"value": total})
 
     def post(self, *args, **kwargs) -> None:
         raise Http404()
