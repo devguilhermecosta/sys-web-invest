@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from typing import TypeVar, List
 from datetime import datetime as dt
+from functools import reduce
 
 
 date = '2023-07-04'
@@ -104,6 +105,17 @@ class UserAction(models.Model):
         total = sum([value for value in history])
         return total
 
+    def get_partial_tax(self) -> float | None:
+        history = ActionHistory.objects.filter(
+            userproduct=self,
+        )
+
+        total = reduce(lambda acc, num: acc + num,
+                       [h.tax_and_irpf for h in history if h.tax_and_irpf],
+                       0,
+                       )
+        return total
+
     @classmethod
     def get_total_profits(cls, user: User) -> float | None:
         queryset = cls.objects.filter(user=user)
@@ -137,6 +149,18 @@ class UserAction(models.Model):
         )
 
         return history
+
+    @classmethod
+    def get_total_amount_invested(cls, user: User) -> float | None:
+        queryset = cls.objects.filter(user=user)
+        total = sum([item.get_total_price() for item in queryset])
+        return total
+
+    @classmethod
+    def get_total_tax(cls, user: User) -> float | None:
+        queryset = cls.objects.filter(user=user)
+        total = sum([item.get_partial_tax() for item in queryset])
+        return total
 
 
 class ActionHistory(models.Model):
