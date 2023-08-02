@@ -152,16 +152,210 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         )
 
     def test_actions_manage_profits_edit_post_request_returns_404_if_the_product_belongs_to_another_user(self) -> None:  # noqa: E501
-        ...
+        # create another user
+        another_user = self.create_user(
+            username='jhondoe',
+            email='jhondoe@email.com',
+        )
 
-    def test_actions_manage_profits_edit_returns_error_messages_if_any_field_is_empty(self) -> None:  # noqa: E501
-        ...
+        # create the UserAction for another_user
+        another_useraction = make_user_action(
+            another_user,
+            1,
+            1,
+            'sanp4',
+            'sanepar',
+        )
 
-    def test_actions_manage_profits_edit_returns_error_messages_if_any_field_has_invalid_data(self) -> None:  # noqa: E501
-        ...
+        # make login with the another_user
+        self.make_login(create_user=False, username=another_user)
+
+        # make post request for create the history for another_useraction
+        r_post = self.client.post(
+            reverse('product:actions_manage_profits'),
+            {
+                'user_product_id': another_useraction.id,
+                'profits_type': 'dividends',
+                'date': '2023-07-02',
+                'tax_and_irpf': 1,
+                'total_price': 10,
+            },
+            follow=True,
+        )
+
+        # checks if the history has been created
+        self.assertIn(
+            '{"data": "success request"}',
+            r_post.content.decode('utf-8'),
+        )
+
+        # get the history id
+        another_user_history = ActionHistory.objects.filter(
+            userproduct=another_useraction,
+        )
+
+        # checks if the history_id of another_user is 1
+        self.assertEqual(another_user_history.first().id, 1)
+
+        # make logout with the another_user
+        self.client.logout()
+
+        # make login with user
+        self.make_login()
+
+        # now i am logged in with the user
+        # i will try to edit the history of id 1 whose another_user owns
+        response = self.client.post(self.url)
+
+        # the status code must be 404
+        self.assertEqual(response.status_code, 404)
+
+    @parameterized.expand([
+        ('user_product_id', 'selecione uma ação'),
+        ('profits_type', 'campo obrigatório'),
+        ('date', 'campo obrigatório'),
+        ('total_price', 'campo obrigatório'),
+    ])
+    def test_actions_manage_profits_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
+        # create the useraction and make login
+        create_actions_history(self.client,
+                               self.make_login,
+                               )
+
+        # history data
+        history_data = {
+            field: '',
+        }
+
+        # make post request
+        response = self.client.post(
+            self.url,
+            history_data,
+            follow=True,
+        )
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            message,
+            content,
+        )
+
+    @parameterized.expand([
+        ('user_product_id', '---', 'selecione uma ação'),
+        ('profits_type', '---', 'selecione um tipo de rendimento'),
+        ('date', '00-00-0000', 'Informe uma data válida'),
+        ('total_price', 'abc', 'Informe um número'),
+    ])
+    def test_actions_manage_profits_edit_returns_error_messages_if_any_field_has_invalid_data(self, field: str, value: str, message: str) -> None:  # noqa: E501
+        # create the useraction and make login
+        create_actions_history(self.client,
+                               self.make_login,
+                               )
+
+        # history data
+        history_data = {
+            field: value,
+        }
+
+        # make post request
+        response = self.client.post(
+            self.url,
+            history_data,
+            follow=True,
+        )
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            message,
+            content,
+        )
 
     def test_actions_manage_profits_edit_returns_success_message_if_the_form_data_is_ok(self) -> None:  # noqa: E501
-        ...
+        # create the useraction and make login
+        u = create_actions_history(self.client,
+                                   self.make_login,
+                                   )
+
+        # create one more useraction
+        new_useraction = make_user_action(u['user'],
+                                          1,
+                                          1,
+                                          'cash3',
+                                          'meliuz',
+                                          )
+
+        # history data
+        history_data = {
+            'user_product_id': new_useraction.id,
+            'profits_type': 'renting',
+            'date': '2023-08-01',
+            'total_price': 1000,
+        }
+
+        # make post request
+        response = self.client.post(
+            self.url,
+            history_data,
+            follow=True,
+        )
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            'rendimento salvo com sucesso',
+            content,
+        )
+        self.assertRedirects(
+            response,
+            '/ativos/acoes/gerenciar-proventos/',
+            302,
+        )
 
     def test_actions_manage_profits_edit_modify_the_edited_history(self) -> None:  # noqa: E501
-        ...
+        # create the useraction and make login
+        u = create_actions_history(self.client,
+                                   self.make_login,
+                                   )
+
+        # create one more useraction
+        new_useraction = make_user_action(u['user'],
+                                          1,
+                                          1,
+                                          'cash3',
+                                          'meliuz',
+                                          )
+
+        # history data
+        history_data = {
+            'user_product_id': new_useraction.id,
+            'profits_type': 'renting',
+            'date': '2023-08-01',
+            'total_price': 1000,
+        }
+
+        # make post request
+        self.client.post(
+            self.url,
+            history_data,
+            follow=True,
+        )
+
+        # get the edited action history
+        history_queryset = ActionHistory.objects.all()
+        history = history_queryset.first()
+
+        self.assertEqual(
+            history.userproduct,
+            new_useraction,
+        )
+        self.assertEqual(
+            history.handler,
+            'renting',
+        )
+        self.assertEqual(
+            str(history.date),
+            '2023-08-01',
+        )
+        self.assertEqual(
+            history.total_price,
+            1000,
+        )
