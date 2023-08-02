@@ -64,6 +64,8 @@ import { createGoogleIcon } from "./src/modules.js";
 
         xmlrequest.onreadystatechange = function() {
           if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
+            const oldMessage = document.querySelectorAll('.messages')[0];
+            if (oldMessage) {oldMessage.parentElement.removeChild(oldMessage);}
             let result = document.querySelector('#result');
             result.classList.add('messages');
             result.classList.add('message_success');
@@ -143,7 +145,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
 function createDataTableProfits(refresh=false) {
   const inputPath = document.querySelector('#url-actions-history-profits');
 
-  if (inputPath) {
+  if (inputPath && inputPath.dataset.urlHistoryProfits) {
     const path = inputPath.dataset.urlHistoryProfits;
     const xmlrRequest = new XMLHttpRequest();
 

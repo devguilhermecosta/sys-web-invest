@@ -64,6 +64,8 @@ import { getTotalProfits } from './src/utils.js';
 
           xmlr.onreadystatechange = function() {
             if (xmlr.readyState === 4 && xmlr.status == 200) {
+              const oldMessage = document.querySelectorAll('.messages')[0];
+              if (oldMessage) {oldMessage.parentElement.removeChild(oldMessage);}
               let result = document.querySelector('#result');
               result.classList.add('messages');
               result.classList.add('message_success');
