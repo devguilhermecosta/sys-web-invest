@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from product.forms import ActionBuyAndSellForm, ActionsReceivProfitsForm
 from product.models import Action, UserAction, ActionHistory
 from .base_views.variable_income import Buy, Sell, History
@@ -183,9 +184,11 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
         return history
 
     def get(self, *args, **kwargs) -> HttpResponse:
-        history = self.get_userproduct_or_404(kwargs.get('id', None))
+        history = self.get_product_history_or_404(kwargs.get('id', None))
+        session = self.request.session.get('actions-profits-edit', None)
         tax = history.tax_and_irpf
         form = ActionsReceivProfitsForm(
+            session,
             initial={
                 'user_product_id': history.userproduct.id,
                 'profits_type': history.handler,
@@ -202,7 +205,7 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
             context={
                 'form': form,
                 'form_title': 'editar rendimento',
-                'custom_id': 'actions-receive-profits-form',
+                'custom_id': 'actions-receive-profits-edit-form',
                 'button_submit_value': 'salvar',
                 'is_main_page': False,
             }
@@ -210,3 +213,34 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
 
     def post(self, *args, **kwargs) -> HttpResponse:
         history = self.get_product_history_or_404(kwargs.get('id', None))
+        post = self.request.POST
+        self.request.session['actions-profits-edit'] = post
+        form = ActionsReceivProfitsForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            tax = data['tax_and_irpf'] if data['tax_and_irpf'] != 0 else ''
+            user_action = UserAction.objects.get(pk=data['user_product_id'])
+
+            history.userproduct = user_action
+            history.handler = data['profits_type']
+            history.date = data['date']
+            history.tax_and_irpf = tax
+            history.total_price = data['total_price']
+
+            history.save()
+
+            messages.success(
+                self.request,
+                'rendimento salvo com sucesso'
+            )
+
+            del self.request.session['actions-profits-edit']
+
+            return redirect(
+                reverse('product:actions_manage_profits'),
+            )
+
+        return redirect(
+            reverse('product:action_manage_profits_edit', args=(history.id,))
+        )
