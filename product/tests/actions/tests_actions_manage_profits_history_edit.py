@@ -359,3 +359,4 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
             history.total_price,
             1000,
         )
+        self.fail('corrigir o erro da mensagem após editar o rendimento.')
