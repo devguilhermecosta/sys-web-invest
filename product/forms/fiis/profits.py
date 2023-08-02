@@ -9,7 +9,7 @@ default_input_class = 'C-login_input'
 
 
 class FIIReceiptProfitsForm(forms.Form):
-    user_product_id = forms.CharField(
+    userproduct = forms.CharField(
         label='fii',
         widget=forms.Select()
     )
@@ -22,7 +22,7 @@ class FIIReceiptProfitsForm(forms.Form):
         ),
         input_formats=['%Y-%m-%d']
     )
-    value = forms.FloatField(
+    total_price = forms.FloatField(
         label='valor',
         widget=forms.NumberInput(
             {
@@ -37,16 +37,16 @@ class FIIReceiptProfitsForm(forms.Form):
             field[1].required = False
             add_css_class(field[1], default_input_class)
 
-    def clean_user_product_id(self):
-        product_id = self.cleaned_data["user_product_id"]
+    def clean_userproduct(self):
+        userproduct = self.cleaned_data["userproduct"]
 
-        if not product_id or product_id == '---':
+        if not userproduct or userproduct == '---':
             raise ValidationError(
                 ('Selecione um produto'),
                 code='required',
             )
 
-        return product_id
+        return userproduct
 
     def clean_date(self):
         date = self.cleaned_data["date"]
@@ -67,18 +67,18 @@ class FIIReceiptProfitsForm(forms.Form):
 
         return date
 
-    def clean_value(self):
-        value = self.cleaned_data["value"]
+    def clean_total_price(self):
+        total_price = self.cleaned_data["total_price"]
 
-        if not value:
+        if not total_price:
             raise ValidationError(
                 ('Campo obrigatório'),
                 code='required'
             )
 
-        if value <= 0:
+        if total_price <= 0:
             raise ValueError(
                 ('O valor deve ser maior que zero'),
                 code='invalid',
             )
-        return value
+        return total_price

@@ -101,7 +101,7 @@ class FIIManageIncomeReceipt(FIIsView):
     def get(self, *args, **kwargs) -> HttpResponse:
         session = self.request.session.get('fiis_manage_income', None)
         form = FIIReceiptProfitsForm(session)
-        form.fields.get('user_product_id').widget.choices = self.choices()
+        form.fields.get('userproduct').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -123,18 +123,16 @@ class FIIManageIncomeReceipt(FIIsView):
         form = FIIReceiptProfitsForm(post)
 
         if form.is_valid():
-            p_id = form.cleaned_data['user_product_id']
-            value = form.cleaned_data['value']
-            date = form.cleaned_data['date']
+            data = form.cleaned_data
 
-            product = UserFII.objects.get(
+            user_fii = UserFII.objects.get(
                 user=self.request.user,
-                pk=p_id,
+                pk=data['userproduct'],
             )
 
-            product.receive_profits(
-                value=value,
-                date=date,
+            user_fii.receive_profits(
+                value=data['total_price'],
+                date=data['date'],
             )
 
             del self.request.session['fiis_manage_income']
@@ -171,12 +169,12 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
             form = FIIReceiptProfitsForm(
                 session,
                 initial={
-                    'user_product_id': history.userproduct.id,
+                    'userproduct': history.userproduct.id,
                     'date': str(history.date),
-                    'value': f'{history.total_price:.2f}',
+                    'total_price': f'{history.total_price:.2f}',
                     }
                 )
-            form.fields.get('user_product_id').widget.choices = self.choices()
+            form.fields.get('userproduct').widget.choices = self.choices()
 
             return render(
                 self.request,
@@ -203,11 +201,11 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
             history = FiiHistory.objects.get(pk=pk)
 
             if history.userproduct.user == self.request.user:
-                user_product = UserFII.objects.get(pk=data['user_product_id'])
+                user_fii = UserFII.objects.get(pk=data['userproduct'])
 
-                history.userproduct = user_product
+                history.userproduct = user_fii
                 history.date = data['date']
-                history.total_price = data['value']
+                history.total_price = data['total_price']
                 history.save()
 
                 del self.request.session['fiis-profits-edit']

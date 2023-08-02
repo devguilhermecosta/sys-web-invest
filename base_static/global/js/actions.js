@@ -20,10 +20,10 @@ import { createGoogleIcon } from "./src/modules.js";
       event.preventDefault();
 
       const dataForm = new FormData(form);
-      const productInput = form.querySelector("#id_user_product_id");
-      const profitsTypeInput = form.querySelector('#id_profits_type');
+      const productInput = form.querySelector("#id_userproduct");
+      const profitsTypeInput = form.querySelector('#id_handler');
 
-      const product_id = parseInt(dataForm.get('user_product_id'));
+      const product_id = parseInt(dataForm.get('userproduct'));
       const productDesc = productInput.options[productInput.selectedIndex].innerHTML;
       const handler = profitsTypeInput.options[profitsTypeInput.selectedIndex].innerHTML;
       const date = dataForm.get('date');

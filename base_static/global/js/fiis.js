@@ -20,11 +20,11 @@ import { getTotalProfits } from './src/utils.js';
       event.preventDefault();
 
       const form = new FormData(formFiisReceivProfis);
-      const product = parseInt(form.get('user_product_id'));
-      const select = formFiisReceivProfis.querySelector('#id_user_product_id');
+      const product = parseInt(form.get('userproduct'));
+      const select = formFiisReceivProfis.querySelector('#id_userproduct');
       const productDesc = select.options[select.selectedIndex].innerHTML;
       const date = form.get('date');
-      const value = parseFloat(form.get('value'));
+      const value = parseFloat(form.get('total_price'));
 
       const body = document.body;
       const container = createDefaultContainer();

@@ -142,7 +142,12 @@ class ActionsManageProfitsView(ActionsView):
             if user_action.user != self.request.user:
                 raise Http404()
 
-            user_action.receiv_profits(**data)
+            user_action.receiv_profits(
+                handler=data['handler'],
+                date=data['date'],
+                total_price=data['total_price'],
+                tax_and_irpf=data['tax_and_irpf'],
+            )
 
             return JsonResponse({'data': 'success request'})
 
