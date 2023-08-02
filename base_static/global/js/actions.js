@@ -7,6 +7,7 @@ import { createTextElement } from "./src/modules.js";
 import { createButton } from "./src/modules.js";
 import { cleanDataTable } from "./src/modules.js";
 import { createHistoryLinkEdit , createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
+import { getTotalProfits } from "./src/utils.js";
 import { createGoogleIcon } from "./src/modules.js";
 
 
@@ -71,7 +72,10 @@ import { createGoogleIcon } from "./src/modules.js";
             form.reset();
             labels.forEach((l) => {l.classList.remove('C-login_input_active')});
             body.removeChild(container);
+
             createDataTableProfits(true);
+            getTotalProfits();
+
           }
         }
         xmlrequest.open('POST', path, true);

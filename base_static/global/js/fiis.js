@@ -8,6 +8,7 @@ import { createGoogleIcon } from './src/modules.js';
 import { convertToBRL, convertToLocaleDateString, makeHandler } from './src/modules.js';
 import { cleanDataTable } from './src/modules.js';
 import { createHistoryLinkDelete, confirmationBoxDeleteHistory, createHistoryLinkEdit } from './src/utils.js';
+import { getTotalProfits } from './src/utils.js';
 
 
 // form fiis receiv profis
@@ -72,7 +73,7 @@ import { createHistoryLinkDelete, confirmationBoxDeleteHistory, createHistoryLin
               formFiisReceivProfis.reset();
               labels.forEach((l) => {l.classList.remove('C-login_input_active')});
               createProfitsTable(true);
-              getTotalProfitsFiis();
+              getTotalProfits();
             }
           }
           xmlr.open('POST', urlPath);
@@ -168,32 +169,3 @@ function createProfitsTable(refresh=false) {
 }
 
 createProfitsTable();
-
-
-// get the total amount received in profits
-function getTotalProfitsFiis() {
-  const url = document.querySelector('#url-total-profits');
-
-  if (url) {
-    const path = url.dataset.urlTotalProfits;
-    let xmlrequest = new XMLHttpRequest()
-
-    xmlrequest.onreadystatechange = function() {
-      if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
-        const response = JSON.parse(xmlrequest.responseText);
-        let elem = document.querySelector('#total_profits_fiis');
-        elem.innerHTML = response.value.toLocaleString(
-          'pt-BR',
-          {
-            style: 'currency',
-            currency: 'BRL',
-          }
-        );
-      }
-    }
-    xmlrequest.open('GET', path);
-    xmlrequest.send();
-  }
-}
-
-getTotalProfitsFiis();

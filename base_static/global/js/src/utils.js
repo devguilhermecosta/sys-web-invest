@@ -70,3 +70,32 @@ export function confirmationBoxDeleteHistory(elem, code) {
   buttonCancel.addEventListener("click", () => {body.removeChild(container)});
   buttonConfirm.addEventListener("click", () => {form.submit();});
 }
+
+
+// get the total amount received in profits (FIIs and Actions)
+export function getTotalProfits() {
+  const url = document.querySelector('#url-total-profits');
+
+  if (url) {
+    const path = url.dataset.urlTotalProfits;
+    let xmlrequest = new XMLHttpRequest()
+
+    xmlrequest.onreadystatechange = function() {
+      if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
+        const response = JSON.parse(xmlrequest.responseText);
+        let elem = document.querySelector('#total_profits_fiis');
+        elem.innerHTML = response.value.toLocaleString(
+          'pt-BR',
+          {
+            style: 'currency',
+            currency: 'BRL',
+          }
+        );
+      }
+    }
+    xmlrequest.open('GET', path);
+    xmlrequest.send();
+  }
+}
+
+getTotalProfits();
