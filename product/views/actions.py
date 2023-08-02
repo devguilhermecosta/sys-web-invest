@@ -104,7 +104,7 @@ class ActionsManageProfitsView(ActionsView):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         form = ActionsReceivProfitsForm()
-        form.fields.get('user_product_id').widget.choices = self.choices()
+        form.fields.get('userproduct').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -136,18 +136,13 @@ class ActionsManageProfitsView(ActionsView):
 
             user_action = get_object_or_404(
                 UserAction,
-                pk=data['user_product_id'],
+                pk=data['userproduct'],
             )
 
             if user_action.user != self.request.user:
                 raise Http404()
 
-            user_action.receiv_profits(
-                handler=data['profits_type'],
-                date=data['date'],
-                total_price=data['total_price'],
-                tax_and_irpf=data.get('tax_and_irpf', ''),
-            )
+            user_action.receiv_profits(**data)
 
             return JsonResponse({'data': 'success request'})
 
@@ -204,14 +199,14 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
         form = ActionsReceivProfitsForm(
             session,
             initial={
-                'user_product_id': history.userproduct.id,
-                'profits_type': history.handler,
+                'userproduct': history.userproduct.id,
+                'handler': history.handler,
                 'date': history.date,
                 'tax_and_irpf': f'{tax:.2f}' if tax else '',
                 'total_price': f'{history.total_price:.2f}',
             }
             )
-        form.fields.get('user_product_id').widget.choices = self.choices()
+        form.fields.get('userproduct').widget.choices = self.choices()
 
         return render(
             self.request,
@@ -233,11 +228,11 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
 
         if form.is_valid():
             data = form.cleaned_data
-            tax = data['tax_and_irpf'] if data['tax_and_irpf'] != 0 else ''
-            user_action = UserAction.objects.get(pk=data['user_product_id'])
+            tax = data['tax_and_irpf'] if data['tax_and_irpf'] != 0 else 0
+            user_action = UserAction.objects.get(pk=data['userproduct'])
 
             history.userproduct = user_action
-            history.handler = data['profits_type']
+            history.handler = data['handler']
             history.date = data['date']
             history.tax_and_irpf = tax
             history.total_price = data['total_price']

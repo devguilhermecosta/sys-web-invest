@@ -17,12 +17,12 @@ profitys_type_choices = (
 
 
 class ActionsReceivProfitsForm(forms.Form):
-    user_product_id = forms.CharField(
+    userproduct = forms.CharField(
         label='ação',
         max_length=255,
         widget=forms.Select()
     )
-    profits_type = forms.CharField(
+    handler = forms.CharField(
         label='tipo de rendimento',
         max_length=255,
         widget=forms.Select(
@@ -42,7 +42,7 @@ class ActionsReceivProfitsForm(forms.Form):
         label='taxas e irpf',
         widget=forms.NumberInput(
             attrs={
-                'min': 0.01,
+                'min': 0,
                 'step': 0.01,
             }
         )
@@ -63,35 +63,35 @@ class ActionsReceivProfitsForm(forms.Form):
             add_css_class(field[1], default_input_class)
             field[1].required = False
 
-    def clean_user_product_id(self):
-        user_product = self.cleaned_data["user_product_id"]
+    def clean_userproduct(self):
+        userproduct = self.cleaned_data["userproduct"]
 
-        if not user_product or user_product == '---':
+        if not userproduct or userproduct == '---':
             raise ValidationError(
                 ('selecione uma ação'),
                 code='required',
                 )
 
-        user_product = int(user_product)
+        userproduct = int(userproduct)
 
-        if not isinstance(user_product, int):
+        if not isinstance(userproduct, int):
             raise ValidationError(
                 ('selecione uma ação'),
                 code='invalid',
                 )
 
-        return user_product
+        return userproduct
 
-    def clean_profits_type(self):
-        profits_type = self.cleaned_data["profits_type"]
+    def clean_handler(self):
+        handler = self.cleaned_data["handler"]
 
-        if not profits_type or profits_type == '---':
+        if not handler or handler == '---':
             raise ValidationError(
                 ('selecione um tipo de rendimento'),
                 code='required',
                 )
 
-        return profits_type
+        return handler
 
     def clean_date(self):
         date = self.cleaned_data["date"]
@@ -119,7 +119,8 @@ class ActionsReceivProfitsForm(forms.Form):
                     ('digite somente números'),
                     code='required',
                     )
-        return tax_and_irpf
+
+        return tax_and_irpf if tax_and_irpf else 0
 
     def clean_total_price(self):
         total_price = self.cleaned_data["total_price"]
