@@ -316,7 +316,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            'salvo com sucesso',
+            'rendimento salvo com sucesso',
             content,
             )
         self.assertRedirects(
