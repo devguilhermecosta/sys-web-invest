@@ -76,7 +76,7 @@ export function confirmationBoxDeleteHistory(elem, code) {
 export function getTotalProfits() {
   const url = document.querySelector('#url-total-profits');
 
-  if (url) {
+  if (url && url.dataset.urlTotalProfits) {
     const path = url.dataset.urlTotalProfits;
     let xmlrequest = new XMLHttpRequest()
 
