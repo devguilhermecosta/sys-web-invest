@@ -1,6 +1,8 @@
 from django.urls import reverse, resolve
 from product import views
 from utils.mixins.auth import TestCaseWithLogin
+from product.tests.base_tests import create_actions_history
+from parameterized import parameterized
 
 
 class ProductActionsTests(TestCaseWithLogin):
@@ -59,13 +61,36 @@ class ProductActionsTests(TestCaseWithLogin):
         self.make_login()
 
         # access the dashboard actions
-        response = self.client.get(
-            self.url
-        )
-
+        response = self.client.get(self.url)
         content = response.content.decode('utf-8')
 
         self.assertIn('minhas ações', content)
         self.assertIn('comprar', content)
         self.assertIn('vender', content)
         self.assertIn('gerenciar proventos', content)
+
+    @parameterized.expand([
+        'Aplicação total:',
+        'R$ 2000,00',
+        'Total recebido em proventos:',
+        'R$ 500,00',
+        'Total pago em taxas:',
+        'R$ 100,00',
+    ])
+    def test_actions_loads_correct_summary(self, text: str) -> None:
+        # create the useraction, history and tax
+        create_actions_history(self.client,
+                               self.make_login,
+                               value_aplication=2000,
+                               tax_and_irpf=100,
+                               gross_value=500,
+                               )
+
+        # access the dashboard actions
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            text,
+            content
+        )
