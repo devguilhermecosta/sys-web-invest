@@ -214,7 +214,7 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
 
                 messages.success(
                     self.request,
-                    'salvo com sucesso',
+                    'rendimento salvo com sucesso',
                 )
 
                 return redirect(
