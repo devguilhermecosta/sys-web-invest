@@ -23,9 +23,20 @@ login_url = '/'
 )
 class ActionsView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
+        user = self.request.user
+
+        total_applied = UserAction.get_total_amount_invested(user)
+        total_profits = UserAction.get_total_profits(user)
+        total_tax = UserAction.get_total_tax(user)
+
         return render(
             self.request,
             'product/pages/actions/actions.html',
+            context={
+                'total_applied': total_applied,
+                'total_received_in_profits': total_profits,
+                'total_tax': total_tax,
+            }
         )
 
 
