@@ -74,7 +74,11 @@ class DirectTreasureHistory(models.Model):
         ('apply', 'apply'),
         ('redeem', 'redeem'),
     ))
+    tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
     value = models.FloatField()
 
     def __str__(self) -> str:
         return f'{self.state} of R$ {self.value:.2f} in {self.date}'
+
+    def get_final_value(self) -> float:
+        return self.value - self.tax_and_irpf
