@@ -11,6 +11,7 @@ from product.forms.fixed_income import (
     FixedIncomeRegisterForm,
     FixedIncomeEditForm,
     FixedIncomeApplyRedeemForm,
+    FixedIncomeProfitsReceivForm,
 )
 
 
@@ -101,7 +102,7 @@ class FixedIncomeEditView(FixedIncomeView):
             context={
                 'form': form,
                 'button_submit_value': 'salvar',
-                }
+            }
         )
 
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
@@ -118,7 +119,7 @@ class FixedIncomeEditView(FixedIncomeView):
             files=self.request.FILES or None,
             data=self.request.POST or None,
             instance=product,
-            )
+        )
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -171,8 +172,8 @@ class FixedIncomeDetailsView(FixedIncomeView):
                 ),
                 'profits_payment': (
                     True if product.interest_receipt != 'não há' else False
-                    )
-                },
+                )
+            },
         )
 
 
@@ -245,6 +246,56 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
         )
 
 
+class FixedIncomeProfitsReceiptView(FixedIncomeView):
+    def get_product_or_404(self, id: int) -> ProductFixedIncome:
+        product = get_object_or_404(
+            ProductFixedIncome,
+            pk=id,
+            user=self.request.user,
+        )
+        return product
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(id=kwargs.get('id', None))
+        session = self.request.session.get('fixed-income-profits-receive', None)
+        form = FixedIncomeProfitsReceivForm(session)
+
+        return render(
+            self.request,
+            'product/pages/fixed_income/profits_receipt.html',
+            context={
+                'form': form,
+                'form_title': product.name.upper(),
+                'button_submit_value': 'receber',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(id=kwargs.get('id', None))
+        post = self.request.POST
+        self.request.session['fixed-income-profits-receive'] = post
+        form = FixedIncomeProfitsReceivForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            product.receive_profits(**data)
+
+            del self.request.session['fixed-income-profits-receive']
+
+            messages.success(
+                self.request,
+                'Recebimento de juros salvo com sucesso',
+            )
+
+            return redirect(
+                reverse('product:fixed_income_details', args=(product.id,))
+            )
+
+        return redirect(
+            reverse('product:fixed_income_profits_receipt', args=(product.id,))
+        )
+
+
 class FixedIncomeHistoryView(FixedIncomeView):
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
         product = get_object_or_404(
@@ -254,7 +305,7 @@ class FixedIncomeHistoryView(FixedIncomeView):
         )
         history = FixedIncomeHistory.objects.filter(
             product=product
-            ).order_by('-id')
+        ).order_by('-id')
 
         return render(
             request,
