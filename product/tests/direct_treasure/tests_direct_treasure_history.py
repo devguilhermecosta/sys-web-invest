@@ -71,7 +71,7 @@ class DirectTreasureHistoryTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/partials/_history_dt_&_fi.html'
+            'product/partials/_history_dt_and_fi.html'
         )
 
     @parameterized.expand([
