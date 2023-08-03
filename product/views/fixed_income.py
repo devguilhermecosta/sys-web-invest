@@ -67,7 +67,10 @@ class FixedIncomeRegisterView(FixedIncomeView):
                 **data,
             )
             new_obj.save()
-            new_obj.make_history(state='apply', value=data['value'])
+            new_obj.make_history(state='apply',
+                                 date=data['grace_period'],
+                                 value=data['value'],
+                                 )
 
             del self.request.session['fixed-income-register']
 
@@ -307,7 +310,7 @@ class FixedIncomeHistoryView(FixedIncomeView):
         )
         history = FixedIncomeHistory.objects.filter(
             product=product
-        ).order_by('-id')
+        ).order_by('-date')
 
         return render(
             request,
