@@ -257,7 +257,9 @@ class FixedIncomeProfitsReceiptView(FixedIncomeView):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         product = self.get_product_or_404(id=kwargs.get('id', None))
-        session = self.request.session.get('fixed-income-profits-receive', None)
+        session = self.request.session.get(
+            'fixed-income-profits-receive', None,
+            )
         form = FixedIncomeProfitsReceivForm(session)
 
         return render(
