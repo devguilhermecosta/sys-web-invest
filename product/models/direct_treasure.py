@@ -57,7 +57,7 @@ class DirectTreasure(models.Model):
             product=self,
             date=date,
             state='redeem',
-            value=value,
+            value=-abs(value),
         )
         new_history.save()
         self.value -= value
