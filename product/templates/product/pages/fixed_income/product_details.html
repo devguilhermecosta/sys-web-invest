@@ -17,7 +17,7 @@
 
     <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
     <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
-    <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.value|real_brl }}</p>
+    <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.get_current_value|real_brl }}</p>
     {% if profits_payment %}
       <p class="C-fixed_income_text is_bold">Total recebido em juros: R$ 0,00</p>
     {% endif %}

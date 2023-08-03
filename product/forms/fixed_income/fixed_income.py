@@ -66,6 +66,17 @@ class FixedIncomeRegisterForm(forms.ModelForm):
         )
     )
 
+    value = forms.FloatField(
+        label='valor',
+        required=False,
+        widget=forms.NumberInput(
+            attrs={
+                'min': 0,
+                'step': 0.00,
+            }
+        )
+    )
+
     interest_receipt = forms.CharField(
         label='pagamento de juros',
         widget=forms.Select(
@@ -90,7 +101,6 @@ class FixedIncomeRegisterForm(forms.ModelForm):
         fields = [
             'category',
             'name',
-            'value',
             'grace_period',
             'maturity_date',
             'liquidity',
@@ -101,7 +111,6 @@ class FixedIncomeRegisterForm(forms.ModelForm):
 
         labels = {
             'name': 'nome',
-            'value': 'valor',
             'profitability': 'rentabilidade',
             'description': 'observações',
         }

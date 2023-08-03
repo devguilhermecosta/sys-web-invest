@@ -17,7 +17,6 @@ class ProductFixedIncome(models.Model):
         ('debêntures', 'debêntures'),
     ))
     name = models.CharField(max_length=255)
-    value = models.FloatField()
     grace_period = models.DateField(default='2023-07-01')
     maturity_date = models.DateField(default='2023-07-01')
     liquidity = models.CharField(max_length=255, choices=(
@@ -35,20 +34,31 @@ class ProductFixedIncome(models.Model):
         ('semestral', 'semestral'),
         ('anual', 'anual'),
     ))
-    description = models.TextField()
+    description = models.TextField(default='', blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
 
-    def get_total_applied(self) -> float:
-        return self.value
+    def get_current_value(self) -> float:
+        history = FixedIncomeHistory.objects.filter(product=self)
+        total = sum([h.get_final_value() for h in history])
+        return total
 
-    def make_history(self, state: str, date: date, value: float) -> None:
+    def apply(self, date: date, value: float) -> None:
         new_history = FixedIncomeHistory.objects.create(
             product=self,
-            state=state,
+            state='apply',
             date=date,
-            value=value
+            value=abs(value),
+        )
+        new_history.save()
+
+    def redeem(self, date: date, value: float) -> None:
+        new_history = FixedIncomeHistory.objects.create(
+            product=self,
+            state='redeem',
+            date=date,
+            value=-abs(value),
         )
         new_history.save()
 
@@ -60,7 +70,7 @@ class ProductFixedIncome(models.Model):
             product=self,
             state='profits',
             date=date,
-            tax_and_irpf=tax_and_irpf if tax_and_irpf else 0,
+            tax_and_irpf=-abs(tax_and_irpf) if tax_and_irpf else 0,
             value=value,
         )
         new_history.save()
@@ -80,7 +90,7 @@ class FixedIncomeHistory(models.Model):
     value = models.FloatField()
 
     def get_final_value(self) -> float:
-        return self.value - self.tax_and_irpf
+        return self.value - abs(self.tax_and_irpf)
 
     def __str__(self) -> str:
         history = (

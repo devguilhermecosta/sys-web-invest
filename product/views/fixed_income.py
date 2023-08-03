@@ -26,7 +26,7 @@ class FixedIncomeView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         fixed_income_objects = ProductFixedIncome.objects.filter(
             user=self.request.user,
-        )
+        ).order_by('-id')
 
         return render(
             self.request,
@@ -62,15 +62,20 @@ class FixedIncomeRegisterView(FixedIncomeView):
         if form.is_valid():
             data = form.cleaned_data
             user = self.request.user
+
             new_obj = ProductFixedIncome.objects.create(
                 user=user,
-                **data,
+                category=data['category'],
+                name=data['name'],
+                grace_period=data['grace_period'],
+                maturity_date=data['maturity_date'],
+                liquidity=data['liquidity'],
+                profitability=data['profitability'],
+                interest_receipt=data['interest_receipt'],
+                description=data.get('description', ''),
             )
             new_obj.save()
-            new_obj.make_history(state='apply',
-                                 date=data['grace_period'],
-                                 value=data['value'],
-                                 )
+            new_obj.apply(date=data['grace_period'], value=data['value'])
 
             del self.request.session['fixed-income-register']
 
@@ -192,12 +197,7 @@ class FixedIncomeApplyView(FixedIncomeEditView):
 
         if form.is_valid():
             data = form.cleaned_data
-            product.value += data['value']
-            product.save()
-            product.make_history(state='apply',
-                                 date=data['date'],
-                                 value=data['value'],
-                                 )
+            product.apply(date=data['date'], value=data['value'])
 
             del self.request.session['product-apply']
 
@@ -221,7 +221,7 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
         if form.is_valid():
             data = form.cleaned_data
 
-            if data['value'] > product.value:
+            if data['value'] > product.get_current_value():
                 messages.error(
                     self.request,
                     'Saldo insuficiente para resgate'
@@ -230,12 +230,7 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
                     reverse('product:fixed_income_details', args=(product.id,))
                 )
 
-            product.value -= data['value']
-            product.save()
-            product.make_history(state='redeem',
-                                 date=data['date'],
-                                 value=data['value'],
-                                 )
+            product.redeem(date=data['date'], value=data['value'])
 
             del self.request.session['product-redeem']
 

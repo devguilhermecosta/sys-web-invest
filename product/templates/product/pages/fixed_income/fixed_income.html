@@ -29,7 +29,7 @@
             <td>
               <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
             </td>
-            <td>{{ object.value|real_brl }}</td>
+            <td>{{ object.get_current_value|real_brl }}</td>
             <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
           </tr>
         </tbody>

@@ -9,7 +9,7 @@
 <section class="C-dashboard_table_details">
   <h1>{{ product.name }}</h1>
   <h2 
-  class="C-dashboard_table_details_fi_value">valor atual: {{ product.value|real_brl }}
+  class="C-dashboard_table_details_fi_value">valor atual: {{ product.get_current_value|real_brl }}
   </h2>
   <table class="C-dashboard_table fixed_income">
     <thead>
