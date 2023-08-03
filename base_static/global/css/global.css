@@ -991,6 +991,7 @@ textarea.C-login_input {
   color: var(--white);
   text-transform: uppercase;
   text-align: center;
+  text-decoration: none;
   padding: 10px;
   cursor: pointer;
 }
