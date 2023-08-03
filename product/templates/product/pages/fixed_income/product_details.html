@@ -18,6 +18,9 @@
     <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
     <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
     <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.value|real_brl }}</p>
+    {% if profits_payment %}
+      <p class="C-fixed_income_text is_bold">Total recebido em juros: R$ 0,00</p>
+    {% endif %}
     <p class="C-fixed_income_text">Carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
     <p class="C-fixed_income_text">Vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
     <p class="C-fixed_income_text">Liquidez: {{ product.liquidity }}</p>
@@ -29,7 +32,11 @@
       {% include 'product/partials/_form_apply.html' %}
       {% include 'product/partials/_form_redeem.html' %}
       {% if profits_payment %}
-        <a class="C-fixed_income_button">receber juros</a>
+        <a 
+          class="C-fixed_income_button"
+          href="{% url 'product:fixed_income_profits_receipt' product.id %}">
+          receber juros
+        </a>
       {% endif %}
     </section>
   </section>

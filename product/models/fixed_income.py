@@ -52,6 +52,19 @@ class ProductFixedIncome(models.Model):
         )
         new_history.save()
 
+    def receive_profits(self,
+                        date: date,
+                        value: float,
+                        tax_and_irpf: float = 0) -> None:
+        new_history = FixedIncomeHistory.objects.create(
+            product=self,
+            state='profits',
+            date=date,
+            tax_and_irpf=tax_and_irpf if tax_and_irpf else 0,
+            value=value,
+        )
+        new_history.save()
+
 
 class FixedIncomeHistory(models.Model):
     product = models.ForeignKey(ProductFixedIncome,
@@ -60,9 +73,14 @@ class FixedIncomeHistory(models.Model):
     state = models.CharField(max_length=255, default='apply', choices=(
         ('apply', 'apply'),
         ('redeem', 'redeem'),
+        ('profits', 'profits'),
     ))
     date = models.DateField(default='2023-07-02')
+    tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
     value = models.FloatField()
+
+    def get_final_value(self) -> float:
+        return self.value - self.tax_and_irpf
 
     def __str__(self) -> str:
         history = (

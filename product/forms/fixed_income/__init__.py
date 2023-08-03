@@ -4,4 +4,5 @@ from .fixed_income import (
     FixedIncomeRegisterForm,
     FixedIncomeEditForm,
     FixedIncomeApplyRedeemForm,
+    FixedIncomeProfitsReceivForm,
     )

@@ -243,3 +243,80 @@ class FixedIncomeApplyRedeemForm(forms.Form):
             )
 
         return value
+
+
+class FixedIncomeProfitsReceivForm(forms.Form):
+    date = forms.DateField(
+        required=False,
+        label='data',
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+            }
+        )
+    )
+    value = forms.FloatField(
+        required=False,
+        label='valor bruto',
+        widget=forms.NumberInput(
+            attrs={
+                'min': 0,
+            }
+        )
+    )
+    tax_and_irpf = forms.FloatField(
+        required=False,
+        label='taxas e impostos',
+        widget=forms.NumberInput(
+            attrs={
+                'min': 0,
+                'step': 0.01,
+            }
+        )
+    )
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.items():
+            field[1].required = False
+            add_css_class(field[1], default_input_class)
+
+    def clean_date(self):
+        date = self.cleaned_data["date"]
+
+        if not date:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+        return date
+
+    def clean_value(self):
+        value = self.cleaned_data["value"]
+
+        if not value:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required',
+            )
+
+        if not isinstance(value, float):
+            raise ValidationError(
+                ('Digite somente números'),
+                code='invalid',
+            )
+
+        return value
+
+    def clean_tax_and_irpf(self):
+        tax_and_irpf = self.cleaned_data["tax_and_irpf"]
+
+        if tax_and_irpf:
+            if not isinstance(tax_and_irpf, float):
+                raise ValidationError(
+                    ('Digite somente números'),
+                    code='invalid'
+                )
+
+        return tax_and_irpf if tax_and_irpf else 0
