@@ -66,8 +66,8 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:actions_manage_profits'),
             {
-                'user_product_id': another_useraction.id,
-                'profits_type': 'dividends',
+                'userproduct': another_useraction.id,
+                'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
                 'total_price': 10,
@@ -174,8 +174,8 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:actions_manage_profits'),
             {
-                'user_product_id': another_useraction.id,
-                'profits_type': 'dividends',
+                'userproduct': another_useraction.id,
+                'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
                 'total_price': 10,
@@ -241,8 +241,8 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', '---', 'selecione uma ação'),
-        ('profits_type', '---', 'selecione um tipo de rendimento'),
+        ('userproduct', '---', 'selecione uma ação'),
+        ('handler', '---', 'selecione um tipo de rendimento'),
         ('date', '00-00-0000', 'Informe uma data válida'),
         ('total_price', 'abc', 'Informe um número'),
     ])
@@ -286,8 +286,8 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
 
         # history data
         history_data = {
-            'user_product_id': new_useraction.id,
-            'profits_type': 'renting',
+            'userproduct': new_useraction.id,
+            'handler': 'renting',
             'date': '2023-08-01',
             'total_price': 1000,
         }
@@ -326,8 +326,8 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
 
         # history data
         history_data = {
-            'user_product_id': new_useraction.id,
-            'profits_type': 'renting',
+            'userproduct': new_useraction.id,
+            'handler': 'renting',
             'date': '2023-08-01',
             'total_price': 1000,
         }
@@ -359,4 +359,3 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
             history.total_price,
             1000,
         )
-        self.fail('corrigir o erro da mensagem após editar o rendimento.')
