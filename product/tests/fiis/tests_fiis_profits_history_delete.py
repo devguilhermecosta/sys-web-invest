@@ -79,8 +79,8 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:fiis_manage_income_receipt'),
             {
-                'user_product_id': another_userfii.id,
-                'value': 50,
+                'userproduct': another_userfii.id,
+                'total_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,

@@ -172,8 +172,8 @@ def create_profits_history(client: Client,
     response = client.post(
         reverse('product:fiis_manage_income_receipt'),
         {
-            'user_product_id': user_product.id,
-            'value': kwargs.get('profits_value', 10),
+            'userproduct': user_product.id,
+            'total_price': kwargs.get('profits_value', 10),
             'date': '2023-07-02',
         },
         follow=True,
@@ -231,8 +231,8 @@ def create_actions_history(client: Client,
     response = client.post(
         reverse('product:actions_manage_profits'),
         {
-            'user_product_id': user_product.id,
-            'profits_type': kwargs.get('handler', 'dividends'),
+            'userproduct': user_product.id,
+            'handler': kwargs.get('handler', 'dividends'),
             'date': kwargs.get('date', '2023-07-02'),
             'tax_and_irpf': kwargs.get('tax_and_irpf', 0),
             'total_price': kwargs.get('gross_value', 10),

@@ -56,8 +56,8 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         response = self.client.get(self.url)
 
         self.assertIn(
-            '{"data": [{"date": "2023-07-02", "product": "bbas3", '
-            '"handler": "dividends", "tax": 0.0, '
+            '{"data": [{"date": "2023-07-02", "product": '
+            '"bbas3", "handler": "dividends", "tax": 0, '
             '"gross_value": 10.0, "final_value": 10.0, '
             '"history_id": 1}]}',
             response.content.decode('utf-8')
@@ -86,8 +86,8 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:actions_manage_profits'),
             {
-                'user_product_id': another_useraction.id,
-                'profits_type': 'dividends',
+                'userproduct': another_useraction.id,
+                'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
                 'total_price': 10,
@@ -97,7 +97,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
 
         # checks if the history has been created
         self.assertIn(
-            'rendimento para bbas3 lançado com sucesso',
+            '{"data": "success request"}',
             r_post.content.decode('utf-8'),
         )
 
@@ -138,8 +138,8 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         self.client.post(
             reverse('product:actions_manage_profits'),
             {
-                'user_product_id': user_action.id,
-                'profits_type': 'jscp',
+                'userproduct': user_action.id,
+                'handler': 'jscp',
                 'date': '2024-12-31',
                 'tax_and_irpf': 0,
                 'total_price': 580,
@@ -153,7 +153,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         # checks if the content is correct
         self.assertIn(
             '{"data": [{"date": "2024-12-31", "product": "sanp4", '
-            '"handler": "jscp", "tax": 0.0, "gross_value": 580.0, '
+            '"handler": "jscp", "tax": 0, "gross_value": 580.0, '
             '"final_value": 580.0, "history_id": 2}]}',
             response.content.decode('utf-8')
         )

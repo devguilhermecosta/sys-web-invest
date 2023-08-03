@@ -61,9 +61,9 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
 
         # data
         data = {
-            'user_product_id': user_fii.pk,
+            'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'value': 4.96,
+            'total_price': 4.96,
         }
 
         # make post request for save the profits
@@ -106,8 +106,8 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:fiis_manage_income_receipt'),
             {
-                'user_product_id': another_userfii.id,
-                'value': 50,
+                'userproduct': another_userfii.id,
+                'total_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,
@@ -153,9 +153,9 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
 
         # data
         data = {
-            'user_product_id': user_fii.pk,
+            'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'value': 4.96,
+            'total_price': 4.96,
         }
 
         # make post request for save the profits

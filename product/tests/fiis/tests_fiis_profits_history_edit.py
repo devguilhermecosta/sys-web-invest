@@ -81,9 +81,9 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', 'Selecione um produto'),
+        ('userproduct', 'Selecione um produto'),
         ('date', 'Campo obrigatório'),
-        ('value', 'Campo obrigatório'),
+        ('total_price', 'Campo obrigatório'),
     ])
     def test_profits_history_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # create the profits history
@@ -113,9 +113,9 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', 1, ''),
+        ('userproduct', 1, ''),
         ('date', '00-00-00', 'Informe uma data válida'),
-        ('value', 10, ''),
+        ('total_price', 10, ''),
     ])
     def test_profits_history_edit_returns_error_message_if_data_has_a_invalid_format(self, field: str, value: str | int, message: str) -> None:  # noqa: E501
         # create the profits history
@@ -155,17 +155,17 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         self.client.post(
             reverse('product:fiis_manage_income_receipt'),
             {
-                'user_product_id': new_user_fii.id,
-                'value': 10,
+                'userproduct': new_user_fii.id,
+                'total_price': 10,
                 'date': '2023-07-02',
             }
             )
 
         # history data
         history_data = {
-            'user_product_id': new_user_fii.id,
+            'userproduct': new_user_fii.id,
             'date': '2024-12-31',
-            'value': 14,
+            'total_price': 14,
         }
 
         # make post request
@@ -214,8 +214,8 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:fiis_manage_income_receipt'),
             {
-                'user_product_id': another_userfii.id,
-                'value': 50,
+                'userproduct': another_userfii.id,
+                'total_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,
@@ -266,9 +266,9 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         response_post = self.client.post(
             self.url,
             data={
-                'user_product_id': u['user_fii'].id,
+                'userproduct': u['user_fii'].id,
                 'date': '2024-12-31',
-                'value': 14,
+                'total_price': 14,
             },
             follow=True,
             )
@@ -302,9 +302,9 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
 
         # history data
         history_data = {
-            'user_product_id': new_user_fii.id,
+            'userproduct': new_user_fii.id,
             'date': '2024-12-31',
-            'value': 14,
+            'total_price': 14,
         }
 
         # make post request

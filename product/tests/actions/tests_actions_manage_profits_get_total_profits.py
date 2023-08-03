@@ -90,8 +90,8 @@ class ActionsProfitsGetTotalProfitsTests(TestCaseWithLogin):
         r_post = self.client.post(
             reverse('product:actions_manage_profits'),
             {
-                'user_product_id': another_useraction.id,
-                'profits_type': 'dividends',
+                'userproduct': another_useraction.id,
+                'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
                 'total_price': 1500,

@@ -61,7 +61,7 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
         ('aluguel'),
         ('data'),
         ('taxas e irpf'),
-        ('valor recebido'),
+        ('valor bruto'),
         ('lançar rendimento'),
         ('salvar'),
     ])
@@ -118,7 +118,7 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # checks if the bbas3 is in content
         self.assertIn(
-            'bbas3',
+            'BBAS3',
             content,
         )
 
@@ -209,8 +209,8 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # profits data with the id of another user
         profits_data = {
-            'user_product_id': another_user_action.id,
-            'profits_type': 'jscp',
+            'userproduct': another_user_action.id,
+            'handler': 'jscp',
             'date': '2023-07-02',
             'tax_and_irpf': 2.78,
             'total_price': 50,
@@ -239,8 +239,8 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # profits data
         profits_data = {
-            'user_product_id': user_action.id,
-            'profits_type': 'jscp',
+            'userproduct': user_action.id,
+            'handler': 'jscp',
             'date': '2023-07-02',
             'tax_and_irpf': 2.78,
             'total_price': 50,

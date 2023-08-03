@@ -138,9 +138,9 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('user_product_id', 'Campo obrigatório'),
+        ('userproduct', 'Campo obrigatório'),
         ('date', 'Campo obrigatório'),
-        ('value', 'Campo obrigatório'),
+        ('total_price', 'Campo obrigatório'),
     ])
     def test_fiis_profits_returns_error_messages_if_any_field_is_empty(self, field: str, msg: str) -> None:  # noqa: E501
         # make login
@@ -183,9 +183,9 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         # data
         data = {
-            'user_product_id': user_fii.pk,
+            'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'value': 4.96,
+            'total_price': 4.96,
         }
 
         # make post request
@@ -214,9 +214,9 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         # data
         data = {
-            'user_product_id': user_fii.pk,
+            'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'value': 4.96,
+            'total_price': 4.96,
         }
 
         # make post request
