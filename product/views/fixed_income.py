@@ -184,10 +184,13 @@ class FixedIncomeApplyView(FixedIncomeEditView):
         form = FixedIncomeApplyRedeemForm(post)
 
         if form.is_valid():
-            value = form.cleaned_data.get('value')
-            product.value += value
+            data = form.cleaned_data
+            product.value += data['value']
             product.save()
-            product.make_history(state='apply', value=value)
+            product.make_history(state='apply',
+                                 date=data['date'],
+                                 value=data['value'],
+                                 )
 
             del self.request.session['product-apply']
 
@@ -209,9 +212,9 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
         form = FixedIncomeApplyRedeemForm(post)
 
         if form.is_valid():
-            value = form.cleaned_data.get('value')
+            data = form.cleaned_data
 
-            if value > product.value:
+            if data['value'] > product.value:
                 messages.error(
                     self.request,
                     'Saldo insuficiente para resgate'
@@ -220,9 +223,12 @@ class FixedIncomeRedeemView(FixedIncomeApplyView):
                     reverse('product:fixed_income_details', args=(product.id,))
                 )
 
-            product.value -= value
+            product.value -= data['value']
             product.save()
-            product.make_history(state='redeem', value=value)
+            product.make_history(state='redeem',
+                                 date=data['date'],
+                                 value=data['value'],
+                                 )
 
             del self.request.session['product-redeem']
 

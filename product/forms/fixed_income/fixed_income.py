@@ -215,6 +215,18 @@ class FixedIncomeApplyRedeemForm(forms.Form):
     )
     add_css_class(value, 'C-fixed_income_input')
 
+    date = forms.DateField(
+        required=False,
+        label='data',
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+            },
+        )
+    )
+    add_css_class(date, 'C-fixed_income_input')
+
     def clean_value(self):
         value = self.cleaned_data["value"]
 

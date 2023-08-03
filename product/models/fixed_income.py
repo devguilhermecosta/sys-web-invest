@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 from datetime import date
 
 
-default_date = date.today().strftime('%Y-%m-%d')
-
-
 class ProductFixedIncome(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=255, choices=(
@@ -46,11 +43,11 @@ class ProductFixedIncome(models.Model):
     def get_total_applied(self) -> float:
         return self.value
 
-    def make_history(self, state: str, value: float) -> None:
+    def make_history(self, state: str, date: date, value: float) -> None:
         new_history = FixedIncomeHistory.objects.create(
             product=self,
             state=state,
-            date=default_date,
+            date=date,
             value=value
         )
         new_history.save()

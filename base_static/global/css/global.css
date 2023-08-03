@@ -964,7 +964,7 @@ textarea.C-login_input {
 }
 
 .C-fixed_income_input {
-  max-width: 100px;
+  max-width: 130px;
   height: 35px;
   border: 1px solid var(--turquoise_6);
   padding: 5px 10px;

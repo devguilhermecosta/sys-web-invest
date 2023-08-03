@@ -7,10 +7,11 @@ import { createMessageAlert } from './src/modules.js';
 
 
 // create form confirmation fixed income
-function createFormFixedIncome(form, buttonInput, input, message, messageAlert) {
+function createFormFixedIncome(form, buttonInput, inputValue, inputDate, message, messageAlert) {
   const formApply = form;
   const buttonSubmit = buttonInput;
-  const inputValue = input;
+  const value = inputValue;
+  const date = inputDate;
 
   buttonSubmit.addEventListener('click', function(event) {
     event.preventDefault();
@@ -41,9 +42,9 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
       })
     }
 
-    inputValue.value === '' ? createMessageAlert('white', messageAlert) : createFormConfirmation();
+    !value.value || !date.value ? createMessageAlert('white', messageAlert) : createFormConfirmation();
 
-    return inputValue;
+    return [inputValue, inputDate];
   })
 }
 
@@ -53,8 +54,9 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
   try {
     const form = document.querySelector('#form-apply');
     const button = document.querySelector('#btn-form-apply');
-    const input = document.querySelectorAll('.C-fixed_income_input')[0];
-    createFormFixedIncome(form, button, input, 'deseja confirmar a aplicação?', 'informe um valor');
+    const inputValue = form.querySelector('#id_value');
+    const inputDate = form.querySelector('#id_date');
+    createFormFixedIncome(form, button, inputValue, inputDate, 'deseja confirmar a aplicação?', 'informe uma data e valor');
   } catch(e){}
 })();
 
@@ -64,7 +66,8 @@ function createFormFixedIncome(form, buttonInput, input, message, messageAlert) 
   try {
     const form = document.querySelector('#form-redeem');
     const button = document.querySelector('#btn-form-redeem');
-    const input = document.querySelectorAll('.C-fixed_income_input')[1];
-    createFormFixedIncome(form, button, input, 'deseja confirmar o resgate?', 'informe um valor');
+    const inputValue = form.querySelector('#id_value');
+    const inputDate = form.querySelector('#id_date');
+    createFormFixedIncome(form, button, inputValue, inputDate, 'deseja confirmar o resgate?', 'informe uma data e valor');
   } catch(e){}
 })();

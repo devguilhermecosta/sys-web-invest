@@ -177,8 +177,6 @@ class DirectTreasureDetailsView(DirectTreasureView):
 
 
 class DirectTreasureApplyView(DirectTreasureEditView):
-    date = dt.today().strftime('%Y-%m-%d')
-
     def redirect_response(self, product_id: int) -> HttpResponse:
         return redirect(
             reverse('product:direct_treasure_details', args=(product_id,)),
@@ -194,10 +192,10 @@ class DirectTreasureApplyView(DirectTreasureEditView):
         form = FixedIncomeApplyRedeemForm(post)
 
         if form.is_valid():
-            value = form.cleaned_data['value']
+            data = form.cleaned_data
             product.apply(
-                date=self.date,
-                value=value,
+                date=data['date'],
+                value=data['value'],
             )
 
             del self.request.session['direct-treasure-apply-h']
@@ -218,11 +216,11 @@ class DirectTreasureRedeemView(DirectTreasureApplyView):
         form = FixedIncomeApplyRedeemForm(post)
 
         if form.is_valid():
-            value = form.cleaned_data['value']
+            data = form.cleaned_data
             try:
                 product.redeem(
-                    date=self.date,
-                    value=value,
+                    date=data['date'],
+                    value=data['value'],
                 )
             except ValidationError:
                 messages.error(
