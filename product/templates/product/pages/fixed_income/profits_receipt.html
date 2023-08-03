@@ -1,0 +1,13 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+
+{% block title %}
+  Receber juros
+{% endblock title %}
+
+{% block content%}
+  <section class="C-fixed_income_details">
+    {% include 'global/partials/_messages.html' %}
+    {% include 'global/partials/_form.html' %}
+  </section>
+{% endblock content %}
