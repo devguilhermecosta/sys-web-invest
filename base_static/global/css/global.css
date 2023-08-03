@@ -16,6 +16,8 @@
   --gray_2: #e4dcdc;
   --dark_red: #a82626;
   --yallow_1: #E8CA68;
+  --orange_1: #F57C3D;
+  --orange_2: #CF4F0A;
 }
 
 * {
@@ -979,6 +981,22 @@ textarea.C-login_input {
 .C-fixed_income_input:focus {
   border: 1px solid var(--turquoise_5);
   outline: none;
+}
+
+.C-fixed_income_button {
+  display: block;
+  width: 100%;
+  background-color: var(--orange_1);
+  transition: background-color 200ms ease;
+  color: var(--white);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.C-fixed_income_button:hover {
+  background-color: var(--orange_2);
 }
 /* end dashboard - actions */
 

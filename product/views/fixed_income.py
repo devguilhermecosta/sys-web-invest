@@ -168,7 +168,10 @@ class FixedIncomeDetailsView(FixedIncomeView):
                 ),
                 'url_redeem': reverse(
                     'product:fixed_income_redeem', args=(product.id,)
-                )
+                ),
+                'profits_payment': (
+                    True if product.interest_receipt != 'não há' else False
+                    )
                 },
         )
 

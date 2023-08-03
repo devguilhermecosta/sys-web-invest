@@ -28,6 +28,9 @@
     <section>
       {% include 'product/partials/_form_apply.html' %}
       {% include 'product/partials/_form_redeem.html' %}
+      {% if profits_payment %}
+        <a class="C-fixed_income_button">receber juros</a>
+      {% endif %}
     </section>
   </section>
 {% endblock content %}
