@@ -242,7 +242,9 @@ class DirectTreasureRedeemView(DirectTreasureApplyView):
 class DirectTreasureHistoryView(DirectTreasureEditView):
     def get(self, *args, **kwargs) -> HttpResponse:
         product = self.get_product(id=kwargs.get('id', None))
-        history = DirectTreasureHistory.objects.all().order_by('-id')
+        history = DirectTreasureHistory.objects.filter(
+            product=product,
+            ).order_by('-date')
 
         return render(
             self.request,
