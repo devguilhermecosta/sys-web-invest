@@ -5,67 +5,9 @@ from utils.forms.style import add_css_class
 
 
 default_input_class = 'C-login_input'
-date_field_formats = [
-    '%Y-%m-%d',
-    '%Y/%m/%d',
-    '%d-%m-%Y',
-    '%d/%m/%Y',
-    ]
 
 
 class FixedIncomeRegisterForm(forms.ModelForm):
-    category = forms.CharField(
-        label='categoria',
-        widget=forms.Select(
-            choices=(
-                ('cdb', 'cdb'),
-                ('cra', 'cra'),
-                ('cri', 'cri'),
-                ('lc', 'lc'),
-                ('lci', 'lci'),
-                ('lca', 'lca'),
-                ('lf', 'lf'),
-                ('lfsn', 'lfsn'),
-                ('debêntures', 'debêntures'),
-            )
-        )
-    )
-
-    grace_period = forms.DateField(
-        label='carência',
-        widget=forms.DateInput(
-            format='%Y-%m-%d',
-            attrs={
-                'type': 'date',
-            }
-        ),
-        input_formats=date_field_formats,
-    )
-
-    maturity_date = forms.DateField(
-        label='vencimento',
-        widget=forms.DateInput(
-            format='%Y-%m-%d',
-            attrs={
-                'type': 'date',
-            }
-        ),
-        input_formats=date_field_formats,
-    )
-
-    liquidity = forms.CharField(
-        label='liquidez',
-        widget=forms.Select(
-            choices=(
-                ('no vencimento', 'no vencimento'),
-                ('diária', 'diária'),
-                ('30 dias', '30 dias'),
-                ('30 dias +', '30 dias +'),
-                ('30 dias -', '30 dias -'),
-            )
-        )
-    )
-
     value = forms.FloatField(
         label='valor',
         required=False,
@@ -74,19 +16,6 @@ class FixedIncomeRegisterForm(forms.ModelForm):
                 'min': 0,
                 'step': 0.00,
             }
-        )
-    )
-
-    interest_receipt = forms.CharField(
-        label='pagamento de juros',
-        widget=forms.Select(
-            choices=(
-                ('não há', 'não há'),
-                ('mensal', 'mensal'),
-                ('trimestral', 'trimestral'),
-                ('semestral', 'semestral'),
-                ('anual', 'anual'),
-            )
         )
     )
 
@@ -110,10 +39,30 @@ class FixedIncomeRegisterForm(forms.ModelForm):
         ]
 
         labels = {
+            'category': 'categoria',
             'name': 'nome',
+            'grace_period': 'carência',
+            'maturity_date': 'vencimento',
             'profitability': 'rentabilidade',
+            'liquidity': 'liquidez',
             'description': 'observações',
+            'interest_receipt': 'pagamento de juros',
         }
+
+        widgets = {
+            'grace_period': forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    }
+                ),
+            'maturity_date': forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    }
+                ),
+            }
 
     def clean_category(self):
         category = self.cleaned_data["category"]

@@ -17,8 +17,8 @@ class ProductFixedIncome(models.Model):
         ('debêntures', 'debêntures'),
     ))
     name = models.CharField(max_length=255)
-    grace_period = models.DateField(default='2023-07-01')
-    maturity_date = models.DateField(default='2023-07-01')
+    grace_period = models.DateField(default='')
+    maturity_date = models.DateField(default='')
     liquidity = models.CharField(max_length=255, choices=(
         ('no vencimento', 'no vencimento'),
         ('diária', 'diária'),
