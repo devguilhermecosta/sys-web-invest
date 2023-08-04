@@ -10,6 +10,7 @@ from product.models import ProductFixedIncome, FixedIncomeHistory
 from product.forms.fixed_income import (
     FixedIncomeRegisterForm,
     FixedIncomeEditForm,
+    FixedIncomeHistoryEditForm,
     FixedIncomeApplyRedeemForm,
     FixedIncomeProfitsReceivForm,
 )
@@ -318,4 +319,68 @@ class FixedIncomeHistoryView(FixedIncomeView):
 
 
 class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
-    ...
+    def get_history_or_404(self, product_id: int, history_id: int) -> FixedIncomeHistory:  # noqa: E501
+        history = get_object_or_404(
+            FixedIncomeHistory,
+            product=self.get_product_or_404(id=product_id),
+            pk=history_id,
+        )
+        return history
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(
+            product_id=kwargs.get('product_id', None),
+            history_id=kwargs.get('history_id', None)
+        )
+        history.tax_and_irpf = abs(history.tax_and_irpf)
+        history.value = abs(history.value)
+
+        session = self.request.session.get('fixed-income-histyory-edit', None)
+        form = FixedIncomeHistoryEditForm(session, instance=history)
+
+        return render(
+            self.request,
+            'product/pages/fixed_income/history_edit.html',
+            context={
+                'form': form,
+                'form_title': 'editar histórico',
+                'button_submit_value': 'salvar',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(
+            product_id=kwargs.get('product_id', None),
+            history_id=kwargs.get('history_id', None),
+        )
+        post = self.request.POST
+        self.request.session['fixed-income-histyory-edit'] = post
+        form = FixedIncomeHistoryEditForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            history.update(**data)
+
+            del self.request.session['fixed-income-histyory-edit']
+
+            messages.success(
+                self.request,
+                'histórico salvo com sucesso',
+            )
+
+            return redirect(
+                reverse(
+                    'product:fixed_income_history',
+                    args=(kwargs.get('product_id', None),),
+                    )
+            )
+
+        return redirect(
+            reverse(
+                'product:fixed_income_history_edit',
+                kwargs={
+                    'product_id': kwargs.get('product_id', None),
+                    'history_id': kwargs.get('history_id', None),
+                }
+                )
+        )

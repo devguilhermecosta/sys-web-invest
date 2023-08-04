@@ -32,6 +32,7 @@ from .fixed_income import (
     FixedIncomeApplyView,
     FixedIncomeRedeemView,
     FixedIncomeHistoryView,
+    FixedIncomeHistoryEditView,
     FixedIncomeProfitsReceiptView,
     )
 from .direct_treasure import (

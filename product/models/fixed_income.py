@@ -80,13 +80,31 @@ class FixedIncomeHistory(models.Model):
     product = models.ForeignKey(ProductFixedIncome,
                                 on_delete=models.CASCADE,
                                 )
-    state = models.CharField(max_length=255, default='apply')
+    state = models.CharField(max_length=255, default='apply', choices=(
+        ('apply', 'aplicação'),
+        ('redeem', 'resgate'),
+        ('profits', 'recebimento de juros'),
+    ))
     date = models.DateField(default='2023-07-02')
-    tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
-    value = models.FloatField()
+    tax_and_irpf = models.DecimalField(default=0,
+                                       max_digits=15,
+                                       blank=True, null=True,
+                                       decimal_places=2,
+                                       )
+    value = models.DecimalField(max_digits=15, decimal_places=2)
+
+    def __str__(self) -> str:
+        return f'{self.product.name} - {self.date} - {self.state} - {self.value}'  # noqa: E501
 
     def get_final_value(self) -> float:
         return self.value - abs(self.tax_and_irpf)
 
-    def __str__(self) -> str:
-        return f'{self.product.name} - {self.date} - {self.state} - {self.value}'  # noqa: E501
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.save()
+
+    def save(self, *args, **kwargs) -> None:
+        self.tax_and_irpf = -abs(self.tax_and_irpf)
+        self.value = abs(self.value) if self.state != 'redeem' else -abs(self.value)  # noqa: E501
+        return super().save(*args, **kwargs)

@@ -6,3 +6,5 @@ from .fixed_income import (
     FixedIncomeApplyRedeemForm,
     FixedIncomeProfitsReceivForm,
     )
+
+from .history import FixedIncomeHistoryEditForm
