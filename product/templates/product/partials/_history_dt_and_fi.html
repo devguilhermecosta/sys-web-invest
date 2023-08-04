@@ -11,6 +11,7 @@
   <h2 
   class="C-dashboard_table_details_fi_value">valor atual: {{ product.get_current_value|real_brl }}
   </h2>
+  {% include 'global/partials/_messages.html' %}
   <table class="C-dashboard_table fixed_income">
     <thead>
       <th>data</th>
@@ -38,7 +39,7 @@
         <td>{{ h.value|real_brl }}</td>
         <td>{{ h.get_final_value|real_brl }}</td>
         <td>
-          <a href="">
+          <a href="{% url 'product:fixed_income_history_edit' h.product.id h.id %}">
             <span class="material-symbols-outlined icon_edit">edit</span>
           </a>
         </td>
