@@ -101,13 +101,12 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
     '''
         create a new fixed income object
 
-        kwargs opts: category, name
+        kwargs opts: category, name, value
     '''
     new_object = ProductFixedIncome.objects.create(
         user=user,
         category=kwargs.pop('category', 'cdb'),
         name=kwargs.pop('name', 'cdb bb 2035'),
-        value=kwargs.pop('value', 1250),
         grace_period='2023-07-04',
         maturity_date='2035-01-01',
         liquidity='no vencimento',
@@ -116,6 +115,12 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
         description='cdb muito legal'
     )
     new_object.save()
+
+    value = kwargs.get('value', None)
+
+    if value:
+        new_object.apply('2023-07-02', value)
+
     return new_object
 
 
