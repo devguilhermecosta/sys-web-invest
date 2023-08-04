@@ -104,7 +104,7 @@ class DashboardView(View):
         fixed_income = ProductFixedIncome.objects.filter(
             user=self.request.user,
             )
-        total_f_inc = sum([finc.get_total_applied() for finc in fixed_income])
+        total_f_inc = sum([finc.get_current_value() for finc in fixed_income])
 
         direct_treasure = DirectTreasure.objects.filter(
             user=self.request.user,
