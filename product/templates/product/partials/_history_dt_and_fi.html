@@ -18,6 +18,8 @@
       <th>taxas</th>
       <th>valor bruto</th>
       <th>valor líquido</th>
+      <th>editar</th>
+      <th>deletar</th>
     </thead>
     <tbody>
     {% for h in history %}
@@ -35,6 +37,16 @@
         <td>{{ h.tax_and_irpf|real_brl }}</td>
         <td>{{ h.value|real_brl }}</td>
         <td>{{ h.get_final_value|real_brl }}</td>
+        <td>
+          <a href="">
+            <span class="material-symbols-outlined icon_edit">edit</span>
+          </a>
+        </td>
+        <td>
+          <a href="">
+            <span class="material-symbols-outlined icon_delete">delete_forever</span>
+          </a>
+        </td>
       </tr>
     {% endfor %}
     </tbody>

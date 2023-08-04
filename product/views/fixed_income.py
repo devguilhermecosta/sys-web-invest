@@ -315,3 +315,7 @@ class FixedIncomeHistoryView(FixedIncomeView):
                 'history': history
             }
         )
+
+
+class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
+    ...
