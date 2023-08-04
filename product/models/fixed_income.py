@@ -80,11 +80,7 @@ class FixedIncomeHistory(models.Model):
     product = models.ForeignKey(ProductFixedIncome,
                                 on_delete=models.CASCADE,
                                 )
-    state = models.CharField(max_length=255, default='apply', choices=(
-        ('apply', 'apply'),
-        ('redeem', 'redeem'),
-        ('profits', 'profits'),
-    ))
+    state = models.CharField(max_length=255, default='apply')
     date = models.DateField(default='2023-07-02')
     tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
     value = models.FloatField()
