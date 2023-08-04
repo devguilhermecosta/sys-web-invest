@@ -111,7 +111,7 @@ class FixedIncomeEditView(FixedIncomeView):
             'product/pages/fixed_income/fixed_income_edit.html',
             context={
                 'form': form,
-                'button_submit_valget_product_or_404ue': 'salvar',
+                'button_submit_value': 'salvar',
             }
         )
 
@@ -313,12 +313,26 @@ class FixedIncomeHistoryView(FixedIncomeView):
             'product/partials/_history_dt_and_fi.html',
             context={
                 'product': product,
-                'history': history
+                'history': history,
+                'profits_payment': (
+                    False if product.interest_receipt == 'não há' else True
+                    ),
             }
         )
 
 
 class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
+    def choices(self, product: ProductFixedIncome) -> tuple:
+        choices = [
+            ('apply', 'aplicação'),
+            ('redeem', 'resgate'),
+        ]
+
+        if product.interest_receipt != 'não há':
+            choices.append(('profits', 'recebimento de juros'))
+
+        return choices
+
     def get_history_or_404(self, product_id: int, history_id: int) -> FixedIncomeHistory:  # noqa: E501
         history = get_object_or_404(
             FixedIncomeHistory,
@@ -332,11 +346,14 @@ class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
             product_id=kwargs.get('product_id', None),
             history_id=kwargs.get('history_id', None)
         )
+        product = self.get_product_or_404(kwargs.get('product_id', None))
+
         history.tax_and_irpf = abs(history.tax_and_irpf)
         history.value = abs(history.value)
 
         session = self.request.session.get('fixed-income-histyory-edit', None)
         form = FixedIncomeHistoryEditForm(session, instance=history)
+        form.fields['state'].widget.choices = self.choices(product)
 
         return render(
             self.request,
@@ -384,3 +401,30 @@ class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
                 }
                 )
         )
+
+
+class FixedIncomeHistoryDeleteView(FixedIncomeHistoryEditView):
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(
+            product_id=kwargs.get('product_id', None),
+            history_id=kwargs.get('history_id', None),
+        )
+
+        if history.product.user != self.request.user:
+            raise Http404()
+
+        history.delete()
+
+        messages.success(
+            self.request,
+            'histórico deletado com sucesso',
+        )
+
+        return redirect(
+            reverse('product:fixed_income_history',
+                    args=(kwargs.get('product_id', None),)
+                    )
+            )

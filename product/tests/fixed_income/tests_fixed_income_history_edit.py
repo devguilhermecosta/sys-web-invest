@@ -108,6 +108,33 @@ class FixedIncomeHistoryEditTests(TestCaseWithLogin):
             content,
         )
 
+    def test_fixed_income_history_edit_does_not_loads_the_PROFITS_state_select_if_the_interest_receipt_property_is_NÃO_HÁ(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # create a history
+        make_fixed_income_product(user=user,
+                                  value=10,
+                                  interest_receipt='não há',
+                                  )
+
+        # make get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertNotIn(
+            'profits',
+            content,
+        )
+        self.assertIn(
+            'apply',
+            content,
+        )
+        self.assertIn(
+            'redeem',
+            content,
+        )
+
     @parameterized.expand([
         ('state', 'Campo obrigatório'),
         ('date', 'Campo obrigatório'),

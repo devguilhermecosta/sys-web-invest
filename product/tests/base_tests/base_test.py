@@ -101,7 +101,7 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
     '''
         create a new fixed income object
 
-        kwargs opts: category, name, value
+        kwargs opts: category, name, value, interest_receipt
     '''
     new_object = ProductFixedIncome.objects.create(
         user=user,
@@ -111,7 +111,7 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
         maturity_date='2035-01-01',
         liquidity='no vencimento',
         profitability='102% cdi',
-        interest_receipt='não há',
+        interest_receipt=kwargs.get('interest_receipt', 'não há'),
         description='cdb muito legal'
     )
     new_object.save()

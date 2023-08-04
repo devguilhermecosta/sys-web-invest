@@ -42,7 +42,16 @@ class ProductFixedIncome(models.Model):
 
     def get_current_value(self) -> Decimal:
         history = FixedIncomeHistory.objects.filter(product=self)
-        total = sum([h.get_final_value() for h in history])
+        total = sum(
+            [h.get_final_value() for h in history if h.state != 'profits']
+            )
+        return Decimal(total)
+
+    def get_total_profits_received(self) -> Decimal:
+        history = FixedIncomeHistory.objects.filter(product=self)
+        total = sum(
+            [h.get_final_value() for h in history if h.state == 'profits']
+            )
         return Decimal(total)
 
     def apply(self, date: date, value: float) -> None:

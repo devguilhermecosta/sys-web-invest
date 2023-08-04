@@ -71,3 +71,42 @@ function createFormFixedIncome(form, buttonInput, inputValue, inputDate, message
     createFormFixedIncome(form, button, inputValue, inputDate, 'deseja confirmar o resgate?', 'informe uma data e valor');
   } catch(e){}
 })();
+
+
+// function for fixed income history delete
+(() => {
+  const linkDelete = document.querySelectorAll('.fi_h_delete');
+
+  if (linkDelete) {
+    linkDelete.forEach((link) => {
+      const parentForm = link.parentElement;
+
+      link.addEventListener("click", function() {
+        parentForm.preventDefault;
+
+        const body = document.body;
+
+        const container = createDefaultContainer();
+        const frame = createDefaultFrame();
+        const message = createTextElement(
+          'white',
+          '<p>deseja realmente</p><p>deletar este histórico?</p>',
+        )
+        const buttonContainer = createDivFlexButton();
+        const buttonCancel = createButton('cancelar');
+        const buttonConfirm = createButton('confirmar');
+
+        buttonContainer.appendChild(buttonCancel);
+        buttonContainer.appendChild(buttonConfirm);
+        
+        frame.appendChild(message);
+        frame.appendChild(buttonContainer);
+        container.appendChild(frame);
+        body.appendChild(container);  
+        
+        buttonCancel.addEventListener("click", () => {body.removeChild(container)});
+        buttonConfirm.addEventListener("click", () => {parentForm.submit()});
+      })
+    })
+  }
+})();
