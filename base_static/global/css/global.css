@@ -1054,6 +1054,10 @@ textarea.C-login_input {
   #menu-mobile:checked ~ .C-menu_ul > .C-menu_label {
     left: 265px;
   }
+
+  .C-dashboard_table_details_fi_value {
+    font-size: 18px;
+  }
 }
 
 @media screen and (min-width: 800px) {
