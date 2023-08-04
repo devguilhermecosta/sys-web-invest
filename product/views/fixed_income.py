@@ -93,12 +93,13 @@ class FixedIncomeRegisterView(FixedIncomeView):
 
 
 class FixedIncomeEditView(FixedIncomeView):
-    def get_product(self, id: int = None) -> ProductFixedIncome:
+    def get_product_or_404(self, id: int = None) -> ProductFixedIncome:
         product = None
 
         if id is not None:
             product = get_object_or_404(
                 ProductFixedIncome,
+                user=self.request.user,
                 pk=id,
             )
         return product
@@ -109,18 +110,18 @@ class FixedIncomeEditView(FixedIncomeView):
             'product/pages/fixed_income/fixed_income_edit.html',
             context={
                 'form': form,
-                'button_submit_value': 'salvar',
+                'button_submit_valget_product_or_404ue': 'salvar',
             }
         )
 
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
-        product = self.get_product(id)
+        product = self.get_product_or_404(id)
         session = self.request.session.get('product-fixed-income-edit', None)
         form = FixedIncomeEditForm(session, instance=product)
         return self.render_product(form)
 
     def post(self, request: HttpRequest, id: int) -> HttpResponse:
-        product = self.get_product(id)
+        product = self.get_product_or_404(id)
         post = self.request.POST
         self.request.session['product-fixed-income-edit'] = post
         form = FixedIncomeEditForm(
@@ -130,9 +131,7 @@ class FixedIncomeEditView(FixedIncomeView):
         )
 
         if form.is_valid():
-            product = form.save(commit=False)
-            product.user = request.user
-            product.save()
+            form.save()
 
             del self.request.session['product-fixed-income-edit']
 
@@ -158,6 +157,7 @@ class FixedIncomeDetailsView(FixedIncomeView):
         product = get_object_or_404(
             ProductFixedIncome,
             pk=id,
+            user=self.request.user,
         )
 
         session_apply = self.request.session.get('product-apply', None)
@@ -190,7 +190,7 @@ class FixedIncomeApplyView(FixedIncomeEditView):
         raise Http404()
 
     def post(self, request: HttpRequest, id: int) -> HttpResponse:
-        product = self.get_product(id)
+        product = self.get_product_or_404(id)
         post = self.request.POST
         self.request.session['product-apply'] = post
         form = FixedIncomeApplyRedeemForm(post)
@@ -213,7 +213,7 @@ class FixedIncomeApplyView(FixedIncomeEditView):
 
 class FixedIncomeRedeemView(FixedIncomeApplyView):
     def post(self, request: HttpRequest, id: int) -> HttpResponse:
-        product = self.get_product(id)
+        product = self.get_product_or_404(id)
         post = self.request.POST
         self.request.session['product-redeem'] = post
         form = FixedIncomeApplyRedeemForm(post)
@@ -300,8 +300,8 @@ class FixedIncomeHistoryView(FixedIncomeView):
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
         product = get_object_or_404(
             ProductFixedIncome,
-            user=request.user,
             pk=id,
+            user=request.user,
         )
         history = FixedIncomeHistory.objects.filter(
             product=product
