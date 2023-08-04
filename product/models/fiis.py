@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from typing import TypeVar, List
 from datetime import datetime as dt
+from decimal import Decimal
 
 
 date = '2023-07-04'
@@ -30,8 +31,8 @@ class UserFII(models.Model):
     def __str__(self) -> str:
         return f'{self.product.code} de {self.user.username}'
 
-    def get_total_price(self) -> float:
-        return round(self.quantity * float(self.unit_price), 2)
+    def get_total_price(self) -> Decimal:
+        return Decimal((self.quantity * self.unit_price))
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
@@ -144,8 +145,8 @@ class FiiHistory(models.Model):
     ))
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
-    unit_price = models.FloatField()
-    total_price = models.FloatField()
+    unit_price = models.DecimalField(max_digits=15, decimal_places=2)
+    total_price = models.DecimalField(max_digits=15, decimal_places=2)
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
 
     def __str__(self) -> str:
@@ -165,6 +166,3 @@ class FiiHistory(models.Model):
             f'{self.userproduct.product.code} do usuário '
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
-
-# teremos duas informações: o total investido contendo o recebimento
-# de proventos, e um total sem considerar o recebimento de proventos.

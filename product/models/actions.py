@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
+from decimal import Decimal
 
 
 date = '2023-07-04'
@@ -31,8 +32,8 @@ class UserAction(models.Model):
     def __str__(self):
         return f'{self.product.code} de {self.user.username}'
 
-    def get_total_price(self) -> float:
-        return round(self.quantity * float(self.unit_price), 2)
+    def get_total_price(self) -> Decimal:
+        return Decimal((self.quantity * self.unit_price))
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
@@ -176,9 +177,14 @@ class ActionHistory(models.Model):
     ))
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
-    tax_and_irpf = models.FloatField(blank=True, null=True)
-    unit_price = models.FloatField()
-    total_price = models.FloatField()
+    tax_and_irpf = models.DecimalField(default=0,
+                                       blank=True,
+                                       null=True,
+                                       max_digits=15,
+                                       decimal_places=2,
+                                       )
+    unit_price = models.DecimalField(max_digits=15, decimal_places=2)
+    total_price = models.DecimalField(max_digits=15, decimal_places=2)
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
 
     def __str__(self) -> str:

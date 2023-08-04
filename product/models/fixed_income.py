@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+from decimal import Decimal
 
 
 class ProductFixedIncome(models.Model):
@@ -39,10 +40,10 @@ class ProductFixedIncome(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def get_current_value(self) -> float:
+    def get_current_value(self) -> Decimal:
         history = FixedIncomeHistory.objects.filter(product=self)
         total = sum([h.get_final_value() for h in history])
-        return total
+        return Decimal(total)
 
     def apply(self, date: date, value: float) -> None:
         new_history = FixedIncomeHistory.objects.create(

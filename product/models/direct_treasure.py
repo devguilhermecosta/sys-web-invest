@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from datetime import date
+from decimal import Decimal
 
 
 class DirectTreasure(models.Model):
@@ -21,7 +22,7 @@ class DirectTreasure(models.Model):
     ))
     profitability = models.CharField(max_length=255)
     maturity_date = models.DateField(default='2023-07-02')
-    value = models.FloatField()
+    value = models.DecimalField(max_digits=15, decimal_places=2)
     description = models.TextField()
 
     def __str__(self) -> str:
@@ -63,8 +64,8 @@ class DirectTreasure(models.Model):
         self.value -= value
         self.save()
 
-    def get_total_value(self) -> float:
-        return self.value
+    def get_total_value(self) -> Decimal:
+        return Decimal(self.value)
 
 
 class DirectTreasureHistory(models.Model):
@@ -75,7 +76,7 @@ class DirectTreasureHistory(models.Model):
         ('redeem', 'redeem'),
     ))
     tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
-    value = models.FloatField()
+    value = models.DecimalField(max_digits=15, decimal_places=2)
 
     def __str__(self) -> str:
         return f'{self.state} of R$ {self.value:.2f} in {self.date}'
