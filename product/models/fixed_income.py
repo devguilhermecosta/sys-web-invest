@@ -89,7 +89,4 @@ class FixedIncomeHistory(models.Model):
         return self.value - abs(self.tax_and_irpf)
 
     def __str__(self) -> str:
-        history = (
-            f'{self.product.name} - {self.date} - {self.state} - {self.value}'
-            )
-        return history
+        return f'{self.product.name} - {self.date} - {self.state} - {self.value}'  # noqa: E501
