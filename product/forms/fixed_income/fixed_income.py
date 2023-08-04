@@ -146,19 +146,16 @@ class FixedIncomeRegisterForm(forms.ModelForm):
 
 
 class FixedIncomeEditForm(FixedIncomeRegisterForm):
-    value = forms.FloatField(
-        required=False,
-        label='valor',
-        help_text=(
-            'O valor não pode ser alterado por aqui. '
-            'Altere através da Aplicação e Regaste.'),
-        widget=forms.NumberInput(
-            attrs={
-                'readonly': 'readonly',
-            }
-        )
+    value = forms.CharField(
+        label='',
+        widget=forms.HiddenInput(),
     )
     add_css_class(value, default_input_class)
+
+    def clean_value(self):
+        value = self.cleaned_data["value"]
+        if not value:
+            return
 
 
 class FixedIncomeApplyRedeemForm(forms.Form):
