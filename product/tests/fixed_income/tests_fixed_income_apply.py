@@ -4,6 +4,7 @@ from product.tests.base_tests import make_fixed_income_product
 from product.views import FixedIncomeApplyView
 from product.models import ProductFixedIncome
 from product.models import FixedIncomeHistory
+from parameterized import parameterized
 
 
 class FixedIncomeApplyTests(TestCaseWithLogin):
@@ -37,23 +38,30 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 404)
 
-    def test_fixed_income_apply_returns_error_message_if_value_field_is_empty(self) -> None:  # noqa: E501
+    @parameterized.expand([
+        ('value', 'Campo obrigatório'),
+        ('date', 'Campo obrigatório'),
+    ])
+    def test_fixed_income_apply_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         _, user = self.make_login()
 
         # create a product fixed income
         make_fixed_income_product(user=user)
 
+        # data
+        data = {
+            field: '',
+        }
+
         response = self.client.post(
             self.url,
-            {
-                'value': '',
-            },
+            data,
             follow=True,
             )
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            'Campo obrigatório',
+            message,
             content,
         )
         self.assertRedirects(
@@ -62,7 +70,7 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
             302,
         )
 
-    def test_fixed_income_apply_returns_success_message_value_field_is_ok(self) -> None:  # noqa: E501
+    def test_fixed_income_apply_returns_success_message_if_all_fields_is_ok(self) -> None:  # noqa: E501
         _, user = self.make_login()
 
         # create a product fixed income
@@ -72,6 +80,7 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
             self.url,
             {
                 'value': 10,
+                'date': '2023-07-02',
             },
             follow=True,
             )
@@ -98,6 +107,7 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
             self.url,
             {
                 'value': 90,
+                'date': '2023-07-02',
             },
             follow=True,
             )
@@ -106,7 +116,7 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
         product = ProductFixedIncome.objects.get(id=1)
 
         # checks if the value is 100
-        self.assertEqual(product.value, 100)
+        self.assertEqual(product.get_current_value(), 100)
 
     def test_fixed_income_apply_creates_a_history(self) -> None:  # noqa: E501
         _, user = self.make_login()
@@ -117,7 +127,10 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
         # apply
         self.client.post(
             self.url,
-            {'value': 10},
+            {
+                'value': 10,
+                'date': '2023-07-02'
+            },
             follow=True,
             )
 
@@ -130,4 +143,3 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
         self.assertEqual(len(history), 1)
         self.assertEqual(history[0].value, 10)
         self.assertEqual(history[0].state, 'apply')
-        self.fail('criar a opção de receber juros')

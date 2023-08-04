@@ -3,6 +3,7 @@ from utils.mixins.auth import TestCaseWithLogin
 from product.views.fixed_income import FixedIncomeRedeemView
 from product.tests.base_tests import make_fixed_income_product
 from product.models import ProductFixedIncome, FixedIncomeHistory
+from parameterized import parameterized
 
 
 class FixedIncomeRedeemTests(TestCaseWithLogin):
@@ -38,25 +39,32 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 404)
 
-    def test_fixed_income_redeem_returns_error_message_if_value_field_is_empty(self) -> None:  # noqa: E501
+    @parameterized.expand([
+        ('date', 'Campo obrigatório'),
+        ('value', 'Campo obrigatório'),
+    ])
+    def test_fixed_income_redeem_returns_error_message_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # make login
         _, user = self.make_login()
 
         # create the fixed income product
         make_fixed_income_product(user=user)
 
+        # data
+        data = {
+            field: '',
+        }
+
         # make post request without value
         response = self.client.post(
             self.url,
-            {
-                'value': '',
-            },
+            data,
             follow=True,
         )
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            'Campo obrigatório',
+            field,
             content,
         )
         self.assertRedirects(
@@ -76,6 +84,7 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         response = self.client.post(
             self.url,
             {
+                'date': '2023-07-02',
                 'value': 101,
             },
             follow=True,
@@ -97,12 +106,13 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create the fixed income product
-        make_fixed_income_product(user=user)
+        make_fixed_income_product(user=user, value=10)
 
         # make post request with value equal 10
         response = self.client.post(
             self.url,
             {
+                'date': '2023-07-02',
                 'value': 10,
             },
             follow=True,
@@ -130,6 +140,7 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         self.client.post(
             self.url,
             {
+                'date': '2023-07-02',
                 'value': 99,
             },
             follow=True,
@@ -139,19 +150,22 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
         product = ProductFixedIncome.objects.get(id=1)
 
         # checks if the product value is 1
-        self.assertEqual(product.value, 1)
+        self.assertEqual(product.get_current_value(), 1)
 
     def test_fixed_income_redeem_creates_a_history(self) -> None:
         # make login
         _, user = self.make_login()
 
         # create the product fixed income
-        product = make_fixed_income_product(user=user)
+        product = make_fixed_income_product(user=user, value=100)
 
         # make post request with value 100
         self.client.post(
             self.url,
-            {'value': 100},
+            {
+                'date': '2023-07-02',
+                'value': 100,
+            },
             follow=True,
         )
 
@@ -160,7 +174,10 @@ class FixedIncomeRedeemTests(TestCaseWithLogin):
             product=product,
         )
 
-        # cheks if the history has been created
-        self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].value, 100)
-        self.assertEqual(history[0].state, 'redeem')
+        # cheks if the history has been created.
+        # the history length is 2 because when the product
+        # is created by the make_fixed_income_product function
+        # the apply() method is called.
+        self.assertEqual(len(history), 2)
+        self.assertEqual(history[1].get_final_value(), -100)
+        self.assertEqual(history[1].state, 'redeem')

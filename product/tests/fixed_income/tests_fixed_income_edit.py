@@ -72,7 +72,6 @@ class FixedIncomeEditTests(TestCaseWithLogin):
     @parameterized.expand([
         ('cdb'),
         ('cdb bb 2035'),
-        ('1250'),
         ('2023-07-04'),
         ('2035-01-01'),
         ('no vencimento'),
@@ -85,7 +84,7 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create product fixed income
-        make_fixed_income_product(user=user)
+        make_fixed_income_product(user=user, value=1250)
 
         # get request
         response = self.client.get(self.url)
@@ -99,7 +98,6 @@ class FixedIncomeEditTests(TestCaseWithLogin):
     @parameterized.expand([
         ('category', 'Campo obrigatório'),
         ('name', 'Campo obrigatório'),
-        ('value', 'Campo obrigatório'),
         ('grace_period', 'Campo obrigatório'),
         ('maturity_date', 'Campo obrigatório'),
         ('liquidity', 'Campo obrigatório'),
@@ -147,7 +145,6 @@ class FixedIncomeEditTests(TestCaseWithLogin):
         product_data = {
             'category': 'cdb',
             'name': 'outro cdb qualquer',
-            'value': 1250,
             'grace_period': '2023-07-04',
             'maturity_date': '2035-01-01',
             'liquidity': 'no vencimento',

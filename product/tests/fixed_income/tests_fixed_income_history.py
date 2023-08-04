@@ -60,8 +60,8 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
     @parameterized.expand([
         ('cdb bb 2035'),
         ('valor atual'),
-        ('R$ 2150,00'),
-        ('R$ 100,00'),
+        ('R$ 2900,00'),
+        ('R$ -100,00'),
         ('R$ 1000,00'),
         ('aplicação'),
         ('resgate'),
@@ -71,19 +71,25 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create the product fixed income
-        make_fixed_income_product(user=user)
+        make_fixed_income_product(user=user, value=2000)
 
         # apply the value
         self.client.post(
             reverse('product:fixed_income_apply', args=(1,)),
-            {'value': 1000},
+            {
+                'date': '2023-07-02',
+                'value': 1000
+            },
             follow=True,
         )
 
         # redeem the value
         self.client.post(
             reverse('product:fixed_income_redeem', args=(1,)),
-            {'value': 100},
+            {
+                'date': '2023-08-01',
+                'value': 100,
+            },
             follow=True
         )
 

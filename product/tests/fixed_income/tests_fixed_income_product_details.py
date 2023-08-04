@@ -72,7 +72,7 @@ class ProductFixedIncomeEdit(TestCaseWithLogin):
         _, user = self.make_login()
 
         # make product fixed income
-        make_fixed_income_product(user=user)
+        make_fixed_income_product(user=user, value=1250)
 
         # get request
         response = self.client.get(self.url)

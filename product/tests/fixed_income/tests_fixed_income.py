@@ -69,7 +69,7 @@ class FixedIncomeTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create object
-        make_fixed_income_product(user=user)
+        make_fixed_income_product(user=user, value=1250)
 
         # make get request
         response = self.client.get(self.url)

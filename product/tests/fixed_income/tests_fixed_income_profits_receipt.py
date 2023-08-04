@@ -19,7 +19,7 @@ class FixedIncomeProfitsReceiptTests(TestCaseWithLogin):
         response = resolve(self.url)
         self.assertIs(
             response.func.view_class,
-            views.FixedIncomeProfitsReceipt,
+            views.FixedIncomeProfitsReceiptView,
         )
 
     def test_fixed_income_profits_receipt_is_not_allowed_if_the_user_is_not_authenticated(self) -> None:  # noqa: E501
