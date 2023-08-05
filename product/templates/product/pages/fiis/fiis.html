@@ -24,16 +24,5 @@
   </ul>
 
   <!-- summary -->
-  <section class="C-fiis_summary">
-    <div>
-      <div class="C-fiis_summary_detail" >
-        <p>Aplicação total:</p>
-        <span>{{ total_applied|real_brl }}</span>
-      </div>
-      <div class="C-fiis_summary_detail" >
-        <p>Total recebido em proventos:</p>
-        <span>{{ total_received_in_profits|real_brl }}</span>
-      </div>
-    </div>
-  </section>
+  {% include 'product/partials/_summary.html' %}
 {% endblock content %}

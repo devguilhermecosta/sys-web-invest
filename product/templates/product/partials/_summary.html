@@ -1,0 +1,20 @@
+{% load money %}
+
+<section class="C-fiis_summary">
+  <div>
+    <div class="C-fiis_summary_detail" >
+      <p>Aplicação total:</p>
+      <span>{{ total_applied|real_brl }}</span>
+    </div>
+    <div class="C-fiis_summary_detail" >
+      <p>Total recebido em proventos:</p>
+      <span>{{ total_received_in_profits|real_brl }}</span>
+    </div>
+    {% if total_tax %}
+      <div class="C-fiis_summary_detail" >
+        <p>Total pago em taxas:</p>
+        <span>{{ total_tax|real_brl }}</span>
+      </div>
+    {% endif %}
+  </div>
+</section>

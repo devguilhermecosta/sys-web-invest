@@ -54,6 +54,11 @@ class ProductFixedIncome(models.Model):
             )
         return Decimal(total)
 
+    def get_tax(self) -> Decimal:
+        history = FixedIncomeHistory.objects.filter(product=self)
+        total = sum([h.tax_and_irpf for h in history])
+        return Decimal(total)
+
     def apply(self, date: date, value: float) -> None:
         new_history = FixedIncomeHistory.objects.create(
             product=self,
@@ -84,6 +89,24 @@ class ProductFixedIncome(models.Model):
             value=value,
         )
         new_history.save()
+
+    @classmethod
+    def get_total_amount_invested(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_current_value() for p in products])
+        return Decimal(total)
+
+    @classmethod
+    def get_total_profits(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_total_profits_received() for p in products])
+        return Decimal(total)
+
+    @classmethod
+    def get_total_tax(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_tax() for p in products])
+        return Decimal(abs(total))
 
 
 class FixedIncomeHistory(models.Model):

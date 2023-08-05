@@ -101,7 +101,10 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
     '''
         create a new fixed income object
 
-        kwargs opts: category, name, value, interest_receipt
+        kwargs opts: category, name, value, interest_receipt, tax,
+        profits_value
+
+        if you can create an tax, you need set the profits_value argument
     '''
     new_object = ProductFixedIncome.objects.create(
         user=user,
@@ -117,8 +120,17 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
     new_object.save()
 
     value = kwargs.get('value', None)
+    tax = kwargs.get('tax', None)
+    profits_value = kwargs.get('profits_value', None)
 
     if value:
+        if tax and profits_value:
+            new_object.receive_profits(
+                date='2023-07-02',
+                value=profits_value,
+                tax_and_irpf=tax,
+            )
+
         new_object.apply('2023-07-02', value)
 
     return new_object

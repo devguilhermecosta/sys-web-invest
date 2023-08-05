@@ -894,6 +894,7 @@ textarea.C-login_input {
   color: var(--white);
   text-align: center;
   text-transform: uppercase;
+  margin-bottom: 5px;
   padding: 5px;
   font-size: 12px;
   text-decoration: none;
@@ -902,9 +903,13 @@ textarea.C-login_input {
               color 200ms linear;
 }
 
-.C-fixed_income_btn_edit:nth-child(1) {
-  margin-bottom: 10px;
+.C-fixed_income_btn_edit.delete {
+  background-color: var(--dark_red);
 }
+
+/* .C-fixed_income_btn_edit:nth-child(1) {
+  margin-bottom: 10px;
+} */
 
 .C-fixed_income_btn_edit:hover {
   background-color: var(--gray_1);

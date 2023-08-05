@@ -29,11 +29,24 @@ class FixedIncomeView(View):
             user=self.request.user,
         ).order_by('-id')
 
+        total_applied = ProductFixedIncome.get_total_amount_invested(
+            user=self.request.user
+        )
+
+        total_profits = ProductFixedIncome.get_total_profits(
+            user=self.request.user
+        )
+
+        total_tax = ProductFixedIncome.get_total_tax(user=self.request.user)
+
         return render(
             self.request,
             'product/pages/fixed_income/fixed_income.html',
             context={
                 'fixed_income_objects': fixed_income_objects,
+                'total_applied': total_applied,
+                'total_received_in_profits': total_profits,
+                'total_tax': total_tax,
                 'back_to_page': reverse('dashboard:user_dashboard'),
             }
         )

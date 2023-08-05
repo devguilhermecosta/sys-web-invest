@@ -13,6 +13,7 @@
     <div style="float: right">
       <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_edit' product.id %}">editar</a>
       <a class="C-fixed_income_btn_edit" href="{% url 'product:fixed_income_history' product.id %}">histórico</a>
+      <a class="C-fixed_income_btn_edit delete" href="">deletar</a>
     </div>
 
     <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>

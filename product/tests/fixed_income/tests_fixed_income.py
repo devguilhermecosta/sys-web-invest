@@ -86,6 +86,34 @@ class FixedIncomeTests(TestCaseWithLogin):
         )
         self.assertEqual(len(queryset), 1)
 
+    @parameterized.expand([
+        ('Aplicação total'),
+        ('R$ 1250,00'),
+        ('Total recebido em proventos'),
+        ('R$ 37,25'),
+        ('Total pago em taxas'),
+        ('R$ 12,75'),
+    ])
+    def test_fixed_income_loads_correct_summary(self, text: str) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # create object
+        make_fixed_income_product(user=user,
+                                  value=1250,
+                                  tax=12.75,
+                                  profits_value=50,
+                                  )
+
+        # make get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            text,
+            content
+        )
+
     def test_fixed_income_loads_just_products_of_authenticated_user(self) -> None:  # noqa: E501
         # create a new user
         user_one = self.create_user(True,
