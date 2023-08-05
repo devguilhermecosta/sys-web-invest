@@ -65,6 +65,8 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
         ('R$ 1000,00'),
         ('aplicação'),
         ('resgate'),
+        ('editar'),
+        ('deletar'),
     ])
     def test_fixed_income_history_loads_correct_content(self, text: str) -> None:  # noqa: E501
         # make login
