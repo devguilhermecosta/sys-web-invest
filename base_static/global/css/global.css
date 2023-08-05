@@ -48,6 +48,27 @@ body {
 }
 /* end utils */
 
+/* HEADER */
+.button_back_to_page {
+  display: block;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000000;
+  background-color: var(--white);
+  border-radius: 50%;
+}
+
+.button_back_to_page > span {
+  font-size: 25px;
+  border: 1.5px solid var(--black);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+/* end HEADER */
+
 /* menu */
 .C-header {
   grid-area: header;
@@ -62,7 +83,7 @@ body {
 }
 
 .C-menu {
-  z-index: 10000;
+  z-index: 100000000000000;
 }
 
 .C-menu_ul {
@@ -967,10 +988,15 @@ textarea.C-login_input {
 }
 
 .C-fixed_income_input {
+  width: 100%;
   max-width: 130px;
   height: 35px;
   border: 1px solid var(--turquoise_6);
   padding: 5px 10px;
+}
+
+.C-fixed_income_input[type='date'] {
+  min-width: 120px;
 }
 
 .C-fixed_income_input::placeholder {

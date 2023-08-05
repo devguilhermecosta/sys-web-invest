@@ -34,6 +34,7 @@ class FixedIncomeView(View):
             'product/pages/fixed_income/fixed_income.html',
             context={
                 'fixed_income_objects': fixed_income_objects,
+                'back_to_page': reverse('dashboard:user_dashboard'),
             }
         )
 
@@ -52,6 +53,7 @@ class FixedIncomeRegisterView(FixedIncomeView):
                 'form': form,
                 'form_title': 'Novo ativo',
                 'button_submit_value': 'aplicar',
+                'back_to_page': reverse('product:fixed_income'),
             }
         )
 
@@ -105,13 +107,17 @@ class FixedIncomeEditView(FixedIncomeView):
             )
         return product
 
-    def render_product(self, form) -> HttpResponse:
+    def render_product(self, form, product_id) -> HttpResponse:
         return render(
             self.request,
             'product/pages/fixed_income/fixed_income_edit.html',
             context={
                 'form': form,
                 'button_submit_value': 'salvar',
+                'back_to_page': reverse(
+                    'product:fixed_income_details',
+                    args=(product_id,)
+                    ),
             }
         )
 
@@ -119,7 +125,7 @@ class FixedIncomeEditView(FixedIncomeView):
         product = self.get_product_or_404(id)
         session = self.request.session.get('product-fixed-income-edit', None)
         form = FixedIncomeEditForm(session, instance=product)
-        return self.render_product(form)
+        return self.render_product(form, product.id)
 
     def post(self, request: HttpRequest, id: int) -> HttpResponse:
         product = self.get_product_or_404(id)
@@ -150,7 +156,7 @@ class FixedIncomeEditView(FixedIncomeView):
             'Verifique os dados abaixo',
         )
 
-        return self.render_product(form)
+        return self.render_product(form, product.id)
 
 
 class FixedIncomeDetailsView(FixedIncomeView):
@@ -181,7 +187,8 @@ class FixedIncomeDetailsView(FixedIncomeView):
                 ),
                 'profits_payment': (
                     True if product.interest_receipt != 'não há' else False
-                )
+                ),
+                'back_to_page': reverse('product:fixed_income'),
             },
         )
 
@@ -268,6 +275,10 @@ class FixedIncomeProfitsReceiptView(FixedIncomeView):
                 'form': form,
                 'form_title': product.name.upper(),
                 'button_submit_value': 'receber',
+                'back_to_page': reverse(
+                    'product:fixed_income_details',
+                    args=(product.id,)
+                    ),
             }
         )
 
@@ -317,6 +328,10 @@ class FixedIncomeHistoryView(FixedIncomeView):
                 'profits_payment': (
                     False if product.interest_receipt == 'não há' else True
                     ),
+                'back_to_page': reverse(
+                    'product:fixed_income_details',
+                    args=(product.id,)
+                    ),
             }
         )
 
@@ -362,6 +377,10 @@ class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
                 'form': form,
                 'form_title': 'editar histórico',
                 'button_submit_value': 'salvar',
+                'back_to_page': reverse(
+                    'product:fixed_income_history',
+                    args=(product.id,)
+                    ),
             }
         )
 

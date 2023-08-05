@@ -11,6 +11,13 @@
 <body>
   <!-- header -->
   <header class="C-header">
+    {% if back_to_page %}
+      <a href="{{ back_to_page }}" class="button_back_to_page">
+        <span class="material-symbols-outlined">
+          arrow_back
+        </span>
+      </a>
+    {% endif %}
     {% include 'global/partials/_menu.html' %}
   </header>
 
