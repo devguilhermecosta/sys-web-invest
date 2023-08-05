@@ -907,13 +907,14 @@ textarea.C-login_input {
   background-color: var(--dark_red);
 }
 
-/* .C-fixed_income_btn_edit:nth-child(1) {
-  margin-bottom: 10px;
-} */
-
 .C-fixed_income_btn_edit:hover {
   background-color: var(--gray_1);
   color: var(--black);
+}
+
+.C-fixed_income_btn_edit.delete:hover {
+  background-color: #e28080;
+  color: var(--white);
 }
 
 .C-product_form_container {
