@@ -29,7 +29,7 @@
             <td>
               <a href="{% url 'product:direct_treasure_details' product.id %}">{{ product.name }}</a>
             </td>
-            <td>{{ product.value|real_brl }}</td>
+            <td>{{ product.get_current_value|real_brl }}</td>
             <td>{{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
           </tr>
           {% endfor %}

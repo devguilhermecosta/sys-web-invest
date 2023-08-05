@@ -109,7 +109,7 @@ class DashboardView(View):
         direct_treasure = DirectTreasure.objects.filter(
             user=self.request.user,
         )
-        total_d_t = sum([dt.get_total_value() for dt in direct_treasure])
+        total_d_t = sum([dt.get_current_value() for dt in direct_treasure])
 
         grand_total = total_actions + total_fiis + total_f_inc + total_d_t
 

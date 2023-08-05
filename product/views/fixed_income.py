@@ -195,6 +195,7 @@ class FixedIncomeDetailsView(FixedIncomeView):
             pk=id,
             user=self.request.user,
         )
+        pk = product.id
 
         session_apply = self.request.session.get('product-apply', None)
         session_redeem = self.request.session.get('product-redeem', None)
@@ -203,17 +204,23 @@ class FixedIncomeDetailsView(FixedIncomeView):
 
         return render(
             self.request,
-            'product/pages/fixed_income/product_details.html',
+            'product/partials/_dt_and_fi_details.html',
             context={
                 'product': product,
                 'form_apply': form_apply,
                 'form_redeem': form_redeem,
+                'url_edit': reverse(
+                    'product:fixed_income_edit', args=(pk,)),
+                'url_history': reverse(
+                    'product:fixed_income_history', args=(pk,)),
+                'url_delete': reverse(
+                    'product:fixed_income_delete', args=(pk,)),
+                'url_profits': reverse(
+                    'product:fixed_income_profits_receipt', args=(pk,)),
                 'url_apply': reverse(
-                    'product:fixed_income_apply', args=(product.id,)
-                ),
+                    'product:fixed_income_apply', args=(pk,)),
                 'url_redeem': reverse(
-                    'product:fixed_income_redeem', args=(product.id,)
-                ),
+                    'product:fixed_income_redeem', args=(pk,)),
                 'profits_payment': (
                     True if product.interest_receipt != 'não há' else False
                 ),

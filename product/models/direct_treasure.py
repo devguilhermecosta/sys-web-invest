@@ -22,7 +22,6 @@ class DirectTreasure(models.Model):
     ))
     profitability = models.CharField(max_length=255)
     maturity_date = models.DateField(default='2023-07-02')
-    value = models.DecimalField(max_digits=15, decimal_places=2)
     description = models.TextField()
 
     def __str__(self) -> str:
@@ -45,11 +44,9 @@ class DirectTreasure(models.Model):
             value=value,
         )
         new_history.save()
-        self.value += value
-        self.save()
 
     def redeem(self, date: date, value: float) -> None:
-        if self.value < value:
+        if self.get_current_value() < value:
             raise ValidationError(
                 ('saldo insuficiente para resgate'),
                 code='invalid',
@@ -61,11 +58,16 @@ class DirectTreasure(models.Model):
             value=-abs(value),
         )
         new_history.save()
-        self.value -= value
-        self.save()
 
-    def get_total_value(self) -> Decimal:
-        return Decimal(self.value)
+    def get_current_value(self) -> Decimal:
+        history = DirectTreasureHistory.objects.filter(
+            product=self
+        )
+        total = sum([h.get_final_value() for h in history])
+        return Decimal(total)
+
+    def get_total_profits_received(self) -> Decimal:
+        return Decimal(0)
 
 
 class DirectTreasureHistory(models.Model):
@@ -75,11 +77,16 @@ class DirectTreasureHistory(models.Model):
         ('apply', 'apply'),
         ('redeem', 'redeem'),
     ))
-    tax_and_irpf = models.FloatField(default=0, blank=True, null=True)
+    tax_and_irpf = models.DecimalField(max_digits=15,
+                                       decimal_places=2,
+                                       default=0,
+                                       blank=True,
+                                       null=True,
+                                       )
     value = models.DecimalField(max_digits=15, decimal_places=2)
 
     def __str__(self) -> str:
         return f'{self.state} of R$ {self.value:.2f} in {self.date}'
 
     def get_final_value(self) -> float:
-        return self.value - self.tax_and_irpf
+        return self.value - abs(self.tax_and_irpf)

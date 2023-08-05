@@ -1,0 +1,63 @@
+{% extends 'global/pages/base.html' %}
+{% load money %}
+{% load text %}
+
+{% block title %}
+  Detalhes
+{% endblock title %}
+
+{% block content %}
+<section class="C-fixed_income_details">
+  {% include 'global/partials/_messages.html' %}
+
+  <div style="float: right">
+    <a class="C-fixed_income_btn_edit" href="{{ url_edit }}">editar</a>
+    <a class="C-fixed_income_btn_edit" href="{{ url_history }}">histórico</a>
+    <form 
+      action="{{ url_delete }}"
+      method="POST"
+      >
+      {% csrf_token %}
+      <input id="btn_delete" class="C-fixed_income_btn_edit delete" type="submit" value="deletar">
+  </form>
+  </div>
+
+  <p class="C-fixed_income_text is_bold">Nome: {{ product.name|upper }}</p>
+  <p class="C-fixed_income_text is_bold">
+    Categoria: {{ product.category|upper }}
+  </p>
+  <p class="C-fixed_income_text is_bold">
+    Valor aplicado: {{ product.get_current_value|real_brl }}
+  </p>
+
+  {% if profits_payment %}
+    <p class="C-fixed_income_text is_bold">Total recebido em juros: {{ product.get_total_profits_received|real_brl }}</p>
+  {% endif %}
+
+  {% if product.grace_period %}
+    <p class="C-fixed_income_text">Carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
+  {% endif %}
+
+  <p class="C-fixed_income_text">Vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
+
+  {% if product.liquidity %}
+    <p class="C-fixed_income_text">Liquidez: {{ product.liquidity }}</p>
+  {% endif %}
+
+  <p class="C-fixed_income_text">Rentabilidade: {{ product.profitability }}</p>
+  <p class="C-fixed_income_text">Pagamento de juros: {{ product.interest_receipt|title }}</p>
+  <p class="C-fixed_income_text">Observações: {{ product.description|captalize }}</p>
+
+  <section>
+    {% include 'product/partials/_form_apply.html' %}
+    {% include 'product/partials/_form_redeem.html' %}
+    {% if profits_payment %}
+      <a 
+        class="C-fixed_income_button"
+        href="{{ url_profits }}">
+        receber juros
+      </a>
+    {% endif %}
+  </section>
+</section>
+{% endblock content %}

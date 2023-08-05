@@ -33,6 +33,7 @@ class DirectTreasureView(View):
             'product/pages/direct_treasure/direct_treasure.html',
             context={
                 'products': products,
+                'back_to_page': reverse('dashboard:user_dashboard'),
             }
         )
 
@@ -50,6 +51,7 @@ class DirectTreasureRegisterView(DirectTreasureView):
             context={
                 'form': form,
                 'button_submit_value': 'investir',
+                'back_to_page': reverse('product:direct_treasure'),
             }
         )
 
@@ -113,6 +115,10 @@ class DirectTreasureEditView(DirectTreasureView):
             context={
                 'form': form,
                 'button_submit_value': 'salvar',
+                'back_to_page': reverse(
+                    'product:direct_treasure_details',
+                    args=(product.id,)
+                    ),
             }
         )
 
@@ -161,17 +167,31 @@ class DirectTreasureDetailsView(DirectTreasureView):
 
         return render(
             self.request,
-            'product/pages/direct_treasure/details.html',
+            'product/partials/_dt_and_fi_details.html',
             context={
                 'product': product,
                 'form_apply': form_apply,
                 'form_redeem': form_redeem,
+                'url_edit': reverse(
+                    'product:direct_treasure_edit',
+                    args=(product.id,),
+                    ),
+                'url_history': reverse(
+                    'product:direct_treasure_history',
+                    args=(product.id,),
+                    ),
+                'url_delete': '',
+                'url_profits': '',
                 'url_apply': reverse(
                     'product:direct_treasure_apply', args=(product.id,)
                     ),
                 'url_redeem': reverse(
                     'product:direct_treasure_redeem', args=(product.id,)
-                    )
+                    ),
+                'profits_payment': (
+                    True if product.interest_receipt != 'não há' else False
+                ),
+                'back_to_page': reverse('product:direct_treasure'),
             }
         )
 
@@ -252,6 +272,10 @@ class DirectTreasureHistoryView(DirectTreasureEditView):
             context={
                 'product': product,
                 'history': history,
+                'back_to_page': reverse(
+                    'product:direct_treasure_details',
+                    args=(product.id,),
+                    ),
             }
         )
 

@@ -14,6 +14,14 @@ date_field_formats = [
 
 
 class DirectTreasureRegisterForm(forms.ModelForm):
+    value = forms.DecimalField(
+        required=False,
+        label='valor',
+        min_value=0.01,
+        decimal_places=2,
+        max_digits=15,
+    )
+
     maturity_date = forms.DateField(
         label='vencimento',
         required=False,
@@ -40,7 +48,6 @@ class DirectTreasureRegisterForm(forms.ModelForm):
             'interest_receipt',
             'profitability',
             'maturity_date',
-            'value',
             'description',
         ]
 
@@ -49,16 +56,7 @@ class DirectTreasureRegisterForm(forms.ModelForm):
             'category': 'categoria',
             'interest_receipt': 'recebimento de juros',
             'profitability': 'rentabilidade',
-            'value': 'valor',
             'description': 'descrição',
-        }
-
-        widgets = {
-            'value': forms.NumberInput(
-                attrs={
-                    'min': 1,
-                }
-            ),
         }
 
     def clean_name(self):
