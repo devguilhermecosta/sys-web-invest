@@ -172,6 +172,22 @@ class FixedIncomeEditView(FixedIncomeView):
         return self.render_product(form, product.id)
 
 
+class FixedIncomeDeleteView(FixedIncomeEditView):
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(id=kwargs.get('id', None))
+        product.delete()
+        messages.success(
+            self.request,
+            'ativo deletado com sucesso',
+        )
+        return redirect(
+            reverse('product:fixed_income')
+        )
+
+
 class FixedIncomeDetailsView(FixedIncomeView):
     def get(self, request: HttpRequest, id: int = None) -> HttpResponse:
         product = get_object_or_404(
