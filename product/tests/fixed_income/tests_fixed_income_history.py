@@ -101,3 +101,41 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
             text,
             content,
         )
+
+    def test_fixed_income_history_loads_total_received_in_profits_if_the_product_interest_receipt_property_is_other_than_NÃO_HÁ(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # create the product fixed income and the apply history
+        make_fixed_income_product(user=user,
+                                  value=2000,
+                                  interest_receipt='mensal',
+                                  )
+
+        # make get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            'total recebido em juros: R$',
+            content,
+        )
+
+    def test_fixed_income_history_does_not_loads_total_received_in_profits_if_the_product_interest_receipt_property_is_NÃO_HÁ(self) -> None:  # noqa: E501
+        # make login
+        _, user = self.make_login()
+
+        # create the product fixed income and the apply history
+        make_fixed_income_product(user=user,
+                                  value=2000,
+                                  interest_receipt='não há',
+                                  )
+
+        # make get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertNotIn(
+            'total recebido em juros: R$',
+            content,
+        )
