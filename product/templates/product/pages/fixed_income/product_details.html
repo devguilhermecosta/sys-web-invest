@@ -19,7 +19,7 @@
     <p class="C-fixed_income_text is_bold">Categoria: {{ product.category|upper }}</p>
     <p class="C-fixed_income_text is_bold">Valor aplicado: {{ product.get_current_value|real_brl }}</p>
     {% if profits_payment %}
-      <p class="C-fixed_income_text is_bold">Total recebido em juros: R$ 0,00</p>
+      <p class="C-fixed_income_text is_bold">Total recebido em juros: {{ product.get_total_profits_received|real_brl }}</p>
     {% endif %}
     <p class="C-fixed_income_text">Carência: {{ product.grace_period|date:"SHORT_DATE_FORMAT" }}</p>
     <p class="C-fixed_income_text">Vencimento: {{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</p>
