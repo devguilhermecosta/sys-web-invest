@@ -73,6 +73,44 @@ function createFormFixedIncome(form, buttonInput, inputValue, inputDate, message
 })();
 
 
+// function for delete the fixed income object
+(() => {
+  const inputSupbmit = document.querySelector('#btn_delete');
+
+  if (inputSupbmit) {
+    const parentForm = inputSupbmit.parentElement;
+
+    inputSupbmit.addEventListener("click", function() {
+      parentForm.addEventListener("submit", (e) => {e.preventDefault()});
+      const body = document.body;
+
+      const container = createDefaultContainer();
+      const frame = createDefaultFrame();
+      const text =
+        `Deseja realmente deletar este ativo?
+        Se você deletá-lo, todo seu histórico de aplicação, resgate
+        e recebimento de proventos será deletado também.`;
+      const message = createTextElement('white', text)
+      const buttonContainer = createDivFlexButton();
+      const buttonCancel = createButton('cancelar');
+      const buttonConfirm = createButton('confirmar');
+
+      buttonContainer.appendChild(buttonCancel);
+      buttonContainer.appendChild(buttonConfirm);
+      
+      frame.appendChild(message);
+      frame.appendChild(buttonContainer);
+      container.appendChild(frame);
+      body.appendChild(container);  
+      
+      buttonCancel.addEventListener("click", () => {body.removeChild(container)});
+      buttonConfirm.addEventListener("click", () => {parentForm.submit()});
+
+    })
+  }
+
+})();
+
 // function for fixed income history delete
 (() => {
   const linkDelete = document.querySelectorAll('.fi_h_delete');

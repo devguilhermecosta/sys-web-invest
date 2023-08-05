@@ -31,7 +31,7 @@ export function createDivFlexButton() {
 export function createTextElement(color, message) {
   const text = document.createElement('p');
   text.style.color = color;
-  text.style.whiteSpace = 'nowrap';
+  text.style.whiteSpace = 'normal';
   text.style.textAlign = 'center';
   text.style.padding = '10px';
   text.innerHTML = message;
