@@ -65,6 +65,13 @@ body {
   border: 1.5px solid var(--black);
   border-radius: 50%;
   padding: 5px;
+  transition: all 250ms ease-in-out;
+}
+
+.button_back_to_page > span:hover {
+  background-color: var(--turquoise_6);
+  border-color: var(--turquoise_6);
+  color: var(--white);
 }
 
 /* end HEADER */
