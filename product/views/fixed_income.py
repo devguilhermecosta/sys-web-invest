@@ -364,6 +364,7 @@ class FixedIncomeHistoryView(FixedIncomeView):
                 'profits_payment': (
                     False if product.interest_receipt == 'não há' else True
                     ),
+                'fixed_income': True,
                 'back_to_page': reverse(
                     'product:fixed_income_details',
                     args=(product.id,)

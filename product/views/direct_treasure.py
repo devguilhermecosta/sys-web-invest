@@ -272,6 +272,7 @@ class DirectTreasureHistoryView(DirectTreasureEditView):
             context={
                 'product': product,
                 'history': history,
+                'direct_treasure': True,
                 'back_to_page': reverse(
                     'product:direct_treasure_details',
                     args=(product.id,),
