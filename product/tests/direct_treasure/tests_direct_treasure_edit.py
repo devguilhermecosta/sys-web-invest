@@ -147,7 +147,6 @@ class DirectTreasureEditTests(TestCaseWithLogin):
             'interest_receipt': 'semestral',
             'maturity_date': '2030-12-31',
             'profitability': '8.0% a.a',
-            'value': 2000,
         }
 
         # make post request
@@ -182,7 +181,6 @@ class DirectTreasureEditTests(TestCaseWithLogin):
             'interest_receipt': 'semestral',
             'maturity_date': '2030-12-31',
             'profitability': '8.0% a.a',
-            'value': 2000,
         }
 
         # make post request
