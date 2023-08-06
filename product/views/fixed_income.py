@@ -409,7 +409,7 @@ class FixedIncomeHistoryEditView(FixedIncomeProfitsReceiptView):
 
         return render(
             self.request,
-            'product/pages/fixed_income/history_edit.html',
+            'product/partials/_dt_and_fi_history_edit.html',
             context={
                 'form': form,
                 'form_title': 'editar histórico',
