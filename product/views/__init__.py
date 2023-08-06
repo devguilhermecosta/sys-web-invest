@@ -45,4 +45,5 @@ from .direct_treasure import (
     DirectTreasureApplyView,
     DirectTreasureRedeemView,
     DirectTreasureHistoryView,
+    DirectTreasureHistoryEditView,
 )

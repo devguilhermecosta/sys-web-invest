@@ -91,7 +91,7 @@ class DirectTreasureRegisterView(DirectTreasureView):
 
 
 class DirectTreasureEditView(DirectTreasureView):
-    def get_product(self, id: int = None) -> DirectTreasure:
+    def get_product_or_404(self, id: int = None) -> DirectTreasure:
         product = None
         if id is not None:
             product = get_object_or_404(
@@ -102,7 +102,7 @@ class DirectTreasureEditView(DirectTreasureView):
         return product
 
     def get(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product(kwargs.get('id', None))
+        product = self.get_product_or_404(kwargs.get('id', None))
         session = self.request.session.get('direct-treasure-edit', None)
         form = DirectTreasureEditForm(
             session,
@@ -123,7 +123,7 @@ class DirectTreasureEditView(DirectTreasureView):
         )
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        obj = self.get_product(kwargs.get('id', None))
+        obj = self.get_product_or_404(kwargs.get('id', None))
         post = self.request.POST
         self.request.session['direct-treasure-edit'] = post
         form = DirectTreasureEditForm(
@@ -206,7 +206,7 @@ class DirectTreasureApplyView(DirectTreasureEditView):
         raise Http404()
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product(id=kwargs.get('id', None))
+        product = self.get_product_or_404(id=kwargs.get('id', None))
         post = self.request.POST
         self.request.session['direct-treasure-apply-h'] = post
         form = FixedIncomeApplyRedeemForm(post)
@@ -230,7 +230,7 @@ class DirectTreasureApplyView(DirectTreasureEditView):
 
 class DirectTreasureRedeemView(DirectTreasureApplyView):
     def post(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product(id=kwargs.get('id', None))
+        product = self.get_product_or_404(id=kwargs.get('id', None))
         post = self.request.POST
         self.request.session['direct-treasure-redeem-h'] = post
         form = FixedIncomeApplyRedeemForm(post)
@@ -261,7 +261,7 @@ class DirectTreasureRedeemView(DirectTreasureApplyView):
 
 class DirectTreasureHistoryView(DirectTreasureEditView):
     def get(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product(id=kwargs.get('id', None))
+        product = self.get_product_or_404(id=kwargs.get('id', None))
         history = DirectTreasureHistory.objects.filter(
             product=product,
             ).order_by('-date')
@@ -282,3 +282,17 @@ class DirectTreasureHistoryView(DirectTreasureEditView):
 
     def post(self, *args, **kwargs) -> HttpResponse:
         return Http404()
+
+
+class DirectTreasureHistoryEditView(DirectTreasureEditView):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = get_object_or_404(
+            DirectTreasureHistory,
+            id=kwargs.get('id', 'None')
+        )
+
+        if history.product.user != self.request.user:
+            print('usuário incorreto')
+            raise Http404()
+
+        return HttpResponse('')

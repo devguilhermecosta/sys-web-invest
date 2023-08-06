@@ -139,6 +139,10 @@ def make_fixed_income_product(user: User, **kwargs) -> ProductFixedIncome:
 def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     '''
         create a new direct treasure object
+
+        kwargs: value
+
+        if value, a new history will be created
     '''
     new_object = DirectTreasure.objects.create(
         user=user,
@@ -150,6 +154,15 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
         description='tesouro ipca sem pagamento de juros'
     )
     new_object.save()
+
+    value = kwargs.get('value', None)
+
+    if value:
+        new_object.apply(
+            date='2023-07-02',
+            value=value,
+        )
+
     return new_object
 
 
