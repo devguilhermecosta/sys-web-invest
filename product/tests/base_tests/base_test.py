@@ -140,15 +140,17 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     '''
         create a new direct treasure object
 
-        kwargs: value
+        kwargs: value, interest_receipt, tax, profits_value
 
         if value, a new history will be created
+        if tax and profits_value, a new profits history
+        is created
     '''
     new_object = DirectTreasure.objects.create(
         user=user,
         name=kwargs.get('name', 'tesouro ipca+ 2024'),
         category='ipca',
-        interest_receipt='não há',
+        interest_receipt=kwargs.get('interest_receipt', 'não há'),
         profitability='ipca + 4,9% a.a.',
         maturity_date='2024-12-31',
         description='tesouro ipca sem pagamento de juros'
@@ -156,12 +158,18 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     new_object.save()
 
     value = kwargs.get('value', None)
+    tax = kwargs.get('tax', None)
+    profits_value = kwargs.get('profits_value', None)
 
     if value:
-        new_object.apply(
-            date='2023-07-02',
-            value=value,
-        )
+        if tax and profits_value:
+            new_object.receive_profits(
+                date='2023-07-02',
+                value=profits_value,
+                tax_and_irpf=tax,
+            )
+
+        new_object.apply('2023-07-02', value)
 
     return new_object
 

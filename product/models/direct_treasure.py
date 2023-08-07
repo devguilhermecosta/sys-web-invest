@@ -59,6 +59,19 @@ class DirectTreasure(models.Model):
         )
         new_history.save()
 
+    def receive_profits(self,
+                        date: date,
+                        value: float,
+                        tax_and_irpf: float = 0) -> None:
+        new_history = DirectTreasureHistory.objects.create(
+            product=self,
+            state='profits',
+            date=date,
+            tax_and_irpf=-abs(tax_and_irpf) if tax_and_irpf else 0,
+            value=value,
+        )
+        new_history.save()
+
     def get_current_value(self) -> Decimal:
         history = DirectTreasureHistory.objects.filter(
             product=self
@@ -76,6 +89,7 @@ class DirectTreasureHistory(models.Model):
     state = models.CharField(max_length=255, choices=(
         ('apply', 'apply'),
         ('redeem', 'redeem'),
+        ('profits', 'recebimento de juros'),
     ))
     tax_and_irpf = models.DecimalField(max_digits=15,
                                        decimal_places=2,
@@ -90,3 +104,13 @@ class DirectTreasureHistory(models.Model):
 
     def get_final_value(self) -> float:
         return self.value - abs(self.tax_and_irpf)
+
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.save()
+
+    def save(self, *args, **kwargs) -> None:
+        self.tax_and_irpf = -abs(self.tax_and_irpf)
+        self.value = abs(self.value) if self.state != 'redeem' else -abs(self.value)  # noqa: E501
+        return super().save(*args, **kwargs)
