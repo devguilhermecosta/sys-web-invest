@@ -35,6 +35,15 @@ class DirectTreasureView(View):
             context={
                 'products': products,
                 'back_to_page': reverse('dashboard:user_dashboard'),
+                'total_applied': DirectTreasure.get_total_amount_invested(
+                    user=self.request.user,
+                ),
+                'total_received_in_profits': DirectTreasure.get_total_profits(
+                    user=self.request.user,
+                ),
+                'total_tax': DirectTreasure.get_total_tax(
+                    user=self.request.user,
+                ),
             }
         )
 
@@ -70,10 +79,7 @@ class DirectTreasureRegisterView(DirectTreasureView):
                 **data,
             )
             new_object.save()
-            new_object.make_initial_history(
-                date=self.date,
-                value=data['value']
-            )
+            new_object.apply(data['date'], data['value'])
 
             del self.request.session['direct-treasure-apply']
 
@@ -274,6 +280,9 @@ class DirectTreasureHistoryView(DirectTreasureEditView):
                 'product': product,
                 'history': history,
                 'direct_treasure': True,
+                'profits_payment': (
+                    True if product.interest_receipt != 'não há' else False
+                    ),
                 'back_to_page': reverse(
                     'product:direct_treasure_details',
                     args=(product.id,),
