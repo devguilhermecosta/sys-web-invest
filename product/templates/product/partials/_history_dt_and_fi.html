@@ -73,7 +73,7 @@
           </td>
           <td>
             <form 
-              action=""
+              action="{% url 'product:direct_treasure_history_delete' h.product.id h.id %}"
               method="POST">
               {% csrf_token %}
               <span class="material-symbols-outlined icon_delete fi_h_delete">delete_forever</span>
