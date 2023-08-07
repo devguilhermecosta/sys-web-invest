@@ -368,3 +368,24 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
                 }
             )
         )
+
+
+class DirectTreasureHistoryDeleteView(DirectTreasureHistoryEditView):
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(kwargs.get('history_id', None))
+        history.delete()
+
+        messages.success(
+            self.request,
+            'histórico deletado com sucesso',
+        )
+
+        return redirect(
+            reverse(
+                'product:direct_treasure_history',
+                args=(history.product.id,),
+                )
+        )

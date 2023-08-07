@@ -161,4 +161,7 @@ urlpatterns = [
     path('tesouro-direto/<int:product_id>/historico/<int:history_id>/editar/',
          views.DirectTreasureHistoryEditView.as_view(),
          name='direct_treasure_history_edit'),
+    path('tesouro-direto/<int:product_id>/historico/<int:history_id>/deletar/',
+         views.DirectTreasureHistoryDeleteView.as_view(),
+         name='direct_treasure_history_delete'),
 ]
