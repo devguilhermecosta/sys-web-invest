@@ -338,7 +338,6 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
 
     def post(self, *args, **kwargs) -> HttpResponse:
         history = self.get_history_or_404(kwargs.get('history_id', None))
-        product_id = kwargs.get('product_id', None)
         post = self.request.POST
         self.request.session['direct-treasure-history-edit'] = post
         form = DirectTreasureHistoryForm(post)
@@ -355,7 +354,9 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
             del self.request.session['direct-treasure-history-edit']
 
             return redirect(
-                reverse('product:direct_treasure_history', args=(product_id,))
+                reverse('product:direct_treasure_history',
+                        args=(history.product.id,),
+                        )
             )
 
         return redirect(
@@ -363,7 +364,7 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
                 'product:direct_treasure_history_edit',
                 kwargs={
                     'history_id': history.id,
-                    'product_id': product_id,
+                    'product_id': history.product.id,
                 }
             )
         )
