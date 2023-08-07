@@ -157,18 +157,20 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     )
     new_object.save()
 
-    value = kwargs.get('value', None)
+    value = kwargs.get('value', 1)
     tax = kwargs.get('tax', None)
     profits_value = kwargs.get('profits_value', None)
 
-    if value:
-        if tax and profits_value:
-            new_object.receive_profits(
-                date='2023-07-02',
-                value=profits_value,
-                tax_and_irpf=tax,
-            )
+    # create a history profits
+    if tax and profits_value:
+        new_object.receive_profits(
+            date='2023-07-02',
+            value=profits_value,
+            tax_and_irpf=tax,
+        )
 
+    # create a history apply
+    if value:
         new_object.apply('2023-07-02', value)
 
     return new_object
