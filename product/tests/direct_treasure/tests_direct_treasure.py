@@ -2,6 +2,7 @@ from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
 from product.views import DirectTreasureView
 from product.tests.base_tests import make_direct_treasure
+from parameterized import parameterized
 
 
 class DirectTreasureTests(TestCaseWithLogin):
@@ -94,3 +95,31 @@ class DirectTreasureTests(TestCaseWithLogin):
 
         # the products length should be 1
         self.assertEqual(len(products), 1)
+
+    @parameterized.expand([
+        'Aplicação total',
+        'R$ 1000,00',
+        'Total recebido em proventos',
+        'R$ 573,32',
+        'Total pago em taxas',
+        'R$ 12,58',
+    ])
+    def test_direct_treasure_loads_the_summary(self, text: str) -> None:
+        # make login
+        _, user = self.make_login()
+
+        # create a new product
+        make_direct_treasure(user=user,
+                             value=1000,
+                             tax=12.58,
+                             profits_value=585.90,
+                             )
+
+        # get request
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            text,
+            content,
+        )

@@ -141,5 +141,5 @@ class FixedIncomeApplyTests(TestCaseWithLogin):
 
         # cheks if the history has been created
         self.assertEqual(len(history), 1)
-        self.assertEqual(history[0].value, 10)
+        self.assertEqual(history[0].get_final_value(), 10)
         self.assertEqual(history[0].state, 'apply')

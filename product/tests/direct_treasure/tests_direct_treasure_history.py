@@ -95,14 +95,20 @@ class DirectTreasureHistoryTests(TestCaseWithLogin):
         # apply a value
         self.client.post(
             reverse('product:direct_treasure_apply', args=(1,)),
-            {'value': 100},
+            {
+                'date': '2023-07-02',
+                'value': 100,
+            },
             follow=True
         )
 
         # redeem a value
         self.client.post(
             reverse('product:direct_treasure_redeem', args=(1,)),
-            {'value': 50},
+            {
+                'date': '2023-09-01',
+                'value': 50,
+            },
             follow=True
         )
 
@@ -111,5 +117,6 @@ class DirectTreasureHistoryTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            text, content
+            text,
+            content,
         )

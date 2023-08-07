@@ -3,6 +3,7 @@ from utils.mixins.auth import TestCaseWithLogin
 from product.views import DirectTreasureApplyView
 from product.tests.base_tests import make_direct_treasure
 from product.models import DirectTreasure, DirectTreasureHistory
+from parameterized import parameterized
 
 
 class DirectTreasureApplyTests(TestCaseWithLogin):
@@ -44,7 +45,10 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
         # post request without product
         response = self.client.post(
             self.url,
-            {'value': 10},
+            {
+                'date': '2023-07-02',
+                'value': 10,
+            },
             follow=True,
             )
 
@@ -63,28 +67,40 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
         # make post request
         response = self.client.post(
             self.url,
-            {'value': 10},
+            {
+                'date': '2023-07-02',
+                'value': 10,
+            },
             follow=True,
             )
 
         self.assertEqual(response.status_code, 200)
 
-    def test_direct_treasure_apply_returns_error_message_if_value_field_is_empty(self) -> None:  # noqa: E501
+    @parameterized.expand([
+        ('date', 'Campo obrigatório'),
+        ('value', 'Campo obrigatório'),
+    ])
+    def test_direct_treasure_apply_returns_error_message_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # make login
         _, user = self.make_login()
 
         # create the product
         make_direct_treasure(user=user)
 
+        # data
+        data = {
+            field: ''
+        }
+
         # post request without the value
         response = self.client.post(
             self.url,
-            {'value': ''},
+            data,
             follow=True,
         )
 
         self.assertIn(
-            'Campo obrigatório',
+            message,
             response.content.decode('utf-8'),
         )
         self.assertRedirects(
@@ -103,7 +119,10 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
         # post request without the value equal 10
         self.client.post(
             self.url,
-            {'value': 10},
+            {
+                'date': '2023-07-02',
+                'value': 10,
+            },
             follow=True,
         )
 
@@ -114,7 +133,7 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
         )
 
         # checks if the product value is 100
-        self.assertEqual(product.value, 100)
+        self.assertEqual(product.get_current_value(), 100)
 
     def test_direct_treasure_apply_creates_a_new_history(self) -> None:
         # make login
@@ -126,7 +145,10 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
         # post request with the value equal 10
         self.client.post(
             self.url,
-            {'value': 10},
+            {
+                'date': '2023-07-02',
+                'value': 10,
+            },
             follow=True,
         )
 
@@ -141,8 +163,11 @@ class DirectTreasureApplyTests(TestCaseWithLogin):
             product=product
         )
 
-        # checks if the history length is one
-        self.assertEqual(len(history), 1)
+        # the history length must be 2
+        # because when the make_direct_treasure
+        # function is called, a first history
+        # is created
+        self.assertEqual(len(history), 2)
 
         # checks the product history
         self.assertEqual(

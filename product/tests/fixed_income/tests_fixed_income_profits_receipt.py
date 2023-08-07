@@ -205,4 +205,5 @@ class FixedIncomeProfitsReceiptTests(TestCaseWithLogin):
 
         self.assertEqual(len(history), 1)
         self.assertEqual(str(history.first().date), '2023-07-02')
-        self.assertEqual(history.first().value, 10)
+        self.assertEqual(history.first().get_final_value(), 9)
+        self.assertEqual(history.first().tax_and_irpf, -1)

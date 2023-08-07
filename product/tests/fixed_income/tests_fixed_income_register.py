@@ -176,5 +176,5 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         self.assertEqual(len(history), 1)
 
         # cheks the history data
-        self.assertEqual(history[0].value, 500)
+        self.assertEqual(history[0].get_final_value(), 500)
         self.assertEqual(history[0].state, 'apply')
