@@ -310,6 +310,7 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
 
     def get(self, *args, **kwargs) -> HttpResponse:
         history = self.get_history_or_404(kwargs.get('history_id', None))
+        product = self.get_product_or_404(kwargs.get('product_id', None))
         history.tax_and_irpf = abs(history.tax_and_irpf)
         history.value = abs(history.value)
 
@@ -329,6 +330,10 @@ class DirectTreasureHistoryEditView(DirectTreasureEditView):
             context={
                 'form': form,
                 'button_submit_value': 'salvar',
+                'back_to_page': reverse(
+                    'product:direct_treasure_history',
+                    args=(product.id,),
+                    ),
             }
         )
 
