@@ -27,14 +27,12 @@ class DirectTreasure(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def make_initial_history(self, date: date, value: float) -> None:
-        new_history = DirectTreasureHistory.objects.create(
-            product=self,
-            date=date,
-            state='apply',
-            value=value,
-        )
-        new_history.save()
+    def get_current_value(self) -> Decimal:
+        history = DirectTreasureHistory.objects.filter(product=self)
+        total = sum(
+            [h.get_final_value() for h in history if h.state != 'profits']
+            )
+        return Decimal(total)
 
     def apply(self, date: date, value: float) -> None:
         new_history = DirectTreasureHistory.objects.create(
@@ -72,15 +70,36 @@ class DirectTreasure(models.Model):
         )
         new_history.save()
 
-    def get_current_value(self) -> Decimal:
+    def get_tax(self) -> Decimal:
+        history = DirectTreasureHistory.objects.filter(product=self)
+        total = sum([h.tax_and_irpf for h in history])
+        return Decimal(total)
+
+    def get_total_profits_received(self) -> Decimal:
         history = DirectTreasureHistory.objects.filter(
-            product=self
+            product=self,
+            state='profits',
         )
         total = sum([h.get_final_value() for h in history])
         return Decimal(total)
 
-    def get_total_profits_received(self) -> Decimal:
-        return Decimal(0)
+    @classmethod
+    def get_total_amount_invested(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_current_value() for p in products])
+        return Decimal(total)
+
+    @classmethod
+    def get_total_profits(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_total_profits_received() for p in products])
+        return Decimal(total)
+
+    @classmethod
+    def get_total_tax(cls, user: User) -> Decimal:
+        products = cls.objects.filter(user=user)
+        total = sum([p.get_tax() for p in products])
+        return Decimal(abs(total))
 
 
 class DirectTreasureHistory(models.Model):
