@@ -67,7 +67,7 @@
 
         {% if direct_treasure %}
           <td>
-            <a href="{% url 'product:direct_treasure_history_edit' h.id %}">
+            <a href="{% url 'product:direct_treasure_history_edit' h.product.id h.id %}">
               <span class="material-symbols-outlined icon_edit">edit</span>
             </a>
           </td>

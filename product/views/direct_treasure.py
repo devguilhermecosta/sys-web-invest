@@ -10,6 +10,7 @@ from product.models import DirectTreasure, DirectTreasureHistory
 from product.forms.direct_treasure import (
     DirectTreasureRegisterForm,
     DirectTreasureEditForm,
+    DirectTreasureHistoryForm,
     )
 from product.forms.fixed_income import FixedIncomeApplyRedeemForm
 from datetime import date as dt
@@ -285,14 +286,80 @@ class DirectTreasureHistoryView(DirectTreasureEditView):
 
 
 class DirectTreasureHistoryEditView(DirectTreasureEditView):
-    def get(self, *args, **kwargs) -> HttpResponse:
+    def get_history_or_404(self, id: int) -> DirectTreasureHistory:
         history = get_object_or_404(
             DirectTreasureHistory,
-            id=kwargs.get('id', 'None')
+            pk=id,
         )
-
         if history.product.user != self.request.user:
-            print('usuário incorreto')
             raise Http404()
 
-        return HttpResponse('')
+        return history
+
+    def choices(self, history: DirectTreasureHistory) -> list:
+        choices = [
+            ('apply', 'aplicação'),
+            ('redeem', 'resgate'),
+        ]
+
+        if history.product.interest_receipt != 'não há':
+            choices.append(
+                ('profits', 'recebimento de juros')
+            )
+        return choices
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(kwargs.get('history_id', None))
+        history.tax_and_irpf = abs(history.tax_and_irpf)
+        history.value = abs(history.value)
+
+        session = self.request.session.get(
+            'direct-treasure-history-edit',
+            None,
+            )
+        form = DirectTreasureHistoryForm(
+            session,
+            instance=history,
+            )
+        form.fields['state'].widget.choices = self.choices(history)
+
+        return render(
+            self.request,
+            'product/partials/_dt_and_fi_history_edit.html',
+            context={
+                'form': form,
+                'button_submit_value': 'salvar',
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        history = self.get_history_or_404(kwargs.get('history_id', None))
+        product_id = kwargs.get('product_id', None)
+        post = self.request.POST
+        self.request.session['direct-treasure-history-edit'] = post
+        form = DirectTreasureHistoryForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            history.update(**data)
+
+            messages.success(
+                self.request,
+                'histórico salvo com sucesso',
+            )
+
+            del self.request.session['direct-treasure-history-edit']
+
+            return redirect(
+                reverse('product:direct_treasure_history', args=(product_id,))
+            )
+
+        return redirect(
+            reverse(
+                'product:direct_treasure_history_edit',
+                kwargs={
+                    'history_id': history.id,
+                    'product_id': product_id,
+                }
+            )
+        )

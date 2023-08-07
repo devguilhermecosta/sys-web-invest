@@ -158,7 +158,7 @@ urlpatterns = [
     path('tesouro-direto/<int:id>/historico/',
          views.DirectTreasureHistoryView.as_view(),
          name='direct_treasure_history'),
-    path('tesouro-direto/historico/<int:id>/editar/',
+    path('tesouro-direto/<int:product_id>/historico/<int:history_id>/editar/',
          views.DirectTreasureHistoryEditView.as_view(),
          name='direct_treasure_history_edit'),
 ]
