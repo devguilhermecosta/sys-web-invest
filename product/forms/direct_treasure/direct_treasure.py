@@ -14,8 +14,17 @@ date_field_formats = [
 
 
 class DirectTreasureRegisterForm(forms.ModelForm):
+    date = forms.CharField(
+        label='data',
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'type': 'date',
+            }
+        )
+    )
+
     value = forms.DecimalField(
-        required=False,
         label='valor',
         min_value=0.01,
         decimal_places=2,
@@ -24,7 +33,6 @@ class DirectTreasureRegisterForm(forms.ModelForm):
 
     maturity_date = forms.DateField(
         label='vencimento',
-        required=False,
         widget=forms.DateInput(
             format='%Y-%m-%d',
             attrs={
@@ -108,6 +116,10 @@ class DirectTreasureRegisterForm(forms.ModelForm):
                 code='required'
             )
         return maturity_date
+
+    def clean_description(self):
+        description = self.cleaned_data["description"]
+        return description if description else ''
 
     def clean_value(self):
         value = self.cleaned_data["value"]

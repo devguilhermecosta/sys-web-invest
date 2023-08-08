@@ -72,11 +72,15 @@ class DirectTreasureRegisterView(DirectTreasureView):
 
         if form.is_valid():
             data = form.cleaned_data
-            user = self.request.user
 
             new_object = DirectTreasure.objects.create(
-                user=user,
-                **data,
+                user=self.request.user,
+                name=data['name'],
+                category=data['category'],
+                interest_receipt=data['interest_receipt'],
+                profitability=data['profitability'],
+                maturity_date=data['maturity_date'],
+                description=data['description'],
             )
             new_object.save()
             new_object.apply(data['date'], data['value'])
