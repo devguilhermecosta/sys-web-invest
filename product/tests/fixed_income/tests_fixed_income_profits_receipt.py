@@ -85,7 +85,7 @@ class FixedIncomeProfitsReceiptTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/profits_receipt.html'
+            'product/partials/_dt_and_fi_profits_receipt.html'
         )
 
     @parameterized.expand([

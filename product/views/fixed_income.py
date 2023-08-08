@@ -306,7 +306,7 @@ class FixedIncomeProfitsReceiptView(FixedIncomeView):
 
         return render(
             self.request,
-            'product/pages/fixed_income/profits_receipt.html',
+            'product/partials/_dt_and_fi_profits_receipt.html',
             context={
                 'form': form,
                 'form_title': product.name.upper(),

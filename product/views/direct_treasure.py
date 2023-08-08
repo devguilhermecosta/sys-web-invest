@@ -12,7 +12,11 @@ from product.forms.direct_treasure import (
     DirectTreasureEditForm,
     DirectTreasureHistoryForm,
     )
-from product.forms.fixed_income import FixedIncomeApplyRedeemForm
+
+from product.forms.fixed_income import (
+    FixedIncomeApplyRedeemForm,
+    FixedIncomeProfitsReceivForm,
+    )
 from datetime import date as dt
 
 
@@ -192,7 +196,10 @@ class DirectTreasureDetailsView(DirectTreasureView):
                     args=(product.id,),
                     ),
                 'url_delete': '',
-                'url_profits': '',
+                'url_profits': reverse(
+                    'product:direct_treasure_profits_receipt',
+                    args=(product.id,),
+                    ),
                 'url_apply': reverse(
                     'product:direct_treasure_apply', args=(product.id,)
                     ),
@@ -268,6 +275,66 @@ class DirectTreasureRedeemView(DirectTreasureApplyView):
             )
 
         return self.redirect_response(product.id)
+
+
+class DirectTreasureProfitsReceiptView(DirectTreasureView):
+    def get_product_or_404(self, id: int) -> DirectTreasure:
+        product = get_object_or_404(
+            DirectTreasure,
+            pk=id,
+            user=self.request.user,
+        )
+        return product
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(kwargs.get('id', None))
+        session = self.request.session.get(
+            'direct-treasure-profits-receive',
+            None,
+            )
+        form = FixedIncomeProfitsReceivForm(session)
+
+        return render(
+            self.request,
+            'product/partials/_dt_and_fi_profits_receipt.html',
+            context={
+                'form': form,
+                'form_title': product.name.upper(),
+                'button_submit_value': 'receber',
+                'back_to_page': reverse(
+                    'product:direct_treasure_details',
+                    args=(product.id,)
+                    ),
+            }
+        )
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(kwargs.get('id', None))
+        post = self.request.POST
+        self.request.session['direct-treasure-profits-receive'] = post
+        form = FixedIncomeProfitsReceivForm(post)
+
+        if form.is_valid():
+            data = form.cleaned_data
+            product.receive_profits(**data)
+
+            del self.request.session['direct-treasure-profits-receive']
+
+            messages.success(
+                self.request,
+                'Recebimento de juros salvo com sucesso',
+            )
+
+            return redirect(
+                reverse('product:direct_treasure_details', args=(product.id,))
+            )
+
+        return redirect(
+            reverse(
+                'product:direct_treasure_profits_receipt',
+                args=(product.id,),
+                )
+        )
 
 
 class DirectTreasureHistoryView(DirectTreasureEditView):

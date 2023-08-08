@@ -140,7 +140,7 @@ def make_direct_treasure(user: User, **kwargs) -> DirectTreasure:
     '''
         create a new direct treasure object
 
-        kwargs: value, interest_receipt, tax, profits_value
+        kwargs: name, value, interest_receipt, tax, profits_value
 
         if value, a new history will be created
         if tax and profits_value, a new profits history
