@@ -167,6 +167,24 @@ class DirectTreasureEditView(DirectTreasureView):
         )
 
 
+class DirectTreasureDeleteView(DirectTreasureEditView):
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        product = self.get_product_or_404(kwargs.get('id', None))
+        product.delete()
+
+        messages.success(
+            self.request,
+            'ativo deletado com sucesso',
+        )
+
+        return redirect(
+            reverse('product:direct_treasure')
+        )
+
+
 class DirectTreasureDetailsView(DirectTreasureView):
     def get(self, *args, **kwargs) -> HttpResponse:
         product = get_object_or_404(
@@ -195,7 +213,10 @@ class DirectTreasureDetailsView(DirectTreasureView):
                     'product:direct_treasure_history',
                     args=(product.id,),
                     ),
-                'url_delete': '',
+                'url_delete': reverse(
+                    'product:direct_treasure_delete',
+                    args=(product.id,),
+                    ),
                 'url_profits': reverse(
                     'product:direct_treasure_profits_receipt',
                     args=(product.id,),
