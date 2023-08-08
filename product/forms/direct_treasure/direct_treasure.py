@@ -133,6 +133,7 @@ class DirectTreasureRegisterForm(forms.ModelForm):
 
 
 class DirectTreasureEditForm(DirectTreasureRegisterForm):
+    date = None
     value = forms.CharField(
         label='',
         widget=forms.HiddenInput(),
