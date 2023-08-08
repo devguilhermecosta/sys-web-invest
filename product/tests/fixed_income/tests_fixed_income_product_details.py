@@ -50,7 +50,7 @@ class ProductFixedIncomeEdit(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/product_details.html',
+            'product/partials/_dt_and_fi_details.html',
         )
 
     @parameterized.expand([

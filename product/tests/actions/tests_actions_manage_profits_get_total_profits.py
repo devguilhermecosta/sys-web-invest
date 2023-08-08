@@ -63,7 +63,7 @@ class ActionsProfitsGetTotalProfitsTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            '{"value": 10000.0}',
+            '{"value": "10000.00"}',
             content
         )
 
@@ -120,6 +120,6 @@ class ActionsProfitsGetTotalProfitsTests(TestCaseWithLogin):
 
         # the total value must be 1500, not 3000
         self.assertIn(
-            '{"value": 1500.0}',
+            '{"value": "1500.00"}',
             content
         )

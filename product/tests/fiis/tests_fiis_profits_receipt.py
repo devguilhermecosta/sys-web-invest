@@ -231,15 +231,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
         # get_history
         history = u_fii.get_partial_history('profits')[0]
 
-        self.assertEqual(
-            history.handler,
-            'profits',
-        )
-        self.assertEqual(
-            str(history.date),
-            '2023-07-02',
-        )
-        self.assertEqual(
-            history.total_price,
-            4.96
-        )
+        self.assertEqual(history.handler, 'profits')
+        self.assertEqual(str(history.date), '2023-07-02')
+        self.assertEqual(float(history.total_price), 4.96)

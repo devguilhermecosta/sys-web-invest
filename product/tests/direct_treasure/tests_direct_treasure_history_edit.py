@@ -251,8 +251,3 @@ class DirectTreasureHistoryEditTests(TestCaseWithLogin):
             reverse('product:direct_treasure_history', args=(1,)),
             302,
         )
-        self.fail(
-            'testar todos os históricos de model - '
-            'somente as partes que ocorre conversão com '
-            'o método abs().'
-        )

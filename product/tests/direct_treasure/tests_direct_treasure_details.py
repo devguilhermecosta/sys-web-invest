@@ -77,7 +77,7 @@ class DirectTreasureDetailsTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/direct_treasure/details.html',
+            'product/partials/_dt_and_fi_details.html',
         )
 
     @parameterized.expand([
@@ -96,7 +96,7 @@ class DirectTreasureDetailsTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create the new product
-        make_direct_treasure(user=user)
+        make_direct_treasure(user=user, value=1500)
 
         # make get request
         response = self.client.get(self.url)

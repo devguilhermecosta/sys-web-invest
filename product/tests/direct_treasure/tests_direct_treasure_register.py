@@ -106,6 +106,7 @@ class DirectTreasureRegisterTests(TestCaseWithLogin):
         # registar data
         register_data = {
             'user': user,
+            'date': '2023-07-02',
             'name': 'tesouro prefixado 2024',
             'category': 'selic',
             'interest_receipt': 'não há',
@@ -140,13 +141,14 @@ class DirectTreasureRegisterTests(TestCaseWithLogin):
         # registar data
         register_data = {
             'user': user,
+            'date': '2023-07-02',
             'name': 'tesouro prefixado 2024',
             'category': 'selic',
             'interest_receipt': 'não há',
             'profitability': '10% a.a',
             'maturity_date': '2024-12-31',
-            'value': 1000,
             'description': '',
+            'value': 1000,
         }
 
         # make post request

@@ -57,7 +57,7 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
         response = self.client.get(self.url)
 
         self.assertIn(
-            '{"value": 10.0}',
+            '{"value": "10.00"}',
             response.content.decode('utf-8'),
         )
 
@@ -104,7 +104,7 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
         # checks if the value is 50
         self.assertEqual(
             r_get.content.decode('utf-8'),
-            '{"value": 50.0}',
+            '{"value": "50.00"}',
         )
 
         # make logout with the another_user
@@ -121,6 +121,6 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
 
         # the response must be 'value: 150'
         self.assertIn(
-            '{"value": 150.0}',
+            '{"value": "150.00"}',
             response.content.decode('utf-8'),
         )

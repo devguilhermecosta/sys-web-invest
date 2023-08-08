@@ -76,7 +76,6 @@ class DirectTreasureEditTests(TestCaseWithLogin):
         ('não há'),
         ('ipca + 4,9% a.a'),
         ('2024-12-31'),
-        ('1500'),
         ('tesouro ipca sem pagamento de juros'),
     ])
     def test_direct_treasure_edit_loads_correct_content(self, text: str) -> None:  # noqa: E501

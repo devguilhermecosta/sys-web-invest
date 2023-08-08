@@ -97,7 +97,10 @@ class FixedIncomeHistoryEditTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create a history
-        make_fixed_income_product(user=user, value=10)
+        make_fixed_income_product(user=user,
+                                  value=10,
+                                  interest_receipt='semestral',
+                                  )
 
         # make get request
         response = self.client.get(self.url)

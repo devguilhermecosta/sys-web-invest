@@ -78,7 +78,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         self.assertIn(
             ('{"data": [{"date": "2023-07-02", '
              '"history_id": 1, "product": "mxrf11", '
-             '"value": 4.96, "handler": "profits"}]}'
+             '"value": "4.96", "handler": "profits"}]}'
              ),
             response.content.decode('utf-8')
         )
@@ -124,7 +124,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
 
         expected_another_user_content = (
             '{"date": "2023-07-02", "history_id": 1, '
-            '"product": "pvbi11", "value": 50.0, '
+            '"product": "pvbi11", "value": "50.00", '
             '"handler": "profits"}'
         )
 
@@ -171,7 +171,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         self.assertIn(
             ('{"data": [{"date": "2023-07-02", '
              '"history_id": 2, "product": "mxrf11", '
-             '"value": 4.96, "handler": "profits"}]}'
+             '"value": "4.96", "handler": "profits"}]}'
              ),
             response.content.decode('utf-8')
         )
