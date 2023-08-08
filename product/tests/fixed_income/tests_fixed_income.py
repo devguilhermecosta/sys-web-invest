@@ -45,7 +45,7 @@ class FixedIncomeTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/fixed_income.html',
+            'product/partials/_dt_and_fi_intro.html',
         )
 
     def test_fixed_income_loads_no_registered_product_if_user_has_no_products(self) -> None:  # noqa: E501

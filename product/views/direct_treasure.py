@@ -1,238 +1,64 @@
-from django.views import View
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from product.models import DirectTreasure, DirectTreasureHistory
+from product.views.base_views.fixed_income import (
+    FixedIncomeBaseView,
+    Register,
+    Update,
+    Delete,
+    Details,
+    )
 from product.forms.direct_treasure import (
     DirectTreasureRegisterForm,
     DirectTreasureEditForm,
     DirectTreasureHistoryForm,
     )
-
 from product.forms.fixed_income import (
     FixedIncomeApplyRedeemForm,
     FixedIncomeProfitsReceivForm,
     )
-from datetime import date as dt
 
 
-@method_decorator(
-    login_required(redirect_field_name='next',
-                   login_url='/',
-                   ),
-    name='dispatch',
-)
-class DirectTreasureView(View):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        user = self.request.user
-        products = DirectTreasure.objects.filter(
-            user=user,
-        )
-
-        return render(
-            self.request,
-            'product/pages/direct_treasure/direct_treasure.html',
-            context={
-                'products': products,
-                'back_to_page': reverse('dashboard:user_dashboard'),
-                'total_applied': DirectTreasure.get_total_amount_invested(
-                    user=self.request.user,
-                ),
-                'total_received_in_profits': DirectTreasure.get_total_profits(
-                    user=self.request.user,
-                ),
-                'total_tax': DirectTreasure.get_total_tax(
-                    user=self.request.user,
-                ),
-            }
-        )
+class DirectTreasureView(FixedIncomeBaseView):
+    model = DirectTreasure
+    template_title = 'tesouro direto'
+    template_path = 'product/partials/_dt_and_fi_intro.html'
+    reverse_url_register = 'product:direct_treasure_register'
+    reverse_url_back_to_page = 'dashboard:user_dashboard'
 
 
-class DirectTreasureRegisterView(DirectTreasureView):
-    date = dt.today().strftime('%Y-%m-%d')
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        session = self.request.session.get('direct-treasure-apply', None)
-        form = DirectTreasureRegisterForm(session)
-
-        return render(
-            self.request,
-            'product/pages/direct_treasure/register.html',
-            context={
-                'form': form,
-                'button_submit_value': 'investir',
-                'back_to_page': reverse('product:direct_treasure'),
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        post = self.request.POST
-        self.request.session['direct-treasure-apply'] = post
-        form = DirectTreasureRegisterForm(post)
-
-        if form.is_valid():
-            data = form.cleaned_data
-
-            new_object = DirectTreasure.objects.create(
-                user=self.request.user,
-                name=data['name'],
-                category=data['category'],
-                interest_receipt=data['interest_receipt'],
-                profitability=data['profitability'],
-                maturity_date=data['maturity_date'],
-                description=data['description'],
-            )
-            new_object.save()
-            new_object.apply(data['date'], data['value'])
-
-            del self.request.session['direct-treasure-apply']
-
-            messages.success(
-                self.request,
-                'Aplicação criada com sucesso',
-            )
-
-            return redirect(
-                reverse('product:direct_treasure'),
-            )
-
-        return redirect(
-            reverse('product:direct_treasure_register'),
-        )
+class DirectTreasureRegisterView(Register):
+    model = DirectTreasure
+    form = DirectTreasureRegisterForm
+    template_path = 'product/partials/_dt_and_fi_register.html'
+    reverse_url_back_to_page = 'product:direct_treasure'
+    reverse_url_if_form_invalid = 'product:direct_treasure_register'
 
 
-class DirectTreasureEditView(DirectTreasureView):
-    def get_product_or_404(self, id: int = None) -> DirectTreasure:
-        product = None
-        if id is not None:
-            product = get_object_or_404(
-                DirectTreasure,
-                user=self.request.user,
-                pk=id,
-            )
-        return product
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product_or_404(kwargs.get('id', None))
-        session = self.request.session.get('direct-treasure-edit', None)
-        form = DirectTreasureEditForm(
-            session,
-            instance=product,
-            )
-
-        return render(
-            self.request,
-            'product/pages/direct_treasure/edit.html',
-            context={
-                'form': form,
-                'button_submit_value': 'salvar',
-                'back_to_page': reverse(
-                    'product:direct_treasure_details',
-                    args=(product.id,)
-                    ),
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        obj = self.get_product_or_404(kwargs.get('id', None))
-        post = self.request.POST
-        self.request.session['direct-treasure-edit'] = post
-        form = DirectTreasureEditForm(
-            post,
-            instance=obj,
-        )
-
-        if form.is_valid():
-            product = form.save(commit=False)
-            product.user = self.request.user
-            product.save()
-
-            del self.request.session['direct-treasure-edit']
-
-            messages.success(
-                self.request,
-                'Salvo com sucesso',
-            )
-
-            return redirect(
-                reverse('product:direct_treasure_details', args=(obj.id,))
-            )
-
-        return redirect(
-            reverse('product:direct_treasure_edit', args=(obj.id,))
-        )
+class DirectTreasureEditView(Update):
+    model = DirectTreasure
+    form = DirectTreasureEditForm
+    template_path = 'product/partials/_dt_and_fi_edit.html'
 
 
-class DirectTreasureDeleteView(DirectTreasureEditView):
-    def get(self, *args, **kwargs) -> None:
-        raise Http404()
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        product = self.get_product_or_404(kwargs.get('id', None))
-        product.delete()
-
-        messages.success(
-            self.request,
-            'ativo deletado com sucesso',
-        )
-
-        return redirect(
-            reverse('product:direct_treasure')
-        )
+class DirectTreasureDeleteView(Delete):
+    model = DirectTreasure
+    reverse_url_redirect = 'product:direct_treasure'
 
 
-class DirectTreasureDetailsView(DirectTreasureView):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        product = get_object_or_404(
-            DirectTreasure,
-            user=self.request.user,
-            pk=kwargs.get('id', None),
-        )
-        s_apply = self.request.session.get('direct-treasure-apply-h', None)
-        form_apply = FixedIncomeApplyRedeemForm(s_apply)
-
-        s_redeem = self.request.session.get('direct-treasure-redeem-h', None)
-        form_redeem = FixedIncomeApplyRedeemForm(s_redeem)
-
-        return render(
-            self.request,
-            'product/partials/_dt_and_fi_details.html',
-            context={
-                'product': product,
-                'form_apply': form_apply,
-                'form_redeem': form_redeem,
-                'url_edit': reverse(
-                    'product:direct_treasure_edit',
-                    args=(product.id,),
-                    ),
-                'url_history': reverse(
-                    'product:direct_treasure_history',
-                    args=(product.id,),
-                    ),
-                'url_delete': reverse(
-                    'product:direct_treasure_delete',
-                    args=(product.id,),
-                    ),
-                'url_profits': reverse(
-                    'product:direct_treasure_profits_receipt',
-                    args=(product.id,),
-                    ),
-                'url_apply': reverse(
-                    'product:direct_treasure_apply', args=(product.id,)
-                    ),
-                'url_redeem': reverse(
-                    'product:direct_treasure_redeem', args=(product.id,)
-                    ),
-                'profits_payment': (
-                    True if product.interest_receipt != 'não há' else False
-                ),
-                'back_to_page': reverse('product:direct_treasure'),
-            }
-        )
+class DirectTreasureDetailsView(Details):
+    model = DirectTreasure
+    template_path = 'product/partials/_dt_and_fi_details.html'
+    reverse_url_back_to_page = 'product:direct_treasure'
+    reverse_url_edit = 'product:direct_treasure_edit'
+    reverse_url_history = 'product:direct_treasure_history'
+    reverse_url_delete = 'product:direct_treasure_delete'
+    reverse_url_profits = 'product:direct_treasure_profits_receipt'
+    reverse_url_apply = 'product:direct_treasure_apply'
+    reverse_url_redeem = 'product:direct_treasure_redeem'
 
 
 class DirectTreasureApplyView(DirectTreasureEditView):

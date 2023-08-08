@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from datetime import date
 from decimal import Decimal
 
@@ -26,6 +27,12 @@ class DirectTreasure(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def get_absolute_url(self) -> str:
+        return reverse(
+            'product:direct_treasure_details',
+            args=(self.pk,),
+            )
 
     def get_current_value(self) -> Decimal:
         history = DirectTreasureHistory.objects.filter(product=self)

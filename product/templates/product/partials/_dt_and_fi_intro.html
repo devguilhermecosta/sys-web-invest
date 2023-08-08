@@ -2,19 +2,19 @@
 {% load money %}
 
 {% block title %}
-  Renda Fixa
+  {{ template_title }}
 {% endblock title %}
 
 {% block content %}
   {% include 'global/partials/_messages.html' %}
-  <h1 class="C-dashboard_title">renda fixa</h1>
+  <h1 class="C-dashboard_title">{{ template_title }}</h1>
   <ul class="C-dashboard_list">
     <li class="C-dashboard_list_li">
-      <a class="C-dashboard_link" href="{% url 'product:fixed_income_register' %}">cadastrar novo</a>
+      <a class="C-dashboard_link" href="{{ url_register }}">cadastrar novo</a>
     </li>
   </ul>
   <section class="C-dashboard_table_details">
-    {% if fixed_income_objects|length == 0 %}
+    {% if products|length == 0 %}
       <p class="C-dashboard_table_empty_message">nenhum produto cadastrado</p>
     {% else %}
       <table class="C-dashboard_table">
@@ -24,13 +24,13 @@
           <th>vencimento</th>
         </thead>
         <tbody>
-        {% for object in fixed_income_objects %}
+        {% for product in products %}
           <tr>
             <td>
-              <a href="{% url 'product:fixed_income_details' object.id %}">{{ object.name }}</a>
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
             </td>
-            <td>{{ object.get_current_value|real_brl }}</td>
-            <td>{{ object.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
+            <td>{{ product.get_current_value|real_brl }}</td>
+            <td>{{ product.maturity_date|date:"SHORT_DATE_FORMAT" }}</td>
           </tr>
         </tbody>
         {% endfor %}

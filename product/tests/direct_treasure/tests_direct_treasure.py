@@ -38,7 +38,7 @@ class DirectTreasureTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/direct_treasure/direct_treasure.html'
+            'product/partials/_dt_and_fi_intro.html',
         )
 
     def test_direct_treasure_loads_correct_content_if_the_user_dont_have_products(self) -> None:  # noqa: E501

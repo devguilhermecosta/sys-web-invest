@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 from datetime import date
 from decimal import Decimal
 
@@ -39,6 +40,12 @@ class ProductFixedIncome(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def get_absolute_url(self) -> str:
+        return reverse(
+            'product:fixed_income_details',
+            args=(self.pk,),
+            )
 
     def get_current_value(self) -> Decimal:
         history = FixedIncomeHistory.objects.filter(product=self)
