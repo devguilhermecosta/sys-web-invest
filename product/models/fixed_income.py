@@ -47,6 +47,12 @@ class ProductFixedIncome(models.Model):
             args=(self.pk,),
             )
 
+    def get_history_url(self) -> str:
+        return reverse(
+            'product:fixed_income_history',
+            args=(self.id,)
+            )
+
     def get_current_value(self) -> Decimal:
         history = FixedIncomeHistory.objects.filter(product=self)
         total = sum(
@@ -136,6 +142,15 @@ class FixedIncomeHistory(models.Model):
 
     def __str__(self) -> str:
         return f'{self.product.name} - {self.date} - {self.state} - {self.value}'  # noqa: E501
+
+    def get_absolute_url(self) -> str:
+        return reverse(
+            'product:fixed_income_history_edit',
+            kwargs={
+                'product_id': self.product.id,
+                'history_id': self.id,
+                }
+            )
 
     def get_final_value(self) -> float:
         return self.value - abs(self.tax_and_irpf)

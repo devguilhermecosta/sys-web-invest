@@ -34,6 +34,12 @@ class DirectTreasure(models.Model):
             args=(self.pk,),
             )
 
+    def get_history_url(self) -> str:
+        return reverse(
+            'product:direct_treasure_history',
+            args=(self.pk,),
+        )
+
     def get_current_value(self) -> Decimal:
         history = DirectTreasureHistory.objects.filter(product=self)
         total = sum(
@@ -127,6 +133,15 @@ class DirectTreasureHistory(models.Model):
 
     def __str__(self) -> str:
         return f'{self.state} of R$ {self.value:.2f} in {self.date}'
+
+    def get_absolute_url(self) -> str:
+        return reverse(
+            'product:fixed_income_history_edit',
+            kwargs={
+                'product_id': self.product.id,
+                'history_id': self.id,
+                }
+            )
 
     def get_final_value(self) -> float:
         return self.value - abs(self.tax_and_irpf)
