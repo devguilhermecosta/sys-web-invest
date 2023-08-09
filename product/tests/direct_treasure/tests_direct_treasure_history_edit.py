@@ -85,7 +85,7 @@ class DirectTreasureHistoryEditTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/partials/_dt_and_fi_history_edit.html',
+            'product/partials/_dt_and_fi_default_form.html',
         )
 
     @parameterized.expand([
