@@ -60,7 +60,7 @@ import { createGoogleIcon } from "./src/modules.js";
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const labels = form.querySelectorAll('.C-login_label');
 
-        const xmlrequest = new XMLHttpRequest();
+        let xmlrequest = new XMLHttpRequest();
 
         xmlrequest.onreadystatechange = function() {
           if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
@@ -161,9 +161,9 @@ function createDataTableProfits(refresh=false) {
             convertToLocaleDateString(history.date),
             history.product,
             makeHandler(history.handler),
-            convertToBRL(history.tax),
-            convertToBRL(history.gross_value),
-            convertToBRL(history.final_value),
+            convertToBRL(parseFloat(history.tax)),
+            convertToBRL(parseFloat(history.gross_value)),
+            convertToBRL(parseFloat(history.final_value)),
             history.history_id,
           )
         })

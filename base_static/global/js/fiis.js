@@ -53,7 +53,7 @@ import { getTotalProfits } from './src/utils.js';
         container.appendChild(frame)
         body.appendChild(container);
 
-        buttonContainer.addEventListener("click", () => {body.removeChild(container);});
+        buttonCancel.addEventListener("click", () => {body.removeChild(container);});
 
         buttonConfirm.addEventListener("click", function() {
           let urlPath = `/ativos/fiis/gerenciar-proventos/receber/`;
@@ -79,7 +79,7 @@ import { getTotalProfits } from './src/utils.js';
             }
           }
           xmlr.open('POST', urlPath);
-          xmlr.setRequestHeader('X-CSRF-TOKEN', token)
+          xmlr.setRequestHeader('X-CSRF-TOKEN', token);
           xmlr.send(form);
         })
         return;
@@ -158,7 +158,7 @@ function createProfitsTable(refresh=false) {
           createDataTable(
             convertToLocaleDateString(el.date),
             el.product,
-            convertToBRL(el.value),
+            convertToBRL(parseFloat(el.value)),
             makeHandler(el.handler),
             el.history_id);
         }
