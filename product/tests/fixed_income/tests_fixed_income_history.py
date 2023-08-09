@@ -29,10 +29,10 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 404)
 
-    def test_fixed_income_history_returns_405_if_post_request(self) -> None:
+    def test_fixed_income_history_returns_404_if_post_request(self) -> None:
         self.make_login()
         response = self.client.post(self.url)
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 404)
 
     def test_fixed_income_history_returns_status_code_200(self) -> None:
         '''

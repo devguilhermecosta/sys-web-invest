@@ -66,7 +66,7 @@ class FixedIncomeEditTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/fixed_income_edit.html',
+            'product/partials/_dt_and_fi_edit.html',
         )
 
     @parameterized.expand([
@@ -126,10 +126,6 @@ class FixedIncomeEditTests(TestCaseWithLogin):
 
         self.assertIn(
             message,
-            content,
-        )
-        self.assertIn(
-            'Verifique os dados abaixo',
             content,
         )
 

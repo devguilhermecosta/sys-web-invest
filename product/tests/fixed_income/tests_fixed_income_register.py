@@ -40,7 +40,7 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/fixed_income/fixed_income_register.html',
+            'product/partials/_dt_and_fi_register.html',
         )
 
     @parameterized.expand([
@@ -132,7 +132,7 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            "Ativo CDB BANCO INTER criado com sucesso.",
+            "Aplicação criada com sucesso",
             content,
         )
         self.assertRedirects(
