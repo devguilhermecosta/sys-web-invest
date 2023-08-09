@@ -40,7 +40,7 @@ class FixedIncomeRegisterTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/partials/_dt_and_fi_register.html',
+            'product/partials/_dt_and_fi_default_form.html',
         )
 
     @parameterized.expand([

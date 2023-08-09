@@ -32,7 +32,7 @@ class FixedIncomeView(FixedIncomeBaseView):
 class FixedIncomeRegisterView(Register):
     model = ProductFixedIncome
     form = FixedIncomeRegisterForm
-    template_path = 'product/partials/_dt_and_fi_register.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_back_to_page = 'product:fixed_income'
     reverse_url_if_form_invalid = 'product:fixed_income_register'
 
@@ -40,7 +40,7 @@ class FixedIncomeRegisterView(Register):
 class FixedIncomeEditView(Update):
     model = ProductFixedIncome
     form = FixedIncomeEditForm
-    template_path = 'product/partials/_dt_and_fi_edit.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_if_form_invalid = 'product:fixed_income_edit'
 
 
@@ -71,7 +71,7 @@ class FixedIncomeRedeemView(Redeem):
 
 class FixedIncomeProfitsReceiptView(ReceiveProfits):
     model = ProductFixedIncome
-    template_path = 'product/partials/_dt_and_fi_profits_receipt.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_if_form_invalid = 'product:fixed_income_profits_receipt'
 
 
@@ -86,7 +86,7 @@ class FixedIncomeHistoryEditView(HistoryUpdate):
     model = ProductFixedIncome
     history_model = FixedIncomeHistory
     history_form = FixedIncomeHistoryEditForm
-    template_path = 'product/partials/_dt_and_fi_history_edit.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
 
 
 class FixedIncomeHistoryDeleteView(HistoryDelete):

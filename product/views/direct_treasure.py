@@ -32,7 +32,7 @@ class DirectTreasureView(FixedIncomeBaseView):
 class DirectTreasureRegisterView(Register):
     model = DirectTreasure
     form = DirectTreasureRegisterForm
-    template_path = 'product/partials/_dt_and_fi_register.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_back_to_page = 'product:direct_treasure'
     reverse_url_if_form_invalid = 'product:direct_treasure_register'
 
@@ -40,7 +40,7 @@ class DirectTreasureRegisterView(Register):
 class DirectTreasureEditView(Update):
     model = DirectTreasure
     form = DirectTreasureEditForm
-    template_path = 'product/partials/_dt_and_fi_edit.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_if_form_invalid = 'product:direct_treasure_edit'
 
 
@@ -71,7 +71,7 @@ class DirectTreasureRedeemView(Redeem):
 
 class DirectTreasureProfitsReceiptView(ReceiveProfits):
     model = DirectTreasure
-    template_path = 'product/partials/_dt_and_fi_profits_receipt.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
     reverse_url_if_form_invalid = 'product:direct_treasure_profits_receipt'
 
 
@@ -86,7 +86,7 @@ class DirectTreasureHistoryEditView(HistoryUpdate):
     model = DirectTreasure
     history_model = DirectTreasureHistory
     history_form = DirectTreasureHistoryForm
-    template_path = 'product/partials/_dt_and_fi_history_edit.html'
+    template_path = 'product/partials/_dt_and_fi_default_form.html'
 
 
 class DirectTreasureHistoryDeleteView(HistoryDelete):
