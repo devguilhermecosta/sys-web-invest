@@ -41,6 +41,7 @@ class FixedIncomeEditView(Update):
     model = ProductFixedIncome
     form = FixedIncomeEditForm
     template_path = 'product/partials/_dt_and_fi_edit.html'
+    reverse_url_if_form_invalid = 'product:fixed_income_edit'
 
 
 class FixedIncomeDeleteView(Delete):

@@ -171,6 +171,7 @@ class DirectTreasureHistoryEditTests(TestCaseWithLogin):
             follow=True,
             )
         content = response.content.decode('utf-8')
+        ...
 
         self.assertIn(
             message,

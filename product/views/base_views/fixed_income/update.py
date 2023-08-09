@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from django.contrib import messages
 from .base import FixedIncomeBaseView
 from product.models import ProductFixedIncome, DirectTreasure
@@ -12,6 +13,7 @@ class Update(FixedIncomeBaseView):
     form: FixedIncomeEditForm | DirectTreasureEditForm
     form_title: str = 'atualizar'
     template_path: str
+    reverse_url_if_form_invalid: str
 
     def get_product_or_404(self,
                            id: int = None,
@@ -63,4 +65,9 @@ class Update(FixedIncomeBaseView):
 
             return redirect(product.get_absolute_url())
 
-        return self.render_product(form, product)
+        return redirect(
+            reverse(
+                self.reverse_url_if_form_invalid,
+                args=(product.id,),
+                ),
+        )

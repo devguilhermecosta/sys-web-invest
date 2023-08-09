@@ -67,7 +67,7 @@ class DirectTreasureEditTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(
             response,
-            'product/pages/direct_treasure/edit.html',
+            'product/partials/_dt_and_fi_edit.html',
         )
 
     @parameterized.expand([

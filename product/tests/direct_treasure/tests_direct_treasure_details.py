@@ -29,14 +29,14 @@ class DirectTreasureDetailsTests(TestCaseWithLogin):
             302,
         )
 
-    def test_direct_treasure_details_returns_status_code_405_if_not_get_request(self) -> None:  # noqa: E501
+    def test_direct_treasure_details_returns_status_code_404_if_not_get_request(self) -> None:  # noqa: E501
         # make login
         self.make_login()
 
         # make post request
         response = self.client.post(self.url)
         self.assertEqual(
-            response.status_code, 405
+            response.status_code, 404
         )
 
     def test_direct_treasure_details_returns_status_code_404_if_the_product_not_exists(self) -> None:  # noqa: E501

@@ -41,6 +41,7 @@ class DirectTreasureEditView(Update):
     model = DirectTreasure
     form = DirectTreasureEditForm
     template_path = 'product/partials/_dt_and_fi_edit.html'
+    reverse_url_if_form_invalid = 'product:direct_treasure_edit'
 
 
 class DirectTreasureDeleteView(Delete):

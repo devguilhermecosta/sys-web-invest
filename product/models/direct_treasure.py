@@ -136,7 +136,7 @@ class DirectTreasureHistory(models.Model):
 
     def get_absolute_url(self) -> str:
         return reverse(
-            'product:fixed_income_history_edit',
+            'product:direct_treasure_history_edit',
             kwargs={
                 'product_id': self.product.id,
                 'history_id': self.id,

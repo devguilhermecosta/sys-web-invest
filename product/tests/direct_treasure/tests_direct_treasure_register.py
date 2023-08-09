@@ -39,7 +39,7 @@ class DirectTreasureRegisterTests(TestCaseWithLogin):
         response = self.client.get(self.url)
         self.assertTemplateUsed(
             response,
-            'product/pages/direct_treasure/register.html',
+            'product/partials/_dt_and_fi_register.html',
         )
 
     @parameterized.expand([

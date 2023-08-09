@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from .update import Update
@@ -42,3 +42,6 @@ class Details(Update):
                 'back_to_page': reverse(self.reverse_url_back_to_page),
             },
         )
+
+    def post(self, *args, **kwargs) -> None:
+        raise Http404()
