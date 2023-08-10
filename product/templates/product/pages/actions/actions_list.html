@@ -18,6 +18,7 @@
           <th>quant.</th>
           <th>valor med.</th>
           <th>total</th>
+          <th>deletar</th>
         </tr>
       {% for action in actions %}
         <tr>
@@ -27,6 +28,9 @@
           <td>{{ action.quantity }}</td>
           <td>{{ action.unit_price|real_brl }}</td>
           <td>{{ action.get_total_price|real_brl }}</td>
+          <td>
+            <span class="material-symbols-outlined icon_delete">delete</span>
+          </td>
         </tr>
       {% endfor %}
       </table>
