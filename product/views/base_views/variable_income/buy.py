@@ -88,7 +88,6 @@ class Buy(View):
                 user_product = self.user_product_model.objects.create(
                     user=user,
                     product=product,
-                    **params,
                     )
                 user_product.save()
 
