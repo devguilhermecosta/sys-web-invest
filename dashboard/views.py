@@ -96,7 +96,9 @@ class LogoutView(View):
 class DashboardView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         actions = UserAction.objects.filter(user=self.request.user)
-        total_actions = sum([action.get_total_price() for action in actions])
+        total_actions = sum(
+            [action.get_current_value_invested() for action in actions]
+            )
 
         fiis = UserFII.objects.filter(user=self.request.user)
         total_fiis = sum([fii.get_total_price() for fii in fiis])

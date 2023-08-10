@@ -12,26 +12,40 @@ import { createGoogleIcon } from "./src/modules.js";
 import { createFormSubmit } from "./src/utils.js";
 
 
-// delete the actions objects
-(() => {
-  const spanDelete = document.querySelectorAll('.span_vi_delete');
+// function for delete objects
+function deleteObject(css_class_btn_action, message) {
+  const spanDelete = document.querySelectorAll(`.${css_class_btn_action}`);
   if (spanDelete) {
     spanDelete.forEach((el) => {
       el.addEventListener("click", function() {
         const parentForm = el.parentElement;
         createFormSubmit(
           parentForm,
-          `Deseja realmente deletar este ativo?
-          Se você deletá-lo, todo seu histórico de compra, venda
-          e recebimento de proventos será deletado também.`,
+          message,
           );
       })
-  })
+    })
   }
-})();
+}
 
 
-// function for receive profits
+// delete the actions objects
+deleteObject(
+  'span_vi_delete',
+  `Deseja realmente deletar este ativo?
+  Se você deletá-lo, todo seu histórico de compra, venda
+  e recebimento de proventos será deletado também.`,
+);
+
+
+// delete the history objects
+deleteObject(
+  'span_vihist_delete',
+  'Deseja realmente deletar este histórico?',
+);
+
+
+  // function for receive profits
 (() => {
   const form = document.querySelector('#actions-receive-profits-form');
 
