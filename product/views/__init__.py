@@ -4,6 +4,7 @@ from .actions import (
     ActionsBuyView,
     ActionsSellView,
     ActionsView,
+    ActionsDeleteView,
     AllActionsView,
     ActionHistoryDetails,
     ActionsManageProfitsView,

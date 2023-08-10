@@ -61,6 +61,30 @@ class AllActionsView(ListView):
         return query_set
 
 
+class ActionsDeleteView(ActionsView):
+    def get_product_or_404(self, id: int) -> UserAction:
+        action = get_object_or_404(
+            UserAction,
+            pk=id,
+            user=self.request.user,
+        )
+        return action
+
+    def get(self, *args, **kwargs) -> None:
+        raise Http404()
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        action = self.get_product_or_404(kwargs.get('id', None))
+        action.delete()
+        messages.success(
+            self.request,
+            'ativo deletado com sucesso',
+        )
+        return redirect(
+            reverse('product:actions_list')
+        )
+
+
 class ActionsBuyView(Buy):
     success_response_url_redirect = 'product:actions'
     error_response_url_redirect = 'product:actions_buy'
