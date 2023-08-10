@@ -21,6 +21,7 @@
       <th>valor</th>
       <th>total</th>
       <th>nota</th>
+      <th>deletar</th>
     </thead>
     <tbody>
     {% for product in history %}
@@ -37,7 +38,7 @@
         {% endwith %}
         <td>{{ product.quantity }}</td>
         <td>{{ product.unit_price|real_brl }}</td>
-        <td>{{ product.total_price|real_brl }}</td>
+        <td>{{ product.get_final_value|real_brl }}</td>
         {% if product.trading_note %}
           <td><a class="C-dashboard_table_nf" href="{{ product.trading_note.url }}"
             download="nota.pdf">nf</a>
@@ -45,6 +46,14 @@
         {% else %}
             <td><a class="C-dashboard_table_nf"></a></td>
         {% endif %}
+        <td>
+          <form
+          action="{{ product.get_url_delete }}"
+          method="POST">
+          {% csrf_token %}
+          <span class="material-symbols-outlined icon_delete span_vi_delete">delete</span>
+          </form>
+        </td>
       </tr>
     {% endfor %}
     </tbody>

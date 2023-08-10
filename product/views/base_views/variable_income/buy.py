@@ -79,32 +79,20 @@ class Buy(View):
                 code=data['code']
                 ).first()
 
-            user_product_exists = self.user_product_model.objects.filter(
+            user_product = self.user_product_model.objects.filter(
                 product=product,
                 user=user,
                 ).first()
 
-            if user_product_exists:
-                user_product_exists.buy(trading_note=trading_note, **params)
-                return self.success_response(
-                    qty=params['quantity'], code=product.code,
+            if not user_product:
+                user_product = self.user_product_model.objects.create(
+                    user=user,
+                    product=product,
+                    **params,
                     )
+                user_product.save()
 
-            new_user_product = self.user_product_model.objects.create(
-                user=user,
-                product=product,
-                **params,
-                )
-            new_user_product.save()
-
-            user_product_history = self.history_model.objects.create(
-                userproduct=new_user_product,
-                handler='buy',
-                total_price=params['quantity'] * params['unit_price'],
-                trading_note=trading_note,
-                **params,
-            )
-            user_product_history.save()
+            user_product.buy(trading_note=trading_note, **params)
 
             return self.success_response(
                 qty=params['quantity'], code=product.code,

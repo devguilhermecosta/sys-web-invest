@@ -36,8 +36,21 @@ class UserAction(models.Model):
     def get_url_delete(self) -> str:
         return reverse('product:actions_delete', args=(self.id,))
 
-    def get_total_price(self) -> Decimal:
-        return Decimal((self.quantity * self.unit_price))
+    def get_quantity(self) -> int:
+        history = ActionHistory.objects.filter(userproduct=self)
+        total = sum([h.quantity for h in history])
+        return total
+
+    def get_middle_price(self) -> Decimal:
+        history = ActionHistory.objects.filter(userproduct=self)
+        h_lenght = len(history) if len(history) > 0 else 1
+        total = sum([(h.get_final_value() / h.quantity) for h in history])
+        return Decimal(total / h_lenght)
+
+    def get_current_value_invested(self) -> Decimal:
+        history = ActionHistory.objects.filter(userproduct=self)
+        total = sum([h.get_final_value() for h in history])
+        return Decimal(total)
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
@@ -47,13 +60,9 @@ class UserAction(models.Model):
             date=date,
             quantity=quantity,
             unit_price=unit_price,
-            total_price=quantity * unit_price,
             trading_note=trading_note,
         )
         new_history.save()
-        self.quantity += quantity
-        self.unit_price = (self.unit_price + unit_price) / 2
-        self.save()
 
     def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         if quantity > self.quantity:
@@ -93,7 +102,6 @@ class UserAction(models.Model):
         new_history.save()
 
     def get_history(self) -> QuerySet | None:
-        ''' param: handler '''
         history = ActionHistory.objects.filter(
             userproduct=self,
         )
@@ -158,7 +166,7 @@ class UserAction(models.Model):
     @classmethod
     def get_total_amount_invested(cls, user: User) -> float | None:
         queryset = cls.objects.filter(user=user)
-        total = sum([item.get_total_price() for item in queryset])
+        total = sum([item.get_current_value_invested() for item in queryset])
         return total
 
     @classmethod
@@ -181,14 +189,13 @@ class ActionHistory(models.Model):
     ))
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
+    unit_price = models.DecimalField(max_digits=15, decimal_places=2)
     tax_and_irpf = models.DecimalField(default=0,
                                        blank=True,
                                        null=True,
                                        max_digits=15,
                                        decimal_places=2,
                                        )
-    unit_price = models.DecimalField(max_digits=15, decimal_places=2)
-    total_price = models.DecimalField(max_digits=15, decimal_places=2)
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
 
     def __str__(self) -> str:
@@ -214,3 +221,12 @@ class ActionHistory(models.Model):
             f'{self.userproduct.product.code} do usuário '
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
+
+    def get_final_value(self) -> Decimal:
+        total = (abs(self.quantity * self.unit_price)) - abs(self.tax_and_irpf)
+        return Decimal(total)
+
+    def get_url_delete(self) -> str:
+        return reverse(
+            'product:actions_history_delete', args=(self.id,)
+        )

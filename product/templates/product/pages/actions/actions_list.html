@@ -25,9 +25,9 @@
           <td><a href="{% url 'product:action_history' action.product.code %}">
             {{ action.product.code }}
           </a></td>
-          <td>{{ action.quantity }}</td>
-          <td>{{ action.unit_price|real_brl }}</td>
-          <td>{{ action.get_total_price|real_brl }}</td>
+          <td>{{ action.get_quantity }}</td>
+          <td>{{ action.get_middle_price|real_brl }}</td>
+          <td>{{ action.get_current_value_invested|real_brl }}</td>
           <td>
             <form
               action="{{ action.get_url_delete }}"

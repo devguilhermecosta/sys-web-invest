@@ -8,7 +8,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import ActionBuyAndSellForm, ActionsReceivProfitsForm
 from product.models import Action, UserAction, ActionHistory
-from .base_views.variable_income import Buy, Sell, Delete, History
+from .base_views.variable_income import (
+    Buy,
+    Sell,
+    Delete,
+    History,
+    HistoryDelete,
+    )
 
 
 login_url = '/'
@@ -90,6 +96,12 @@ class ActionHistoryDetails(History):
     product_model = Action
     user_product_model = UserAction
     history_model = ActionHistory
+
+
+class ActionsHistoryDeleteView(HistoryDelete):
+    model = UserAction
+    history_model = ActionHistory
+    reverse_url_response = 'product:action_history'
 
 
 class ActionsManageProfitsView(ActionsView):
