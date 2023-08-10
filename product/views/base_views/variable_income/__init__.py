@@ -3,3 +3,4 @@
 from .buy import Buy
 from .sell import Sell
 from .history import History
+from .delete import Delete
