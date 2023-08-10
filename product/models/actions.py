@@ -75,13 +75,10 @@ class UserAction(models.Model):
             handler='sell',
             date=date,
             quantity=quantity,
-            unit_price=unit_price,
-            total_price=quantity * unit_price,
+            unit_price=-abs(unit_price),
             trading_note=trading_note,
         )
         new_history.save()
-        self.quantity -= quantity
-        self.unit_price = (self.unit_price + unit_price) / 2
         self.save()
 
     def receiv_profits(self,
