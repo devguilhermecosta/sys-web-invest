@@ -25,10 +25,6 @@ class Action(models.Model):
 class UserAction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Action, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    unit_price = models.FloatField()
-    date = models.DateField(default=date, auto_now=False, auto_now_add=False)
-    handler = models.CharField(max_length=255, default='buy')
 
     def __str__(self):
         return f'{self.product.code} de {self.user.username}'
