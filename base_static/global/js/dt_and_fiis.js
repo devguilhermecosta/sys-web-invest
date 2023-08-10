@@ -1,33 +1,5 @@
-import { createDefaultContainer } from './src/modules.js';
-import { createDefaultFrame } from './src/modules.js';
-import { createButton } from './src/modules.js';
-import { createDivFlexButton } from './src/modules.js';
-import { createTextElement } from './src/modules.js';
 import { createMessageAlert } from './src/modules.js';
-
-
-// create a form for make submit or cancel event
-function createFormSubmit(form, text) {
-  const body = document.body;
-
-  const container = createDefaultContainer();
-  const frame = createDefaultFrame();
-  const message = createTextElement('white', text)
-  const buttonContainer = createDivFlexButton();
-  const buttonCancel = createButton('cancelar');
-  const buttonConfirm = createButton('confirmar');
-
-  buttonContainer.appendChild(buttonCancel);
-  buttonContainer.appendChild(buttonConfirm);
-  
-  frame.appendChild(message);
-  frame.appendChild(buttonContainer);
-  container.appendChild(frame);
-  body.appendChild(container);  
-  
-  buttonCancel.addEventListener("click", () => {body.removeChild(container)});
-  buttonConfirm.addEventListener("click", () => {form.submit()});
-}
+import { createFormSubmit } from './src/utils.js';
 
 
 // create form confirmation fixed income

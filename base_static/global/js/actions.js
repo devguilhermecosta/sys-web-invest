@@ -9,6 +9,26 @@ import { cleanDataTable } from "./src/modules.js";
 import { createHistoryLinkEdit , createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
 import { getTotalProfits } from "./src/utils.js";
 import { createGoogleIcon } from "./src/modules.js";
+import { createFormSubmit } from "./src/utils.js";
+
+
+// delete the actions objects
+(() => {
+  const spanDelete = document.querySelectorAll('.span_vi_delete');
+  if (spanDelete) {
+    spanDelete.forEach((el) => {
+      el.addEventListener("click", function() {
+        const parentForm = el.parentElement;
+        createFormSubmit(
+          parentForm,
+          `Deseja realmente deletar este ativo?
+          Se você deletá-lo, todo seu histórico de compra, venda
+          e recebimento de proventos será deletado também.`,
+          );
+      })
+  })
+  }
+})();
 
 
 // function for receive profits
@@ -141,6 +161,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
 }
 
 
+// create the profits table
 function createDataTableProfits(refresh) {
   const inputPath = document.querySelector('#url-actions-history-profits');
 

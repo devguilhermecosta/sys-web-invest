@@ -1,5 +1,8 @@
-import { createDefaultContainer, createDefaultFrame, createTextElement } from "./modules.js";
-import { createButton, createDivFlexButton } from "./modules.js";
+import { createDefaultContainer } from './modules.js';
+import { createDefaultFrame } from './modules.js';
+import { createButton } from './modules.js';
+import { createDivFlexButton } from './modules.js';
+import { createTextElement } from './modules.js';
 
 
 // function for link history edit
@@ -98,4 +101,25 @@ export function getTotalProfits() {
   }
 }
 
-getTotalProfits();
+// create a form for make submit or cancel event
+export function createFormSubmit(form, text) {
+  const body = document.body;
+
+  const container = createDefaultContainer();
+  const frame = createDefaultFrame();
+  const message = createTextElement('white', text)
+  const buttonContainer = createDivFlexButton();
+  const buttonCancel = createButton('cancelar');
+  const buttonConfirm = createButton('confirmar');
+
+  buttonContainer.appendChild(buttonCancel);
+  buttonContainer.appendChild(buttonConfirm);
+  
+  frame.appendChild(message);
+  frame.appendChild(buttonContainer);
+  container.appendChild(frame);
+  body.appendChild(container);  
+  
+  buttonCancel.addEventListener("click", () => {body.removeChild(container)});
+  buttonConfirm.addEventListener("click", () => {form.submit()});
+}
