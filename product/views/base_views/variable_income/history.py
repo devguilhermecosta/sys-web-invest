@@ -29,7 +29,7 @@ class History(View):
     def get(self, *args, **kwargs) -> HttpResponse:
         product = get_object_or_404(
             self.product_model,
-            code=kwargs.get('code', None)
+            code=kwargs.get('code', None),
         )
 
         user_product = get_object_or_404(
@@ -38,17 +38,18 @@ class History(View):
             product=product,
         )
 
-        if user_product:
-            product_history = self.history_model.objects.filter(
-                userproduct=user_product,
-            ).order_by('-date')
-        else:
+        if not user_product:
             raise Http404()
+
+        product_history = self.history_model.objects.filter(
+            userproduct=user_product,
+        ).order_by('-date')
 
         return render(
             self.request,
             self.template_to_render_response,
             context={
                 'history': product_history,
+                'product': product,
             }
         )

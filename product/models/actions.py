@@ -221,5 +221,9 @@ class ActionHistory(models.Model):
 
     def get_url_delete(self) -> str:
         return reverse(
-            'product:actions_history_delete', args=(self.id,)
+            'product:actions_history_delete',
+            kwargs={
+                'h_id': self.id,
+                'p_id': self.userproduct.id,
+            }
         )

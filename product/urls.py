@@ -26,7 +26,7 @@ urlpatterns = [
          views.ActionsSellView.as_view(),
          name='actions_sell',
          ),
-    path('acoes/historico/<int:id>/deletar/',
+    path('acoes/<int:p_id>/historico/<int:h_id>/deletar/',
          views.ActionsHistoryDeleteView.as_view(),
          name='actions_history_delete',
          ),

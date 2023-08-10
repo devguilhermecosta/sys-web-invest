@@ -8,11 +8,9 @@
 
 {% block content %}
 <section class="C-dashboard_table_details is_head">
-  {% with product=history.0.userproduct.product %}
-    <h1>{{ product.code }}</h1>
-    <h2>{{ product.description }}</h2>
-    <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
-  {% endwith %}
+  <h1>{{ product.code }}</h1>
+  <h2>{{ product.description }}</h2>
+  <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
   <table class="C-dashboard_table">
     <thead>
       <th>data</th>
@@ -24,10 +22,10 @@
       <th>deletar</th>
     </thead>
     <tbody>
-    {% for product in history %}
+    {% for h in history %}
       <tr>
-        <td>{{ product.date|date:"d/m/y" }}</td>
-        {% with handler=product.handler %}
+        <td>{{ h.date|date:"d/m/y" }}</td>
+        {% with handler=h.handler %}
           {% if handler == 'buy' %}
             <td class="C-dashboard_table_buy">compra</td>
           {% elif handler == 'sell' %}
@@ -36,11 +34,11 @@
             <td class="C-dashboard_table_buy">proventos</td>
           {% endif %}
         {% endwith %}
-        <td>{{ product.quantity }}</td>
-        <td>{{ product.unit_price|real_brl }}</td>
-        <td>{{ product.get_final_value|real_brl }}</td>
-        {% if product.trading_note %}
-          <td><a class="C-dashboard_table_nf" href="{{ product.trading_note.url }}"
+        <td>{{ h.quantity }}</td>
+        <td>{{ h.unit_price|real_brl }}</td>
+        <td>{{ h.get_final_value|real_brl }}</td>
+        {% if h.trading_note %}
+          <td><a class="C-dashboard_table_nf" href="{{ h.trading_note.url }}"
             download="nota.pdf">nf</a>
           </td>
         {% else %}
@@ -48,7 +46,7 @@
         {% endif %}
         <td>
           <form
-          action="{{ product.get_url_delete }}"
+          action="{{ h.get_url_delete }}"
           method="POST">
           {% csrf_token %}
           <span class="material-symbols-outlined icon_delete span_vi_delete">delete</span>

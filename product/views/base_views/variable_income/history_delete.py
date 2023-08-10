@@ -8,23 +8,24 @@ from product.models import ActionHistory, FiiHistory
 class HistoryDelete(Delete):
     history_model: ActionHistory | FiiHistory
 
-    def get_history_or_404(self, id: int,) -> ActionHistory | FiiHistory:
+    def get_history_or_404(self, h_id: int, p_id: int) -> ActionHistory | FiiHistory:  # noqa: E501
+        product = self.get_product_or_404(p_id)
         history = get_object_or_404(
             self.history_model,
-            pk=id,
+            pk=h_id,
+            userproduct=product,
         )
         return history
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        history = self.get_history_or_404(kwargs.get('id', None))
-
-        if history.userproduct.user != self.request.user:
-            raise Http404()
+        p = self.get_product_or_404(kwargs.get('p_id', None))
+        history = self.get_history_or_404(
+            kwargs.get('h_id', None),
+            kwargs.get('p_id', None),
+            )
 
         history.delete()
 
-        return HttpResponse('')
-
-        # return redirect(
-        #     reverse(self.reverse_url_response, args=(product.code,))
-        # )
+        return redirect(
+            reverse(self.reverse_url_response, args=(p.product.code,))
+        )
