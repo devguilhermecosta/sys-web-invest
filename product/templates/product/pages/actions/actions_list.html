@@ -29,7 +29,12 @@
           <td>{{ action.unit_price|real_brl }}</td>
           <td>{{ action.get_total_price|real_brl }}</td>
           <td>
-            <span class="material-symbols-outlined icon_delete">delete</span>
+            <form
+              action="{{ action.get_url_delete }}"
+              method="POST">
+              {% csrf_token %}
+              <span class="material-symbols-outlined icon_delete span_vi_delete">delete</span>
+            </form>
           </td>
         </tr>
       {% endfor %}

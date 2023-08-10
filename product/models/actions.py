@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
@@ -31,6 +32,9 @@ class UserAction(models.Model):
 
     def __str__(self):
         return f'{self.product.code} de {self.user.username}'
+
+    def get_url_delete(self) -> str:
+        return reverse('product:actions_delete', args=(self.id,))
 
     def get_total_price(self) -> Decimal:
         return Decimal((self.quantity * self.unit_price))
