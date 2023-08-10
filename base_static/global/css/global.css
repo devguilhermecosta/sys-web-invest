@@ -525,7 +525,7 @@ textarea.C-login_input {
 /* end password reset */
 
 /* flash messages */
-.messages {
+.messages, .profits_messages {
   width: 100%;
   max-width: 450px;
   margin: 20px auto;
@@ -541,7 +541,7 @@ textarea.C-login_input {
   max-width: 380px;
 }
 
-.message_success {
+.message_success, .profits_messages {
   background-color: var(--turquoise_5);
 }
 

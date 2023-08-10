@@ -30,7 +30,7 @@ import { getTotalProfits } from './src/utils.js';
       const container = createDefaultContainer();
 
       if (product >= 1 && date.length > 0 && value > 0) {
-        const formatedValue = convertToLocaleDateString(value);
+        const formatedValue = convertToBRL(value);
         const frame = createDefaultFrame();
         const buttonContainer = createDivFlexButton();
 
@@ -67,8 +67,7 @@ import { getTotalProfits } from './src/utils.js';
               const oldMessage = document.querySelectorAll('.messages')[0];
               if (oldMessage) {oldMessage.parentElement.removeChild(oldMessage);}
               let result = document.querySelector('#result');
-              result.classList.add('messages');
-              result.classList.add('message_success');
+              result.classList.add('profits_messages');
               result.innerHTML = 
               `Recebimento de ${formatedValue} lançado com sucesso para ${productDesc}`;
 
@@ -81,6 +80,7 @@ import { getTotalProfits } from './src/utils.js';
           xmlr.open('POST', urlPath);
           xmlr.setRequestHeader('X-CSRF-TOKEN', token);
           xmlr.send(form);
+          body.removeChild(container);
         })
         return;
       }

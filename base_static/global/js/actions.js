@@ -59,30 +59,29 @@ import { createGoogleIcon } from "./src/modules.js";
         const path = inputPath.dataset.urlReceiveProfits;
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const labels = form.querySelectorAll('.C-login_label');
-
+        
         let xmlrequest = new XMLHttpRequest();
-
+        
         xmlrequest.onreadystatechange = function() {
           if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
             const oldMessage = document.querySelectorAll('.messages')[0];
             if (oldMessage) {oldMessage.parentElement.removeChild(oldMessage);}
             let result = document.querySelector('#result');
-            result.classList.add('messages');
-            result.classList.add('message_success');
+            result.classList.add('profits_messages');
             result.innerHTML = `Recebimento de ${totalValue} lançado com sucesso para ${productDesc}`;
             
             form.reset();
             labels.forEach((l) => {l.classList.remove('C-login_input_active')});
-            body.removeChild(container);
-
+            
             createDataTableProfits(true);
             getTotalProfits();
-
+            
           }
         }
         xmlrequest.open('POST', path, true);
         xmlrequest.setRequestHeader('X-CSRF-TOKEN', token);
         xmlrequest.send(dataForm);
+        body.removeChild(container);
       })
     })
   }
@@ -142,7 +141,7 @@ function createDataTable(date, code, handler, tax, gross_value, final_value, h_i
 }
 
 
-function createDataTableProfits(refresh=false) {
+function createDataTableProfits(refresh) {
   const inputPath = document.querySelector('#url-actions-history-profits');
 
   if (inputPath && inputPath.dataset.urlHistoryProfits) {
@@ -174,4 +173,4 @@ function createDataTableProfits(refresh=false) {
   }
 }
 
-createDataTableProfits();
+createDataTableProfits(false);
