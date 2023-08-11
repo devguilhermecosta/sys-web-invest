@@ -10,7 +10,7 @@ from django.contrib import messages
 from product.forms import FIIBuyForm, FIIReceiptProfitsForm
 from product.models import FII, UserFII, FiiHistory
 from .base_views.variable_income import Buy, Sell, History
-from typing import List
+from typing import Any, Dict, List
 
 
 @method_decorator(
@@ -34,6 +34,7 @@ class FIIsView(View):
             context={
                 'total_applied': total_applied,
                 'total_received_in_profits': total_profits,
+                'back_to_page': reverse('dashboard:user_dashboard'),
             }
         )
 
@@ -51,6 +52,13 @@ class AllFIIsView(ListView):
     ordering = ['-id']
     context_object_name = 'fiis'
 
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        return {
+            **context,
+            'back_to_page': reverse('product:fiis'),
+        }
+
     def get_queryset(self, *args, **kwargs):
         query_set = super().get_queryset(*args, **kwargs)
         user = self.request.user
@@ -67,6 +75,7 @@ class FIISBuyView(Buy):
     product_model = FII
     user_product_model = UserFII
     history_model = FiiHistory
+    reverse_url_back_to_page = 'product:fiis'
 
 
 class FIIsSellView(Sell):
@@ -76,6 +85,7 @@ class FIIsSellView(Sell):
     template_get_request = 'product/pages/fiis/fiis_sell.html'
     product_model = FII
     user_product_model = UserFII
+    reverse_url_back_to_page = 'product:fiis'
 
 
 class FIIHistoryDetails(History):
@@ -83,6 +93,7 @@ class FIIHistoryDetails(History):
     product_model = FII
     user_product_model = UserFII
     history_model = FiiHistory
+    reverse_url_back_to_page = 'product:fiis_list'
 
 
 class FIIManageIncomeReceipt(FIIsView):
@@ -114,6 +125,7 @@ class FIIManageIncomeReceipt(FIIsView):
                 'custom_id': 'form_fii_receiv_profis',
                 'button_submit_value': 'salvar',
                 'is_main_page': True,
+                'back_to_page': reverse('product:fiis'),
             }
         )
 
@@ -184,6 +196,7 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
                     'form_title': 'editar',
                     'button_submit_value': 'salvar',
                     'is_main_page': False,
+                    'back_to_page': reverse('product:fiis_manage_income'),
                 }
             )
 

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from typing import TypeVar, List
 from datetime import datetime as dt
 from decimal import Decimal
+import yfinance as yf
 
 
 date = '2023-07-04'
@@ -23,16 +24,12 @@ class FII(models.Model):
 class UserFII(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(FII, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    unit_price = models.FloatField()
-    date = models.DateField(default=date, auto_now=False, auto_now_add=False)
-    handler = models.CharField(max_length=255, default='buy')
 
     def __str__(self) -> str:
         return f'{self.product.code} de {self.user.username}'
 
-    def get_total_price(self) -> Decimal:
-        return Decimal((self.quantity * self.unit_price))
+    def get_url_delete(self) -> str:
+        ...
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
@@ -42,13 +39,9 @@ class UserFII(models.Model):
             date=date,
             quantity=quantity,
             unit_price=unit_price,
-            total_price=quantity * unit_price,
             trading_note=trading_note,
         )
         new_history.save()
-        self.quantity += quantity
-        self.unit_price = (self.unit_price + unit_price) / 2
-        self.save()
 
     def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         if quantity > self.quantity:
@@ -60,15 +53,11 @@ class UserFII(models.Model):
             userproduct=self,
             handler='sell',
             date=date,
-            quantity=quantity,
+            quantity=-abs(quantity),
             unit_price=unit_price,
-            total_price=quantity * unit_price,
             trading_note=trading_note,
         )
         new_history.save()
-        self.quantity -= quantity
-        self.unit_price = (self.unit_price + unit_price) / 2
-        self.save()
 
     def receive_profits(self, value: float, date: str) -> None:
         new_history = FiiHistory.objects.create(
@@ -77,10 +66,32 @@ class UserFII(models.Model):
             date=date,
             quantity=1,
             unit_price=value,
-            total_price=value,
         )
         new_history.save()
-        self.save()
+
+    def get_quantity(self) -> int:
+        handler = ('buy', 'sell')
+        history = FiiHistory.objects.filter(userproduct=self)
+        total = sum([h.quantity for h in history if h.handler in handler])
+        return total
+
+    def get_middle_price(self) -> Decimal:
+        history = FiiHistory.objects.filter(userproduct=self, handler='buy')
+        total = sum([h.unit_price for h in history])
+        return Decimal(total / len(history)) if total != 0 else 0
+
+    def previous_close(self) -> Decimal:
+        get_ticker = yf.Ticker(f'{self.product.code}.sa')
+        ticker_info = get_ticker.info
+        last_value = ticker_info['previousClose']
+        return Decimal(last_value)
+
+    def get_current_value_invested(self) -> Decimal:
+        get_ticker = yf.Ticker(f'{self.product.code}.sa')
+        ticker_info = get_ticker.info
+        last_value = ticker_info['previousClose']
+        total = self.get_quantity() * last_value
+        return Decimal(total) if total >= 0 else 0
 
     def get_partial_history(self, handler: str) -> QuerySet:
         history = FiiHistory.objects.filter(
@@ -91,7 +102,7 @@ class UserFII(models.Model):
 
     def get_partial_profits(self) -> float:
         history = self.get_partial_history(handler='profits')
-        total = sum([h.total_price for h in history])
+        total = sum([h.get_final_value() for h in history])
         return total
 
     @classmethod
@@ -99,7 +110,7 @@ class UserFII(models.Model):
         uf_query_set = cls.objects.filter(
             user=user
         )
-        total = sum([uf.get_total_price() for uf in uf_query_set])
+        total = sum([uf.get_current_value_invested() for uf in uf_query_set])
         return total
 
     @classmethod
@@ -146,7 +157,6 @@ class FiiHistory(models.Model):
     date = models.DateField(default=date, auto_now=False, auto_now_add=False)
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=15, decimal_places=2)
-    total_price = models.DecimalField(max_digits=15, decimal_places=2)
     trading_note = models.FileField(blank=True, null=True, upload_to=upload)
 
     def __str__(self) -> str:
@@ -166,3 +176,11 @@ class FiiHistory(models.Model):
             f'{self.userproduct.product.code} do usuário '
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
+
+    def get_final_value(self) -> Decimal:
+        quantity = abs(self.quantity) if self.quantity != 0 else 1
+        total = quantity * self.unit_price
+        return Decimal(total)
+
+    def get_url_delete(self) -> str:
+        ...

@@ -16,6 +16,7 @@
           <th>código</th>
           <th>quant.</th>
           <th>valor med.</th>
+          <th>última cotação</th>
           <th>total</th>
         </tr>
       {% for fii in fiis %}
@@ -23,9 +24,10 @@
           <td><a href="{% url 'product:fii_history' fii.product.code %}">
             {{ fii.product.code }}
           </a></td>
-          <td>{{ fii.quantity }}</td>
-          <td>{{ fii.unit_price|real_brl }}</td>
-          <td>{{ fii.get_total_price|real_brl }}</td>
+          <td>{{ fii.get_quantity }}</td>
+          <td>{{ fii.get_middle_price|real_brl }}</td>
+          <td>{{ fii.previous_close|real_brl }}</td>
+          <td>{{ fii.get_current_value_invested|real_brl }}</td>
         </tr>
         {% endfor %}
       </table>
