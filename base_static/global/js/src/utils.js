@@ -87,7 +87,8 @@ export function getTotalProfits() {
       if (xmlrequest.readyState === 4 && xmlrequest.status === 200) {
         const response = JSON.parse(xmlrequest.responseText);
         let elem = document.querySelector('#total_profits_fiis');
-        elem.innerHTML = response.value.toLocaleString(
+        const value = parseFloat(response.value);
+        elem.innerHTML = value.toLocaleString(
           'pt-BR',
           {
             style: 'currency',
