@@ -8,9 +8,6 @@ from functools import reduce
 from decimal import Decimal
 import yfinance as yf
 
-# msft = yf.Ticker("pvbi11.sa")
-# print(msft.info)
-
 
 date = '2023-07-04'
 PDF = TypeVar('PDF', bytes, None)
