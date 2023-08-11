@@ -217,15 +217,14 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
     def get(self, *args, **kwargs) -> HttpResponse:
         history = self.get_product_history_or_404(kwargs.get('id', None))
         session = self.request.session.get('actions-profits-edit', None)
-        tax = history.tax_and_irpf
         form = ActionsReceivProfitsForm(
             session,
             initial={
                 'userproduct': history.userproduct.id,
                 'handler': history.handler,
                 'date': history.date,
-                'tax_and_irpf': f'{tax:.2f}' if tax else '',
-                'total_price': f'{history.total_price:.2f}',
+                'tax_and_irpf': abs(history.tax_and_irpf),
+                'total_price': history.get_gross_value(),
             }
             )
         form.fields.get('userproduct').widget.choices = self.choices()
@@ -257,7 +256,7 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
             history.handler = data['handler']
             history.date = data['date']
             history.tax_and_irpf = tax
-            history.total_price = data['total_price']
+            history.unit_price = data['total_price']
 
             history.save()
 

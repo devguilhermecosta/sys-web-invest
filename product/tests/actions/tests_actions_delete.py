@@ -56,7 +56,7 @@ class ActionsDeleteTests(TestCaseWithLogin):
                                         )
 
         # create the useraction
-        make_user_action(another_user, 1, 1, 'mxrf11', 'maxi renda')
+        make_user_action(another_user, 'mxrf11', 'maxi renda')
 
         # make login with user
         self.make_login()
@@ -71,7 +71,7 @@ class ActionsDeleteTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create the useraction
-        make_user_action(user, 1, 1, 'mxrf11', 'maxi renda')
+        make_user_action(user, 'mxrf11', 'maxi renda')
 
         # checks if the action exists
         useractions = UserAction.objects.filter(user=user)
@@ -89,7 +89,7 @@ class ActionsDeleteTests(TestCaseWithLogin):
         _, user = self.make_login()
 
         # create the useraction
-        make_user_action(user, 1, 1, 'mxrf11', 'maxi renda')
+        make_user_action(user, 'mxrf11', 'maxi renda')
 
         # make post request
         response = self.client.post(self.url, follow=True)

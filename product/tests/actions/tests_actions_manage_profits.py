@@ -83,8 +83,6 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # create the user_action for another_user
         make_user_action(another_user,
-                         1,
-                         1,
                          'sanp4',
                          'sanepar',
                          )
@@ -100,8 +98,6 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # create the user_action for user
         make_user_action(user,
-                         1,
-                         1,
                          'bbas3',
                          'banco do brasil',
                          )
@@ -192,8 +188,6 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # create the user_action for another_user
         another_user_action = make_user_action(another_user,
-                                               1,
-                                               1,
                                                'sanp4',
                                                'sanepar',
                                                )
@@ -231,8 +225,6 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
 
         # create a user_action
         user_action = make_user_action(user,
-                                       1,
-                                       1,
                                        'bbas3',
                                        'banco do brasil',
                                        )

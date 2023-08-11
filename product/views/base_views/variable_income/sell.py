@@ -93,8 +93,8 @@ class Sell(View):
                         self.request,
                         (
                             'Quantidade insuficiente para venda. '
-                            f'Você possui {user_product_exists.quantity} '
-                            'unidade(s) em seu portifólio e está tentando '
+                            f'Você possui {user_product_exists.get_quantity()}'
+                            ' unidade(s) em seu portifólio e está tentando '
                             f'vender {params["quantity"]}.'
                         ),
                     )

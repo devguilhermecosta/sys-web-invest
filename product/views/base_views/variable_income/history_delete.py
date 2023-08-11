@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.contrib import messages
 from .delete import Delete
 from product.models import ActionHistory, FiiHistory
 
@@ -24,6 +25,11 @@ class HistoryDelete(Delete):
             )
 
         history.delete()
+
+        messages.success(
+            self.request,
+            'histórico deletado com sucesso',
+        )
 
         return redirect(
             reverse(self.reverse_url_response,

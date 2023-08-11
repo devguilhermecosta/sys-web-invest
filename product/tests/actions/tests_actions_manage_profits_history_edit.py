@@ -53,8 +53,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         # create the UserAction for another_user
         another_useraction = make_user_action(
             another_user,
-            1,
-            1,
             'sanp4',
             'sanepar',
         )
@@ -161,8 +159,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         # create the UserAction for another_user
         another_useraction = make_user_action(
             another_user,
-            1,
-            1,
             'sanp4',
             'sanepar',
         )
@@ -278,8 +274,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
 
         # create one more useraction
         new_useraction = make_user_action(u['user'],
-                                          1,
-                                          1,
                                           'cash3',
                                           'meliuz',
                                           )
@@ -318,8 +312,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
 
         # create one more useraction
         new_useraction = make_user_action(u['user'],
-                                          1,
-                                          1,
                                           'cash3',
                                           'meliuz',
                                           )
@@ -356,6 +348,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
             '2023-08-01',
         )
         self.assertEqual(
-            history.total_price,
+            history.get_final_value(),
             1000,
         )

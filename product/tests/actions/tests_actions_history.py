@@ -192,18 +192,22 @@ class ActionHistoryTests(TestCaseWithLogin):
         )
         self.assertEqual(action_history[1].handler, 'sell')
         self.assertEqual(action_history[1].quantity, 4)
-        self.assertEqual(action_history[1].unit_price, 25)
+        self.assertEqual(action_history[1].unit_price, -25)
         self.assertIn(
             '/media/trading-notes/actions/file_test',
             action_history[1].trading_note.url,
             )
 
     @parameterized.expand([
+        ('bbas3'),
+        ('banco do brasil'),
         ('cnpj: 82.794.638/9586-01'),
         ('R$ 50,00'),
+        ('R$ 100,00'),
         ('compra'),
         ('venda'),
-        ('R$ 100,00'),
+        ('deletar'),
+        ('/ativos/acoes/1/historico/1/deletar/')
     ])
     def test_action_history_loads_correct_content(self, text) -> None:
         '''

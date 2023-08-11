@@ -32,22 +32,6 @@ class UserAction(models.Model):
     def get_url_delete(self) -> str:
         return reverse('product:actions_delete', args=(self.id,))
 
-    def get_quantity(self) -> int:
-        history = ActionHistory.objects.filter(userproduct=self)
-        total = sum([h.quantity for h in history])
-        return total
-
-    def get_middle_price(self) -> Decimal:
-        history = ActionHistory.objects.filter(userproduct=self)
-        h_lenght = len(history) if len(history) > 0 else 1
-        total = sum([(h.get_final_value() / h.quantity) for h in history])
-        return Decimal(total / h_lenght)
-
-    def get_current_value_invested(self) -> Decimal:
-        history = ActionHistory.objects.filter(userproduct=self)
-        total = sum([h.get_final_value() for h in history])
-        return Decimal(total)
-
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
         new_history = ActionHistory.objects.create(
@@ -61,7 +45,7 @@ class UserAction(models.Model):
         new_history.save()
 
     def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
-        if quantity > self.quantity:
+        if quantity > self.get_quantity():
             raise ValidationError(
                 {'quantity': 'quantidade insuficiente para venda'},
                 code='invalid'
@@ -70,8 +54,8 @@ class UserAction(models.Model):
             userproduct=self,
             handler='sell',
             date=date,
-            quantity=quantity,
-            unit_price=-abs(unit_price),
+            quantity=-abs(quantity),
+            unit_price=unit_price,
             trading_note=trading_note,
         )
         new_history.save()
@@ -87,17 +71,29 @@ class UserAction(models.Model):
             userproduct=self,
             handler=handler,
             date=date,
-            quantity=1,
-            tax_and_irpf=tax_and_irpf,
+            quantity=0,
+            tax_and_irpf=-abs(tax_and_irpf),
             unit_price=total_price,
-            total_price=total_price,
         )
         new_history.save()
 
+    def get_quantity(self) -> int:
+        handler = ('buy', 'sell')
+        history = ActionHistory.objects.filter(userproduct=self)
+        total = sum([h.quantity for h in history if h.handler in handler])
+        return total
+
+    def get_middle_price(self) -> Decimal:
+        history = ActionHistory.objects.filter(userproduct=self, handler='buy')
+        total = sum([h.unit_price for h in history])
+        return Decimal(total / len(history)) if total != 0 else 0
+
+    def get_current_value_invested(self) -> Decimal:
+        total = self.get_quantity() * self.get_middle_price()
+        return Decimal(total) if total >= 0 else 0
+
     def get_history(self) -> QuerySet | None:
-        history = ActionHistory.objects.filter(
-            userproduct=self,
-        )
+        history = ActionHistory.objects.filter(userproduct=self)
         return history
 
     def get_partial_profits(self) -> float | None:
@@ -106,7 +102,7 @@ class UserAction(models.Model):
 
         for h in self.get_history():
             if h.handler in handler:
-                history.append(h.total_price)
+                history.append(h.get_final_value())
 
         total = sum([value for value in history])
         return total
@@ -137,15 +133,13 @@ class UserAction(models.Model):
         for product in products:
             for h in product.get_history():
                 if h.handler in handler:
-                    tax = h.tax_and_irpf
-                    total = h.total_price
                     history.append({
                         'date': h.date,
                         'product': product.product.code,
                         'handler': h.handler,
-                        'tax': tax if tax else 0,
-                        'gross_value': h.total_price,
-                        'final_value': (total - tax) if tax else total,
+                        'tax': h.tax_and_irpf,
+                        'gross_value': h.get_gross_value(),
+                        'final_value': h.get_final_value(),
                         'history_id': h.pk,
                     })
 
@@ -166,7 +160,7 @@ class UserAction(models.Model):
     def get_total_tax(cls, user: User) -> float | None:
         queryset = cls.objects.filter(user=user)
         total = sum([item.get_partial_tax() for item in queryset])
-        return total
+        return abs(total)
 
 
 class ActionHistory(models.Model):
@@ -210,13 +204,18 @@ class ActionHistory(models.Model):
                 ''
 
         return (
-            f'{handler} de {self.quantity} unidade(s) de '
+            f'{handler} de {abs(self.quantity)} unidade(s) de '
             f'{self.userproduct.product.code} do usuário '
             f'{self.userproduct.user.username} realizada '
             f'no dia {self.date}')
 
+    def get_gross_value(self) -> Decimal:
+        quantity = abs(self.quantity) if self.quantity != 0 else 1
+        return quantity * self.unit_price
+
     def get_final_value(self) -> Decimal:
-        total = (abs(self.quantity * self.unit_price)) - abs(self.tax_and_irpf)
+        quantity = abs(self.quantity) if self.quantity != 0 else 1
+        total = (quantity * self.unit_price) - abs(self.tax_and_irpf)
         return Decimal(total)
 
     def get_url_delete(self) -> str:
@@ -227,3 +226,7 @@ class ActionHistory(models.Model):
                 'p_id': self.userproduct.id,
             }
         )
+
+    def save(self, *args, **kwargs) -> None:
+        self.tax_and_irpf = -abs(self.tax_and_irpf)
+        return super().save(*args, **kwargs)

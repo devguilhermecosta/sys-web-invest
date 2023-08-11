@@ -8,6 +8,7 @@
 
 {% block content %}
 <section class="C-dashboard_table_details is_head">
+  {% include 'global/partials/_messages.html' %}
   <h1>{{ product.code }}</h1>
   <h2>{{ product.description }}</h2>
   <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
@@ -34,8 +35,15 @@
             <td class="C-dashboard_table_buy">proventos</td>
           {% endif %}
         {% endwith %}
-        <td>{{ h.quantity }}</td>
+
+        {% if h.handler != 'buy' and h.handler != 'sell' %}
+          <td>-</td>
+        {% else %}
+          <td>{{ h.quantity }}</td>
+        {% endif %}
+
         <td>{{ h.unit_price|real_brl }}</td>
+
         <td>{{ h.get_final_value|real_brl }}</td>
         {% if h.trading_note %}
           <td><a class="C-dashboard_table_nf" href="{{ h.trading_note.url }}"

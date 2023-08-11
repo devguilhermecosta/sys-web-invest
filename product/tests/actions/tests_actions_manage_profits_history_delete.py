@@ -58,8 +58,6 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         # create the UserAction for another_user
         another_useraction = make_user_action(
             another_user,
-            1,
-            1,
             'sanp4',
             'sanepar',
         )

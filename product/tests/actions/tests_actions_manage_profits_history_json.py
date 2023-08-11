@@ -60,7 +60,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
 
         self.assertIn(
             '{"data": [{"date": "2023-07-02", "product": '
-            '"bbas3", "handler": "dividends", "tax": "1.50", '
+            '"bbas3", "handler": "dividends", "tax": "-1.50", '
             '"gross_value": "10.00", "final_value": "8.50", '
             '"history_id": 1}]}',
             response.content.decode('utf-8')
@@ -76,8 +76,6 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         # create the UserAction for another_user
         another_useraction = make_user_action(
             another_user,
-            1,
-            1,
             'bbas3',
             'banco do brasil',
         )
@@ -109,7 +107,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
 
         expected_another_user_content = (
             '{"data": [{"date": "2023-07-02", "product": '
-            '"bbas3", "handler": "dividends", "tax": "1.00", '
+            '"bbas3", "handler": "dividends", "tax": "-1.00", '
             '"gross_value": "10.00", "final_value": "9.00", '
             '"history_id": 1}]}'
         )
@@ -131,8 +129,6 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         # make the user action
         user_action = make_user_action(
             user,
-            1,
-            1,
             'sanp4',
             'sanepar',
         )
@@ -156,7 +152,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
         # checks if the content is correct
         self.assertIn(
             '{"data": [{"date": "2024-12-31", "product": "sanp4", '
-            '"handler": "jscp", "tax": "1.00", "gross_value": "580.00", '
+            '"handler": "jscp", "tax": "-1.00", "gross_value": "580.00", '
             '"final_value": "579.00", "history_id": 2}]}',
             response.content.decode('utf-8')
         )

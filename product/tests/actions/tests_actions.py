@@ -1,7 +1,7 @@
 from django.urls import reverse, resolve
 from product import views
 from utils.mixins.auth import TestCaseWithLogin
-from product.tests.base_tests import create_actions_history
+from product.tests.base_tests import make_user_action
 from parameterized import parameterized
 
 
@@ -73,18 +73,47 @@ class ProductActionsTests(TestCaseWithLogin):
         'Aplicação total:',
         'R$ 2000,00',
         'Total recebido em proventos:',
-        'R$ 500,00',
+        'R$ 400,00',
         'Total pago em taxas:',
         'R$ 100,00',
     ])
     def test_actions_loads_correct_summary(self, text: str) -> None:
-        # create the useraction, history and tax
-        create_actions_history(self.client,
-                               self.make_login,
-                               value_aplication=2000,
-                               tax_and_irpf=100,
-                               gross_value=500,
-                               )
+        # make login
+        _, user = self.make_login()
+
+        # create the useraction
+        p = make_user_action(user,
+                             'bbas3',
+                             'banco do brasil',
+                             )
+
+        # buy the action
+        self.client.post(
+            reverse('product:actions_buy'),
+            {
+                'code': 'bbas3',
+                'quantity': 1,
+                'unit_price': 2000,
+                'date': '2023-07-02',
+            },
+            follow=True,
+        )
+
+        # create a profits history
+        profits_data = {
+            'userproduct': p.id,
+            'handler': 'jscp',
+            'date': '2023-07-02',
+            'tax_and_irpf': 100,
+            'total_price': 500,
+        }
+
+        # make post request
+        response = self.client.post(
+            reverse('product:actions_manage_profits'),
+            profits_data,
+            follow=True,
+        )
 
         # access the dashboard actions
         response = self.client.get(self.url)

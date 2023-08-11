@@ -171,3 +171,4 @@ function createProfitsTable(refresh=false) {
 }
 
 createProfitsTable();
+getTotalProfits()

@@ -35,21 +35,24 @@ def make_action(code: str, desc: str, cnpj: str = None) -> Action:
 
 
 def make_user_action(user: User,
-                     qty: int,
-                     unit_price: float,
                      code: str,
                      desc: str,
+                     create_history: bool = False,
                      **kwargs,
                      ) -> UserAction:
     new_obj = UserAction.objects.create(
         user=user,
         product=make_action(code, desc, cnpj=c2.create_cnpj()),
-        quantity=qty,
-        unit_price=unit_price,
-        date=date.today().strftime('%Y-%m-%d'),
-        handler=kwargs.get('handler', 'buy'),
     )
     new_obj.save()
+
+    if create_history:
+        new_obj.buy(
+            '2023-07-02',
+            1,
+            unit_price=kwargs.get('unit_price', 1),
+        )
+
     return new_obj
 
 
@@ -260,8 +263,6 @@ def create_actions_history(client: Client,
 
     # create the user fii
     user_product = make_user_action(user,
-                                    1,
-                                    kwargs.get('value_aplication', 1),
                                     kwargs.get('code', 'bbas3'),
                                     kwargs.get('desc', 'banco do brasil'),
                                     )

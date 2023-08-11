@@ -65,6 +65,8 @@ class ActionsListTests(TestCaseWithLogin):
         ('bbas3'),
         ('R$ 32,50'),
         ('R$ 325,00'),
+        ('deletar'),
+        ('/ativos/acoes/1/deletar/'),
     ])
     def test_action_list_loads_correct_content_if_user_has_actions(self, text) -> None:  # noqa: E501
         # make login

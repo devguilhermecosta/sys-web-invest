@@ -75,13 +75,10 @@ class ActionsProfitsGetTotalProfitsTests(TestCaseWithLogin):
         )
 
         # create the UserAction for another_user
-        another_useraction = make_user_action(
-            another_user,
-            1,
-            1,
-            'sanp4',
-            'sanepar',
-        )
+        another_useraction = make_user_action(another_user,
+                                              'sanp4',
+                                              'sanepar',
+                                              )
 
         # make login with the another_user
         self.make_login(create_user=False, username=another_user)

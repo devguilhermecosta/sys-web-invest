@@ -208,19 +208,20 @@ class ActionsSellTests(TestCaseWithLogin):
         response_after_sale = self.client.get(
             reverse('product:actions_list')
         )
+
         self.assertIn(
             'bbas3',
             response_after_sale.content.decode('utf-8'),
         )
         self.assertIn(
-            'R$ 0',
+            'R$ 0,00',
             response_after_sale.content.decode('utf-8'),
         )
         # the quantity should be zero
         self.assertEqual(
             UserAction.objects.filter(user=user,
                                       product=action,
-                                      ).first().quantity,
+                                      ).first().get_quantity(),
             0,
         )
 

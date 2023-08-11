@@ -209,3 +209,4 @@ function createDataTableProfits(refresh) {
 }
 
 createDataTableProfits(false);
+getTotalProfits();

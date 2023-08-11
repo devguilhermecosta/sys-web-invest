@@ -150,10 +150,10 @@ class ActionsBuyTests(TestCaseWithLogin):
             response.content.decode('utf-8'),
             )
 
-        # checks if the quantity, unit_price and total_price are corrects
-        self.assertEqual(user_action.quantity, 1)
-        self.assertEqual(user_action.unit_price, 10)
-        self.assertAlmostEqual(user_action.get_total_price(), 10)
+        self.assertEqual(user_action.product.code, 'bbas3')
+        self.assertEqual(
+            user_action.get_current_value_invested(),
+            10)
 
         # checks if the user was redirected after purchase
         self.assertRedirects(
@@ -197,11 +197,11 @@ class ActionsBuyTests(TestCaseWithLogin):
         self.assertTrue(user_action.exists())
 
         # cheks if quantity and price are corrects
-        # the quantity must be 1, and unit_price must be 10
-        # the total_price must be 10
-        self.assertEqual(user_action.first().quantity, 1)
-        self.assertEqual(user_action.first().unit_price, 10)
-        self.assertEqual(user_action.first().get_total_price(), 10)
+        # the quantity must be 1 and the total_price must be 10
+        self.assertEqual(user_action.first().get_quantity(), 1)
+        self.assertEqual(
+            user_action.first().get_current_value_invested(),
+            10,)
 
         # set action_data for the second time
         self.action_data.update(
@@ -219,11 +219,20 @@ class ActionsBuyTests(TestCaseWithLogin):
         )
 
         # cheks if quantity and price are updated
-        # now, the quantity must be 11, and unit_price must be 20
-        # the total_price must be 220
-        self.assertEqual(user_action.first().quantity, 11)
-        self.assertEqual(user_action.first().unit_price, 20)
-        self.assertEqual(user_action.first().get_total_price(), 220)
+        # now, the quantity must be 11 and the total_price must be 310
+        self.assertEqual(user_action.first().get_quantity(), 11)
+        self.assertEqual(
+            user_action.first().get_current_value_invested(),
+            310,
+            )
+        self.fail(
+            'o cálculo do valor final está errado. '
+            'se eu compro x ações há um valor y e '
+            'depois eu faço uma nova compra, não basta '
+            'calcular o valor médio e multiplar pela '
+            'quantidade. É preciso calcular o valor final de '
+            'cada.'
+        )
 
     def test_actions_buy_creates_a_action_history_after_purchase(self) -> None:  # noqa: E501
         ''' after the each action purchase, automatically a new history
