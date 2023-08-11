@@ -16,7 +16,8 @@
         <tr>
           <th>código</th>
           <th>quant.</th>
-          <th>valor med.</th>
+          <th>valor médio pago</th>
+          <th>última cotação</th>
           <th>total</th>
           <th>deletar</th>
         </tr>
@@ -27,6 +28,7 @@
           </a></td>
           <td>{{ action.get_quantity }}</td>
           <td>{{ action.get_middle_price|real_brl }}</td>
+          <td>{{ action.previous_close|real_brl }}</td>
           <td>{{ action.get_current_value_invested|real_brl }}</td>
           <td>
             <form

@@ -6,6 +6,10 @@ from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
 from decimal import Decimal
+import yfinance as yf
+
+# msft = yf.Ticker("pvbi11.sa")
+# print(msft.info)
 
 
 date = '2023-07-04'
@@ -88,8 +92,17 @@ class UserAction(models.Model):
         total = sum([h.unit_price for h in history])
         return Decimal(total / len(history)) if total != 0 else 0
 
+    def previous_close(self) -> Decimal:
+        get_ticker = yf.Ticker(f'{self.product.code}.sa')
+        ticker_info = get_ticker.info
+        last_value = ticker_info['previousClose']
+        return Decimal(last_value)
+
     def get_current_value_invested(self) -> Decimal:
-        total = self.get_quantity() * self.get_middle_price()
+        get_ticker = yf.Ticker(f'{self.product.code}.sa')
+        ticker_info = get_ticker.info
+        last_value = ticker_info['previousClose']
+        total = self.get_quantity() * last_value
         return Decimal(total) if total >= 0 else 0
 
     def get_history(self) -> QuerySet | None:
