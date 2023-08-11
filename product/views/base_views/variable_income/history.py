@@ -1,4 +1,5 @@
 from django.views import View
+from django.urls import reverse
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -25,6 +26,7 @@ class History(View):
     product_model: Action | FII = ''
     user_product_model: UserAction | UserFII = ''
     history_model: ActionHistory | FiiHistory = ''
+    reverse_url_back_to_page: str
 
     def get(self, *args, **kwargs) -> HttpResponse:
         product = get_object_or_404(
@@ -51,5 +53,6 @@ class History(View):
             context={
                 'history': product_history,
                 'product': product,
+                'back_to_page': reverse(self.reverse_url_back_to_page),
             }
         )

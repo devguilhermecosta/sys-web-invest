@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.views import View
 from django.views.generic import ListView
 from django.http import HttpResponse, Http404, JsonResponse
@@ -42,6 +43,7 @@ class ActionsView(View):
                 'total_applied': total_applied,
                 'total_received_in_profits': total_profits,
                 'total_tax': total_tax,
+                'back_to_page': reverse('dashboard:user_dashboard'),
             }
         )
 
@@ -58,6 +60,13 @@ class AllActionsView(ListView):
     template_name = 'product/pages/actions/actions_list.html'
     ordering = ['-id']
     context_object_name = 'actions'
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        return {
+            **context,
+            'back_to_page': reverse('product:actions'),
+        }
 
     def get_queryset(self, *args, **kwargs):
         query_set = super().get_queryset(*args, **kwargs)
@@ -80,6 +89,7 @@ class ActionsBuyView(Buy):
     product_model = Action
     user_product_model = UserAction
     history_model = ActionHistory
+    reverse_url_back_to_page = 'product:actions'
 
 
 class ActionsSellView(Sell):
@@ -89,6 +99,7 @@ class ActionsSellView(Sell):
     template_get_request = 'product/pages/actions/actions_sell.html'
     product_model = Action
     user_product_model = UserAction
+    reverse_url_back_to_page = 'product:actions'
 
 
 class ActionHistoryDetails(History):
@@ -96,6 +107,7 @@ class ActionHistoryDetails(History):
     product_model = Action
     user_product_model = UserAction
     history_model = ActionHistory
+    reverse_url_back_to_page = 'product:actions_list'
 
 
 class ActionsHistoryDeleteView(HistoryDelete):
@@ -141,6 +153,7 @@ class ActionsManageProfitsView(ActionsView):
                     'product:action_total_profits_json',
                 ),
                 'is_main_page': True,
+                'back_to_page': reverse('product:actions'),
             }
         )
 
@@ -238,6 +251,7 @@ class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
                 'custom_id': 'actions-receive-profits-edit-form',
                 'button_submit_value': 'salvar',
                 'is_main_page': False,
+                'back_to_page': reverse('product:actions_manage_profits'),
             }
         )
 

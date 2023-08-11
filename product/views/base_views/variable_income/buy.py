@@ -31,6 +31,7 @@ class Buy(View):
     product_model: Action | FII = ''
     user_product_model: UserAction | UserFII = ''
     history_model: ActionHistory | FiiHistory = ''
+    reverse_url_back_to_page: str = ''
 
     def success_response(self, qty: int, code: str) -> HttpResponseRedirect:
         messages.success(
@@ -55,6 +56,7 @@ class Buy(View):
             context={
                 'form': form,
                 'button_submit_value': 'comprar',
+                'back_to_page': reverse(self.reverse_url_back_to_page),
             }
         )
 
