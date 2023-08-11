@@ -19,6 +19,7 @@ from .fiis import (
     FIISBuyView,
     AllFIIsView,
     FIIsSellView,
+    FiisDeleteView,
     FIIManageIncomeReceipt,
     FIIHistoryDetails,
     FIIManageIncomeReceiptHistory,

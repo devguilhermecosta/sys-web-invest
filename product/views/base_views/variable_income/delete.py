@@ -29,5 +29,5 @@ class Delete(Buy):
             'ativo deletado com sucesso',
         )
         return redirect(
-            reverse(self.reverse_url_response)
+            reverse(self.reverse_url_response),
         )

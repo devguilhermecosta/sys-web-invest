@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.urls import reverse
 from typing import TypeVar, List
 from datetime import datetime as dt
 from decimal import Decimal
@@ -29,7 +30,7 @@ class UserFII(models.Model):
         return f'{self.product.code} de {self.user.username}'
 
     def get_url_delete(self) -> str:
-        ...
+        return reverse('product:fiis_delete', args=(self.id,))
 
     def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
         """ create the new history """
@@ -134,7 +135,7 @@ class UserFII(models.Model):
                     'date': h.date,
                     'history_id': h.pk,
                     'product': product.product.code,
-                    'value': h.total_price,
+                    'value': h.get_final_value(),
                     'handler': h.handler,
                 })
 

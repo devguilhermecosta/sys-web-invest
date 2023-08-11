@@ -9,7 +9,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from product.forms import FIIBuyForm, FIIReceiptProfitsForm
 from product.models import FII, UserFII, FiiHistory
-from .base_views.variable_income import Buy, Sell, History
+from .base_views.variable_income import (
+    Buy,
+    Sell,
+    History,
+    Delete,
+    )
 from typing import Any, Dict, List
 
 
@@ -94,6 +99,11 @@ class FIIHistoryDetails(History):
     user_product_model = UserFII
     history_model = FiiHistory
     reverse_url_back_to_page = 'product:fiis_list'
+
+
+class FiisDeleteView(Delete):
+    model = UserFII
+    reverse_url_response = 'product:fiis_list'
 
 
 class FIIManageIncomeReceipt(FIIsView):
@@ -183,7 +193,7 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
                 initial={
                     'userproduct': history.userproduct.id,
                     'date': str(history.date),
-                    'total_price': f'{history.total_price:.2f}',
+                    'total_price': history.get_final_value(),
                     }
                 )
             form.fields.get('userproduct').widget.choices = self.choices()
@@ -218,7 +228,7 @@ class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
 
                 history.userproduct = user_fii
                 history.date = data['date']
-                history.total_price = data['total_price']
+                history.unit_price = data['total_price']
                 history.save()
 
                 del self.request.session['fiis-profits-edit']
