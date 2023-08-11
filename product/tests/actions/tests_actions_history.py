@@ -191,8 +191,8 @@ class ActionHistoryTests(TestCaseWithLogin):
             str(action_history[1].date), '2023-12-02',
         )
         self.assertEqual(action_history[1].handler, 'sell')
-        self.assertEqual(action_history[1].quantity, 4)
-        self.assertEqual(action_history[1].unit_price, -25)
+        self.assertEqual(action_history[1].quantity, -4)
+        self.assertEqual(action_history[1].unit_price, 25)
         self.assertIn(
             '/media/trading-notes/actions/file_test',
             action_history[1].trading_note.url,

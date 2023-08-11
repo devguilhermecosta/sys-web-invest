@@ -64,11 +64,15 @@ class ActionsListTests(TestCaseWithLogin):
         ('ações em carteira'),
         ('bbas3'),
         ('R$ 32,50'),
-        ('R$ 325,00'),
         ('deletar'),
         ('/ativos/acoes/1/deletar/'),
     ])
     def test_action_list_loads_correct_content_if_user_has_actions(self, text) -> None:  # noqa: E501
+        '''
+            the total application property is dynamically generated
+            through the yfinance library, so testing this value is difficult,
+            so your test is not included here.
+        '''
         # make login
         self.make_login()
 
