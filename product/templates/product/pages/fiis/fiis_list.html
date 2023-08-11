@@ -7,6 +7,7 @@
 
 {% block content %}
   <h1 class="C-dashboard_title">FIIs em carteira</h1>
+  {% include 'global/partials/_messages.html' %}
   <section class="C-dashboard_table_details">
     {% if fiis|length == 0 %}
       <p class="C-dashboard_table_empty_message">nenhum fii até o momento</p>
@@ -15,9 +16,10 @@
         <tr>
           <th>código</th>
           <th>quant.</th>
-          <th>valor med.</th>
+          <th>valor médio pago</th>
           <th>última cotação</th>
           <th>total</th>
+          <th>deletar</th>
         </tr>
       {% for fii in fiis %}
         <tr>
@@ -28,6 +30,14 @@
           <td>{{ fii.get_middle_price|real_brl }}</td>
           <td>{{ fii.previous_close|real_brl }}</td>
           <td>{{ fii.get_current_value_invested|real_brl }}</td>
+          <td>
+            <form
+              action="{{ fii.get_url_delete }}"
+              method="POST">
+              {% csrf_token %}
+              <span class="material-symbols-outlined icon_delete span_vi_delete">delete</span>
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </table>
