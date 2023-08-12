@@ -61,7 +61,7 @@ class ProductFixedIncomeHistoryTests(TestCaseWithLogin):
         ('cdb bb 2035'),
         ('valor atual'),
         ('R$ 2900,00'),
-        ('R$ -100,00'),
+        ('R$ 100,00'),
         ('R$ 1000,00'),
         ('aplicação'),
         ('resgate'),
