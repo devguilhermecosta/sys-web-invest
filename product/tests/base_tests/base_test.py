@@ -206,8 +206,6 @@ def create_profits_history(client: Client,
 
     # create the user fii
     user_product = make_user_fii(user,
-                                 1,
-                                 kwargs.get('value_aplication', 1),
                                  kwargs.get('code', 'mxrf11'),
                                  kwargs.get('desc', 'maxi renda'),
                                  )

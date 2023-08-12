@@ -45,7 +45,7 @@ class UserFII(models.Model):
         new_history.save()
 
     def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
-        if quantity > self.quantity:
+        if quantity > self.get_quantity():
             raise ValidationError(
                 {'quantity': 'quantidade insuficiente para venda'},
                 code='invalid'
