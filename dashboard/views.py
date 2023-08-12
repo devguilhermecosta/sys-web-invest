@@ -101,7 +101,7 @@ class DashboardView(View):
             )
 
         fiis = UserFII.objects.filter(user=self.request.user)
-        total_fiis = sum([fii.get_total_price() for fii in fiis])
+        total_fiis = sum([fii.get_current_value_invested() for fii in fiis])
 
         fixed_income = ProductFixedIncome.objects.filter(
             user=self.request.user,
