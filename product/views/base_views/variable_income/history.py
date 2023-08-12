@@ -4,6 +4,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from product.models import (
     Action,
     UserAction,
@@ -44,8 +45,11 @@ class History(View):
             raise Http404()
 
         product_history = self.history_model.objects.filter(
+            Q(
+                Q(handler__icontains='buy') | Q(handler__icontains='sell'),
+            ),
             userproduct=user_product,
-        ).order_by('-date')
+            ).order_by('-date')
 
         return render(
             self.request,
