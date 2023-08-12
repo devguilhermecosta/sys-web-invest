@@ -53,8 +53,6 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         # make the user fii
         user_fii = make_user_fii(
             user=user,
-            qty=1,
-            unit_price=10,
             code='mxrf11',
             desc='maxi renda',
         )
@@ -93,8 +91,6 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         # create the UserFII for another_user
         another_userfii = make_user_fii(
             another_user,
-            1,
-            1,
             'pvbi11',
             'teste',
         )
@@ -145,8 +141,6 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         # make the user fii
         user_fii = make_user_fii(
             user=user,
-            qty=1,
-            unit_price=10,
             code='mxrf11',
             desc='maxi renda',
         )

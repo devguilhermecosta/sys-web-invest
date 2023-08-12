@@ -64,7 +64,6 @@ class FIIsTests(TestCaseWithLogin):
 
     @parameterized.expand([
         ('Aplicação total'),
-        ('R$ 100,00'),
         ('Total recebido em proventos'),
         ('R$ 200,00'),
     ])

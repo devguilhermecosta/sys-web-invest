@@ -71,8 +71,6 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
         # create the UserFII for another_user
         another_userfii = make_user_fii(
             another_user,
-            1,
-            1,
             'pvbi11',
             'teste',
         )

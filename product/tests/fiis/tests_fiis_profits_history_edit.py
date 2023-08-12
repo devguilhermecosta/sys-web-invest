@@ -149,7 +149,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         r = create_profits_history(self.client, self.make_login)
 
         # create the new userfii
-        new_user_fii = make_user_fii(r['user'], 1, 1, 'pvbi11', 'desc')
+        new_user_fii = make_user_fii(r['user'], 'pvbi11', 'desc')
 
         # create the profit for the new userfii
         self.client.post(
@@ -186,10 +186,6 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
             str(history[0].date),
             '2024-12-31',
         )
-        self.assertEqual(
-            history[0].total_price,
-            14,
-        )
 
     def test_profits_history_edit_returns_status_code_404_if_the_logged_in_user_is_different_from_the_history_owner_user(self) -> None:  # noqa: E501
         # create another user
@@ -201,8 +197,6 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         # create the UserFII for another_user
         another_userfii = make_user_fii(
             another_user,
-            1,
-            1,
             'pvbi11',
             'teste',
         )
@@ -288,7 +282,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         r = create_profits_history(self.client, self.make_login)
 
         # create the new userfii
-        new_user_fii = make_user_fii(r['user'], 1, 1, 'pvbi11', 'desc')
+        new_user_fii = make_user_fii(r['user'], 'pvbi11', 'desc')
 
         # create the profit for the new userfii
         self.client.post(

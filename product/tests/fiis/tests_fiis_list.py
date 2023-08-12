@@ -66,7 +66,6 @@ class FiisListTests(TestCaseWithLogin):
         ('FIIs em carteira'),
         ('mxrf11'),
         ('R$ 9,50'),
-        ('R$ 95,00'),
     ])
     def test_fiis_list_loads_correct_content_if_user_has_fiis(self, text) -> None:  # noqa: E501
         # make login
@@ -135,10 +134,6 @@ class FiisListTests(TestCaseWithLogin):
         # check if the fii MXRF11 is in the fiis list
         self.assertIn(
             'mxrf11',
-            content,
-        )
-        self.assertIn(
-            'R$ 95,00',
             content,
         )
 

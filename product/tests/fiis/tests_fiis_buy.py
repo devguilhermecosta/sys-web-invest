@@ -233,6 +233,9 @@ class FIIsBuyTests(TestCaseWithLogin):
         '''
             When te user already has the FII, if he buys again, the quantity
             will be added together.
+
+            The get_current_value attribute is difficult to test as the values
+            are dynamically obtained by the yfinance library.
         '''
         # make login
         self.make_login()
@@ -262,9 +265,8 @@ class FIIsBuyTests(TestCaseWithLogin):
             product=fii,
         )
 
-        # checks if the quantity is 10 and total price is 95.00
-        self.assertEqual(user_fii.first().quantity, 10)
-        self.assertEqual(user_fii.first().get_total_price(), 95.00)
+        # checks if the quantity is 10
+        self.assertEqual(user_fii.first().get_quantity(), 10)
 
         # fii data 2
         user_fii_data_2 = {
@@ -282,6 +284,5 @@ class FIIsBuyTests(TestCaseWithLogin):
             follow=True
         )
 
-        # checks if the quantity is 30 and total price is 285.00
-        self.assertEqual(user_fii.first().quantity, 30)
-        self.assertEqual(user_fii.first().get_total_price(), 285.00)
+        # checks if the quantity is 30
+        self.assertEqual(user_fii.first().get_quantity(), 30)

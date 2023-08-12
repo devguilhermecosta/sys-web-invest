@@ -321,4 +321,4 @@ class FIIsSellTests(TestCaseWithLogin):
             user=self.get_user('user'),
             product=fii,
         )
-        self.assertEqual(user_fii_2.first().quantity, 5)
+        self.assertEqual(user_fii_2.first().get_quantity(), 5)

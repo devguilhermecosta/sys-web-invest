@@ -64,13 +64,10 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
         )
 
         # create the UserFII for another_user
-        another_userfii = make_user_fii(
-            another_user,
-            1,
-            1,
-            'pvbi11',
-            'teste',
-        )
+        another_userfii = make_user_fii(another_user,
+                                        'pvbi11',
+                                        'teste',
+                                        )
 
         # make login with the another_user
         self.make_login(create_user=False, username=another_user)
@@ -158,10 +155,6 @@ class FIIReceiptProfitsDeleteHistory(TestCaseWithLogin):
         self.assertIn(
             'lucros de 1 unidade(s) de brcr11 do usuário user',
             str(history.first()),
-        )
-        self.assertEqual(
-            history.first().total_price,
-            150,
         )
 
         # remove the history

@@ -182,7 +182,7 @@ class FIIsHistoryTests(TestCaseWithLogin):
             fii_history[1].userproduct.product.code, 'mxrf11',
         )
         self.assertEqual(fii_history[1].handler, 'sell')
-        self.assertEqual(fii_history[1].quantity, 5)
+        self.assertEqual(fii_history[1].quantity, -5)
         self.assertEqual(fii_history[1].unit_price, 10.75)
         self.assertEqual(str(fii_history[1].date), ('2024-01-26'))
         self.assertIn(

@@ -69,8 +69,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
         # make user fii for populate select input
         make_user_fii(
             user,
-            1,
-            1,
             'mxrf11',
             'maxi renda',
         )
@@ -93,8 +91,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         # create the user_fii for another_user
         make_user_fii(another_user,
-                      1,
-                      1,
                       'brcr11',
                       'bresco',
                       )
@@ -175,8 +171,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
         # make the user fii
         user_fii = make_user_fii(
             user=user,
-            qty=1,
-            unit_price=10,
             code='mxrf11',
             desc='maxi renda',
         )
@@ -206,8 +200,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
         # make the user fii
         user_fii = make_user_fii(
             user=user,
-            qty=1,
-            unit_price=10,
             code='mxrf11',
             desc='maxi renda',
         )
@@ -233,4 +225,4 @@ class FIIsProfitsTests(TestCaseWithLogin):
 
         self.assertEqual(history.handler, 'profits')
         self.assertEqual(str(history.date), '2023-07-02')
-        self.assertEqual(float(history.total_price), 4.96)
+        self.assertEqual(float(history.get_final_value()), 4.96)
