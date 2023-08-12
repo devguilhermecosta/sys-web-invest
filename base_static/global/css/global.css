@@ -586,7 +586,6 @@ textarea.C-login_input {
 
 .C-fiis_summary > div {
   max-width: fit-content;
-  /* background-color: red; */
 }
 
 .C-fiis_summary_detail {
@@ -615,17 +614,37 @@ textarea.C-login_input {
   color: var(--gray_1);
 }
 
+.C-dashboard_summary_values {
+  display: flex;
+  flex-direction: column;
+}
+
+.C-dashboard_summary_container {
+  position: relative;
+  min-height: 32px;
+  min-width: 100px;
+}
+
 .C-dashboard_summary_title,
 .C-dashboard_summary_item, 
 .C-dashboard_summary_hidden {
   font-weight: 200;
   text-transform: capitalize;
   line-height: 2;
+  opacity: 1;
+}
+
+.C-dashboard_summary_item,
+.C-dashboard_summary_hidden {
+  position: fixed;
+  transition: opacity 150ms ease;
+  white-space: nowrap;
 }
 
 .C-dashboard_summary_title {
   width: fit-content;
   position: relative;
+  white-space: nowrap;
 }
 
 .C-dashboard_summary_title::before {
@@ -674,14 +693,15 @@ textarea.C-login_input {
 
 .C-dashboard_summary_item {
   line-height: 2;
+  opacity: 1;
 }
 
 #show-invest:checked ~ .C-dashboard_summary .C-dashboard_summary_item {
-  display: none;
+  opacity: 0;
 }
 
 #show-invest:not(:checked) ~ .C-dashboard_summary .C-dashboard_summary_hidden {
-  display: none;
+  opacity: 0;
 }
 /* end dashboard intro */
 

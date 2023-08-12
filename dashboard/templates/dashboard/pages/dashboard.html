@@ -35,17 +35,31 @@
       </div>
       <div class="C-dashboard_summary_title total">total</div>
     </div>
-    <div>
-      <div class="C-dashboard_summary_item">{{ total_actions|real_brl }}</div>
-      <div class="C-dashboard_summary_hidden">R$ --------</div>
-      <div class="C-dashboard_summary_item">{{ total_fixed_income|real_brl }}</div>
-      <div class="C-dashboard_summary_hidden">R$ --------</div>
-      <div class="C-dashboard_summary_item">{{ total_direct_treasure|real_brl }}</div>
-      <div class="C-dashboard_summary_hidden">R$ --------</div>
-      <div class="C-dashboard_summary_item">{{ total_fiis|real_brl }}</div>
-      <div class="C-dashboard_summary_hidden">R$ --------</div>
-      <div class="C-dashboard_summary_item total">{{ grand_total|real_brl }}</div>
-      <div class="C-dashboard_summary_hidden">R$ --------</div>
+    <div class="C-dashboard_summary_values">
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ total_actions|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ total_fixed_income|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ total_direct_treasure|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ total_fiis|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item total">{{ grand_total|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
     </div>
   </section>
 </section>
