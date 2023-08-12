@@ -2,6 +2,7 @@ from django.urls import reverse, resolve, ResolverMatch
 from django.http import HttpResponse
 from dashboard import views
 from utils.mixins.auth import TestCaseWithLogin
+from parameterized import parameterized
 
 
 class DashboardTests(TestCaseWithLogin):
@@ -44,7 +45,16 @@ class DashboardTests(TestCaseWithLogin):
 
         self.assertTemplateUsed(response, 'dashboard/pages/dashboard.html')
 
-    def test_dashboard_loads_correct_content(self) -> None:
+    @parameterized.expand([
+        'meus investimentos',
+        'ações',
+        'renda fixa',
+        'tesouro direto',
+        'fiis',
+        'total',
+        'R$',
+    ])
+    def test_dashboard_loads_correct_content(self, text: str) -> None:
         # make login
         self.make_login()
 
@@ -55,7 +65,6 @@ class DashboardTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            'meus investimentos',
+            text,
             content,
         )
-        self.fail('testar o valor total investido em cada categoria de ativo')
