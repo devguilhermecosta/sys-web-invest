@@ -171,3 +171,7 @@ class ActionsListTests(TestCaseWithLogin):
             'bbas3',
             content_user_2,
         )
+        self.fail(
+            'colocar em cache a chamada para o endpoint da API '
+            'yfinance'
+        )
