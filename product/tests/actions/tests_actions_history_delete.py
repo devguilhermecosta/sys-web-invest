@@ -59,8 +59,8 @@ class ActionsHistoryDeleteTests(TestCaseWithLogin):
 
         # create the history
         p = make_user_action(user=another_user,
-                             code='mxrf11',
-                             desc='maxi renda',
+                             code='bbas3',
+                             desc='banco do brasil',
                              create_history=True,
                              )
 
@@ -82,8 +82,8 @@ class ActionsHistoryDeleteTests(TestCaseWithLogin):
 
         # create the history
         p = make_user_action(user=user,
-                             code='mxrf11',
-                             desc='maxi renda',
+                             code='bbas3',
+                             desc='banco do brasil',
                              create_history=True,
                              )
 
@@ -105,8 +105,8 @@ class ActionsHistoryDeleteTests(TestCaseWithLogin):
 
         # create the history
         make_user_action(user=user,
-                         code='mxrf11',
-                         desc='maxi renda',
+                         code='bbas3',
+                         desc='banco do brasil',
                          create_history=True,
                          )
 
@@ -120,6 +120,6 @@ class ActionsHistoryDeleteTests(TestCaseWithLogin):
 
         self.assertRedirects(
             response,
-            '/ativos/acoes/mxrf11/',
+            '/ativos/acoes/bbas3/',
             302,
         )
