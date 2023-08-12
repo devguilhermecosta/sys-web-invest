@@ -13,6 +13,7 @@ from .base_views.variable_income import (
     Buy,
     Sell,
     History,
+    HistoryDelete,
     Delete,
     )
 from typing import Any, Dict, List
@@ -93,6 +94,11 @@ class FIIsSellView(Sell):
     reverse_url_back_to_page = 'product:fiis'
 
 
+class FiisDeleteView(Delete):
+    model = UserFII
+    reverse_url_response = 'product:fiis_list'
+
+
 class FIIHistoryDetails(History):
     template_to_render_response = 'product/partials/_history_variable_income.html'  # noqa: E501
     product_model = FII
@@ -101,9 +107,10 @@ class FIIHistoryDetails(History):
     reverse_url_back_to_page = 'product:fiis_list'
 
 
-class FiisDeleteView(Delete):
+class FiisHistoryDeleteView(HistoryDelete):
     model = UserFII
-    reverse_url_response = 'product:fiis_list'
+    history_model = FiiHistory
+    reverse_url_response = 'product:fii_history'
 
 
 class FIIManageIncomeReceipt(FIIsView):

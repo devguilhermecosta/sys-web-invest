@@ -70,6 +70,7 @@ def make_fii(code: str, desc: str, cnpj: str = None) -> FII:
 def make_user_fii(user: User,
                   code: str,
                   desc: str,
+                  create_history: bool = False,
                   **kwargs,
                   ) -> UserFII:
     new_obj = UserFII.objects.create(
@@ -77,6 +78,14 @@ def make_user_fii(user: User,
         product=make_fii(code, desc, cnpj=c2.create_cnpj()),
     )
     new_obj.save()
+
+    if create_history:
+        new_obj.buy(
+            date='2023-07-02',
+            quantity=1,
+            unit_price=1,
+        )
+
     return new_obj
 
 

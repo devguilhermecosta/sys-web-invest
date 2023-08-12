@@ -22,6 +22,7 @@ from .fiis import (
     FiisDeleteView,
     FIIManageIncomeReceipt,
     FIIHistoryDetails,
+    FiisHistoryDeleteView,
     FIIManageIncomeReceiptHistory,
     FIIManageIncomeReceiptEditHistory,
     FIIManageIncomeReceiptDeleteHistory,

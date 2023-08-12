@@ -184,4 +184,10 @@ class FiiHistory(models.Model):
         return Decimal(total)
 
     def get_url_delete(self) -> str:
-        ...
+        return reverse(
+            'product:fiis_history_delete',
+            kwargs={
+                'h_id': self.id,
+                'p_id': self.userproduct.id,
+            }
+        )
