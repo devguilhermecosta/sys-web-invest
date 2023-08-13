@@ -29,6 +29,7 @@ class UserMixin:
             username=kwargs.pop('username', 'user'),
             email=kwargs.pop('email', 'user@email.com'),
             password='password',
+            is_staff=kwargs.get('is_staff', False),
         )
         new_user.save()
 
@@ -70,7 +71,10 @@ class TestCaseWithLogin(UserMixin, TestCase):
         # create the user
         user = None
         if create_user:
-            user = self.create_user(with_profile=True)
+            user = self.create_user(
+                with_profile=True,
+                is_staff=kwargs.get('is_staff', False),
+                )
 
         # make login
         response = self.client.post(
