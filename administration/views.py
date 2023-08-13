@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from administration.forms import FIIRegisterForm, ActionRegisterForm
 from product.models import FII, Action
 
@@ -51,6 +53,13 @@ class FIIRegister(TemplateView):
         )
 
 
+@method_decorator(
+    login_required(
+        redirect_field_name='next',
+        login_url='/',
+    ),
+    name='dispatch',
+)
 class ActionRegister(TemplateView):
     template_name = 'administration/pages/product_register.html'
 
@@ -69,6 +78,13 @@ class ActionRegister(TemplateView):
         })
 
         return context_data
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        if not self.request.user.is_staff:
+            return redirect(
+                reverse('dashboard:user_dashboard')
+            )
+        return super().get(*args, **kwargs)
 
     def post(self, *args, **kwargs) -> HttpResponse:
         post = self.request.POST
