@@ -110,7 +110,7 @@ class ProductActionsTests(TestCaseWithLogin):
             'handler': 'jscp',
             'date': '2023-07-02',
             'tax_and_irpf': 100,
-            'total_price': 500,
+            'unit_price': 500,
         }
 
         # make post request

@@ -9,7 +9,7 @@
   <h1 class="C-dashboard_title">FIIs em carteira</h1>
   {% include 'global/partials/_messages.html' %}
   <section class="C-dashboard_table_details">
-    {% if fiis|length == 0 %}
+    {% if products|length == 0 %}
       <p class="C-dashboard_table_empty_message">nenhum fii até o momento</p>
     {% else %}
       <table class="C-dashboard_table">
@@ -21,7 +21,7 @@
           <th>total</th>
           <th>deletar</th>
         </tr>
-      {% for fii in fiis %}
+      {% for fii in products %}
         <tr>
           <td><a href="{% url 'product:fii_history' fii.product.code %}">
             {{ fii.product.code }}

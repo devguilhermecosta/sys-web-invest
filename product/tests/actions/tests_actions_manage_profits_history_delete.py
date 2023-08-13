@@ -73,7 +73,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
                 'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
-                'total_price': 10,
+                'unit_price': 10,
             },
             follow=True,
         )

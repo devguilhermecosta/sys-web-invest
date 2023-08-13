@@ -32,12 +32,12 @@ class ActionsListTests(TestCaseWithLogin):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_actions_list_returns_status_code_405_if_not_get_request(self) -> None:  # noqa: E501
+    def test_actions_list_returns_status_code_404_if_not_get_request(self) -> None:  # noqa: E501
         self.make_login()
 
         response = self.client.post(self.url)
 
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 404)
 
     def test_actions_list_load_correct_template(self) -> None:
         self.make_login()

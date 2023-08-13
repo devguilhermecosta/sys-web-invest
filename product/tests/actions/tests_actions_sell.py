@@ -176,7 +176,7 @@ class ActionsSellTests(TestCaseWithLogin):
         action = make_action('bbas3', 'banco do brasil')
 
         # try buy the action
-        self.client.post(
+        response = self.client.post(
             reverse('product:actions_buy'),
             {
                 'code': 'bbas3',

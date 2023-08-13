@@ -24,7 +24,7 @@ import { getTotalProfits } from './src/utils.js';
       const select = formFiisReceivProfis.querySelector('#id_userproduct');
       const productDesc = select.options[select.selectedIndex].innerHTML;
       const date = form.get('date');
-      const value = parseFloat(form.get('total_price'));
+      const value = parseFloat(form.get('unit_price'));
 
       const body = document.body;
       const container = createDefaultContainer();
@@ -56,7 +56,8 @@ import { getTotalProfits } from './src/utils.js';
         buttonCancel.addEventListener("click", () => {body.removeChild(container);});
 
         buttonConfirm.addEventListener("click", function() {
-          let urlPath = `/ativos/fiis/gerenciar-proventos/receber/`;
+          const inputPath = document.querySelector('#url-receive-profits');
+          let urlPath = inputPath.dataset.urlReceiveProfits;
           let token = formFiisReceivProfis.querySelectorAll('input')[0].value;
           let labels = formFiisReceivProfis.querySelectorAll('.C-login_label');
 

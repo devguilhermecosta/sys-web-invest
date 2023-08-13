@@ -60,13 +60,13 @@ class UserFII(models.Model):
         )
         new_history.save()
 
-    def receive_profits(self, value: float, date: str) -> None:
+    def receive_profits(self, unit_price: float, date: str) -> None:
         new_history = FiiHistory.objects.create(
             userproduct=self,
             handler='profits',
             date=date,
             quantity=1,
-            unit_price=value,
+            unit_price=unit_price,
         )
         new_history.save()
 
@@ -191,3 +191,9 @@ class FiiHistory(models.Model):
                 'p_id': self.userproduct.id,
             }
         )
+
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.save()

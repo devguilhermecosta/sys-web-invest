@@ -235,7 +235,7 @@ class ActionsManageIncomeTests(TestCaseWithLogin):
             'handler': 'jscp',
             'date': '2023-07-02',
             'tax_and_irpf': 2.78,
-            'total_price': 50,
+            'unit_price': 50,
         }
 
         # make post request

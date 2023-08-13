@@ -47,7 +47,7 @@ class ActionsReceivProfitsForm(forms.Form):
             }
         )
     )
-    total_price = forms.FloatField(
+    unit_price = forms.FloatField(
         label='valor bruto',
         widget=forms.NumberInput(
             attrs={

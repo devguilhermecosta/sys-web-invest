@@ -62,19 +62,19 @@ class UserAction(models.Model):
         new_history.save()
         self.save()
 
-    def receiv_profits(self,
-                       handler: str,
-                       date: str,
-                       total_price: float,
-                       tax_and_irpf: float | None = '',
-                       ) -> None:
+    def receive_profits(self,
+                        handler: str,
+                        date: str,
+                        unit_price: float,
+                        tax_and_irpf: float | None = '',
+                        ) -> None:
         new_history = ActionHistory.objects.create(
             userproduct=self,
             handler=handler,
             date=date,
-            quantity=0,
+            quantity=1,
             tax_and_irpf=-abs(tax_and_irpf),
-            unit_price=total_price,
+            unit_price=unit_price,
         )
         new_history.save()
 
@@ -236,6 +236,11 @@ class ActionHistory(models.Model):
                 'p_id': self.userproduct.id,
             }
         )
+
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.save()
 
     def save(self, *args, **kwargs) -> None:
         self.tax_and_irpf = -abs(self.tax_and_irpf)

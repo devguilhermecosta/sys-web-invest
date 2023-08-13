@@ -1,76 +1,30 @@
-from django.views import View
-from django.urls import reverse
-from django.shortcuts import redirect
-from django.views.generic import ListView
-from django.http import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render, get_object_or_404
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.http import JsonResponse, Http404
 from product.forms import FIIBuyForm, FIIReceiptProfitsForm
 from product.models import FII, UserFII, FiiHistory
 from .base_views.variable_income import (
+    BaseView,
+    ListView,
     Buy,
     Sell,
     History,
     HistoryDelete,
     Delete,
+    ReceiveProfits,
+    ReceiveProfitsEdit,
+    ReceiveProfitsDelete,
     )
-from typing import Any, Dict, List
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url='/',
-    ),
-    name='dispatch',
-)
-class FIIsView(View):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        total_applied = UserFII.get_total_amount_invested(
-            user=self.request.user
-        )
-        total_profits = UserFII.get_total_profits(
-            user=self.request.user,
-        )
-        return render(
-            self.request,
-            'product/pages/fiis/fiis.html',
-            context={
-                'total_applied': total_applied,
-                'total_received_in_profits': total_profits,
-                'back_to_page': reverse('dashboard:user_dashboard'),
-            }
-        )
+class FIIsView(BaseView):
+    model = UserFII
+    template_path = 'product/pages/fiis/fiis.html'
+    reverse_url_back_to_page = 'dashboard:user_dashboard'
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url='/',
-    ),
-    name='dispatch',
-)
 class AllFIIsView(ListView):
     model = UserFII
-    template_name = 'product/pages/fiis/fiis_list.html'
-    ordering = ['-id']
-    context_object_name = 'fiis'
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        return {
-            **context,
-            'back_to_page': reverse('product:fiis'),
-        }
-
-    def get_queryset(self, *args, **kwargs):
-        query_set = super().get_queryset(*args, **kwargs)
-        user = self.request.user
-        query_set = query_set.filter(user=user)
-
-        return query_set
+    template_path = 'product/pages/fiis/fiis_list.html'
+    reverse_url_back_to_page = 'product:fiis'
 
 
 class FIISBuyView(Buy):
@@ -113,64 +67,15 @@ class FiisHistoryDeleteView(HistoryDelete):
     reverse_url_response = 'product:fii_history'
 
 
-class FIIManageIncomeReceipt(FIIsView):
-    def choices(self) -> List[tuple]:
-        userfiis = UserFII.objects.filter(
-            user=self.request.user
-        )
-
-        choices = [('---', '---')]
-        for userfii in userfiis:
-            choices.append(
-                (userfii.id, str(userfii.product.code).upper()),
-            )
-        return choices
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        session = self.request.session.get('fiis_manage_income', None)
-        form = FIIReceiptProfitsForm(session)
-        form.fields.get('userproduct').widget.choices = self.choices()
-
-        return render(
-            self.request,
-            'product/pages/fiis/fiis_profits.html',
-            context={
-                'url_history_profits': reverse('product:fii_history_json'),
-                'url_total_profits': reverse('product:fii_total_profits_json'),
-                'form': form,
-                'form_title': 'Receber Proventos',
-                'custom_id': 'form_fii_receiv_profis',
-                'button_submit_value': 'salvar',
-                'is_main_page': True,
-                'back_to_page': reverse('product:fiis'),
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        post = self.request.POST
-        self.request.session['fiis_manage_income'] = post
-        form = FIIReceiptProfitsForm(post)
-
-        if form.is_valid():
-            data = form.cleaned_data
-
-            user_fii = UserFII.objects.get(
-                user=self.request.user,
-                pk=data['userproduct'],
-            )
-
-            user_fii.receive_profits(
-                value=data['total_price'],
-                date=data['date'],
-            )
-
-            del self.request.session['fiis_manage_income']
-
-            return JsonResponse({'success': 'success request'})
-
-        return redirect(
-            reverse('product:fiis_manage_income')
-        )
+class FIIManageIncomeReceipt(ReceiveProfits):
+    user_product_model = UserFII
+    profits_form = FIIReceiptProfitsForm
+    template_path = 'product/pages/fiis/fiis_profits.html'
+    form_custom_id = 'form_fii_receiv_profis'
+    reverse_url_history_profits = 'product:fii_history_json'
+    reverse_url_receive_profits = 'product:fiis_manage_income_receipt'
+    reverse_url_total_profits = 'product:fii_total_profits_json'
+    reverse_url_back_to_page = 'product:fiis'
 
 
 class FIIManageIncomeReceiptHistory(FIIsView):
@@ -185,77 +90,20 @@ class FIIManageIncomeReceiptHistory(FIIsView):
         raise Http404()
 
 
-class FIIManageIncomeReceiptEditHistory(FIIManageIncomeReceipt):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        history = get_object_or_404(
-            FiiHistory,
-            pk=kwargs.get('id', None)
-        )
+class FIIManageIncomeReceiptEditHistory(ReceiveProfitsEdit):
+    user_product_model = UserFII
+    history_model = FiiHistory
+    profits_form = FIIReceiptProfitsForm
+    template_path = 'product/pages/fiis/fiis_profits.html'
+    reverse_url_back_to_page = 'product:fiis_manage_income'
+    reverse_url_success_response = 'product:fiis_manage_income'
+    reverse_url_invalid_form = 'product:fii_manage_income_receipt_edit'
 
-        if history.userproduct.user == self.request.user:
-            session = self.request.session.get('fiis-profits-edit', None)
 
-            form = FIIReceiptProfitsForm(
-                session,
-                initial={
-                    'userproduct': history.userproduct.id,
-                    'date': str(history.date),
-                    'total_price': history.get_final_value(),
-                    }
-                )
-            form.fields.get('userproduct').widget.choices = self.choices()
-
-            return render(
-                self.request,
-                'product/pages/fiis/fiis_profits.html',
-                context={
-                    'form': form,
-                    'form_title': 'editar',
-                    'button_submit_value': 'salvar',
-                    'is_main_page': False,
-                    'back_to_page': reverse('product:fiis_manage_income'),
-                }
-            )
-
-        raise Http404()
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        pk = kwargs.get('id', None)
-        post = self.request.POST
-        self.request.session['fiis-profits-edit'] = post
-        form = FIIReceiptProfitsForm(post)
-
-        if form.is_valid():
-            data = form.cleaned_data
-
-            history = FiiHistory.objects.get(pk=pk)
-
-            if history.userproduct.user == self.request.user:
-                user_fii = UserFII.objects.get(pk=data['userproduct'])
-
-                history.userproduct = user_fii
-                history.date = data['date']
-                history.unit_price = data['total_price']
-                history.save()
-
-                del self.request.session['fiis-profits-edit']
-
-                messages.success(
-                    self.request,
-                    'rendimento salvo com sucesso',
-                )
-
-                return redirect(
-                    reverse('product:fiis_manage_income')
-                )
-
-            raise Http404()
-
-        return redirect(
-            reverse(
-                'product:fii_manage_income_receipt_edit', args=(pk,)
-                )
-        )
+class FIIManageIncomeReceiptDeleteHistory(ReceiveProfitsDelete):
+    user_product_model = UserFII
+    history_model = FiiHistory
+    reverse_url_success_response = 'product:fiis_manage_income'
 
 
 class GetTotalProfitsView(FIIsView):
@@ -264,24 +112,4 @@ class GetTotalProfitsView(FIIsView):
         return JsonResponse({'value': total})
 
     def post(self, *args, **kwargs) -> None:
-        raise Http404()
-
-
-class FIIManageIncomeReceiptDeleteHistory(FIIsView):
-    def post(self, *args, **kwargs) -> HttpResponse:
-        history = get_object_or_404(
-            FiiHistory,
-            pk=kwargs.get('id', None)
-        )
-
-        if history.userproduct.user == self.request.user:
-            history.delete()
-
-            return redirect(
-                reverse('product:fiis_manage_income')
-            )
-
-        raise Http404()
-
-    def get(self, *args, **kwargs) -> None:
         raise Http404()

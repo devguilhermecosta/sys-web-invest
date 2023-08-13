@@ -9,7 +9,7 @@
   <h1 class="C-dashboard_title">ações em carteira</h1>
   {% include 'global/partials/_messages.html' %}
   <section class="C-dashboard_table_details">
-    {% if actions|length == 0 %}
+    {% if products|length == 0 %}
       <p class="C-dashboard_table_empty_message">Nenhuma ação até o momento</p>
     {% else %}
       <table class="C-dashboard_table">
@@ -21,7 +21,7 @@
           <th>total</th>
           <th>deletar</th>
         </tr>
-      {% for action in actions %}
+      {% for action in products %}
         <tr>
           <td><a href="{% url 'product:action_history' action.product.code %}">
             {{ action.product.code }}

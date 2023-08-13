@@ -215,7 +215,7 @@ def create_profits_history(client: Client,
         reverse('product:fiis_manage_income_receipt'),
         {
             'userproduct': user_product.id,
-            'total_price': kwargs.get('profits_value', 10),
+            'unit_price': kwargs.get('profits_value', 10),
             'date': '2023-07-02',
         },
         follow=True,
@@ -258,7 +258,7 @@ def create_actions_history(client: Client,
     returns a instance of User, UserAction, FiiHistory(QuerySet)
     and a HttpResponse
     """
-    # make login
+    # make loginfii
     _, user = login_function()
 
     # create the user fii
@@ -275,7 +275,7 @@ def create_actions_history(client: Client,
             'handler': kwargs.get('handler', 'dividends'),
             'date': kwargs.get('date', '2023-07-02'),
             'tax_and_irpf': kwargs.get('tax_and_irpf', 0),
-            'total_price': kwargs.get('gross_value', 10),
+            'unit_price': kwargs.get('gross_value', 10),
         },
         follow=True,
     )

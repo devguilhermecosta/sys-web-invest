@@ -54,7 +54,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('Receber Proventos'),
+        ('lançar rendimento'),
         ('fii'),
         ('MXRF11'),
         ('data'),
@@ -134,9 +134,9 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('userproduct', 'Campo obrigatório'),
-        ('date', 'Campo obrigatório'),
-        ('total_price', 'Campo obrigatório'),
+        ('userproduct', '{"error": "form errors"}'),
+        ('date', '{"error": "form errors"}'),
+        ('unit_price', '{"error": "form errors"}'),
     ])
     def test_fiis_profits_returns_error_messages_if_any_field_is_empty(self, field: str, msg: str) -> None:  # noqa: E501
         # make login
@@ -158,11 +158,6 @@ class FIIsProfitsTests(TestCaseWithLogin):
             msg,
             response.content.decode('utf-8')
         )
-        self.assertRedirects(
-            response,
-            '/ativos/fiis/gerenciar-proventos/',
-            302,
-        )
 
     def test_fiis_profits_returns_success_json_response_if_all_fields_is_ok(self) -> None:  # noqa: E501
         # make login
@@ -179,7 +174,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
         data = {
             'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'total_price': 4.96,
+            'unit_price': 4.96,
         }
 
         # make post request
@@ -189,7 +184,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
         )
 
         self.assertIn(
-            '{"success": "success request"}',
+            '{"data": "success request"}',
             response.content.decode('utf-8')
         )
 
@@ -208,7 +203,7 @@ class FIIsProfitsTests(TestCaseWithLogin):
         data = {
             'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'total_price': 4.96,
+            'unit_price': 4.96,
         }
 
         # make post request

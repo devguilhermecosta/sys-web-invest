@@ -22,7 +22,7 @@ class FIIReceiptProfitsForm(forms.Form):
         ),
         input_formats=['%Y-%m-%d']
     )
-    total_price = forms.FloatField(
+    unit_price = forms.FloatField(
         label='valor',
         widget=forms.NumberInput(
             {

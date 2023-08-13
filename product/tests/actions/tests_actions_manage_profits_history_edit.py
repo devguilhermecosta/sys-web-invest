@@ -68,7 +68,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
                 'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
-                'total_price': 10,
+                'unit_price': 10,
             },
             follow=True,
         )
@@ -174,7 +174,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
                 'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
-                'total_price': 10,
+                'unit_price': 10,
             },
             follow=True,
         )
@@ -210,7 +210,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         ('user_product_id', 'selecione uma ação'),
         ('profits_type', 'campo obrigatório'),
         ('date', 'campo obrigatório'),
-        ('total_price', 'campo obrigatório'),
+        ('unit_price', 'campo obrigatório'),
     ])
     def test_actions_manage_profits_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # create the useraction and make login
@@ -240,7 +240,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
         ('userproduct', '---', 'selecione uma ação'),
         ('handler', '---', 'selecione um tipo de rendimento'),
         ('date', '00-00-0000', 'Informe uma data válida'),
-        ('total_price', 'abc', 'Informe um número'),
+        ('unit_price', 'abc', 'Informe um número'),
     ])
     def test_actions_manage_profits_edit_returns_error_messages_if_any_field_has_invalid_data(self, field: str, value: str, message: str) -> None:  # noqa: E501
         # create the useraction and make login
@@ -283,7 +283,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
             'userproduct': new_useraction.id,
             'handler': 'renting',
             'date': '2023-08-01',
-            'total_price': 1000,
+            'unit_price': 1000,
         }
 
         # make post request
@@ -321,7 +321,7 @@ class ActionManageProfitsHistoryDeleteTests(TestCaseWithLogin):
             'userproduct': new_useraction.id,
             'handler': 'renting',
             'date': '2023-08-01',
-            'total_price': 1000,
+            'unit_price': 1000,
         }
 
         # make post request

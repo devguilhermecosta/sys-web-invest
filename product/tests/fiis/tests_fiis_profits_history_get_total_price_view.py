@@ -84,7 +84,7 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
             reverse('product:fiis_manage_income_receipt'),
             {
                 'userproduct': another_userfii.id,
-                'total_price': 50,
+                'unit_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,
@@ -93,7 +93,7 @@ class ProfitsHistoryGetTotalPriceTests(TestCaseWithLogin):
         # checks if the history has been created
         self.assertEqual(
             r_post.content.decode('utf-8'),
-            '{"success": "success request"}',
+            '{"data": "success request"}',
         )
 
         # make get request for get the total value

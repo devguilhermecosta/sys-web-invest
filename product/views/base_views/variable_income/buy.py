@@ -1,11 +1,9 @@
-from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from product.forms import ActionBuyAndSellForm, FIIBuyForm
+from .base import BaseView
 from product.models import (
     Action,
     UserAction,
@@ -16,14 +14,7 @@ from product.models import (
     )
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url='/',
-    ),
-    name='dispatch',
-)
-class Buy(View):
+class Buy(BaseView):
     success_response_url_redirect: str = ''
     error_response_url_redirect: str = ''
     form: ActionBuyAndSellForm | FIIBuyForm = ''

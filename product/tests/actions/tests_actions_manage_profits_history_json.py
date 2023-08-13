@@ -91,7 +91,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
                 'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
-                'total_price': 10,
+                'unit_price': 10,
             },
             follow=True,
         )
@@ -141,7 +141,7 @@ class ActionManageProfitsHistoryJsonTests(TestCaseWithLogin):
                 'handler': 'jscp',
                 'date': '2024-12-31',
                 'tax_and_irpf': 1,
-                'total_price': 580,
+                'unit_price': 580,
             },
             follow=True,
         )

@@ -61,7 +61,7 @@ deleteObject(
       const productDesc = productInput.options[productInput.selectedIndex].innerHTML;
       const handler = profitsTypeInput.options[profitsTypeInput.selectedIndex].innerHTML;
       const date = dataForm.get('date');
-      const totalValue = convertToBRL(parseFloat(dataForm.get('total_price')));
+      const totalValue = convertToBRL(parseFloat(dataForm.get('unit_price')));
 
       if (!product_id || !handler || !date || !totalValue) {
         createMessageAlert('white', 'informe todos os dados');
@@ -89,7 +89,7 @@ deleteObject(
 
       buttonCancel.addEventListener("click", () => {body.removeChild(container)});
       buttonConfirm.addEventListener("click", function() {
-        const inputPath = document.querySelector('#url-actions-receive-profits');
+        const inputPath = document.querySelector('#url-receive-profits');
         const path = inputPath.dataset.urlReceiveProfits;
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         const labels = form.querySelectorAll('.C-login_label');

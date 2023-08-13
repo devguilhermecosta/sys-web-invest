@@ -83,7 +83,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
     @parameterized.expand([
         ('userproduct', 'Selecione um produto'),
         ('date', 'Campo obrigatório'),
-        ('total_price', 'Campo obrigatório'),
+        ('unit_price', 'Campo obrigatório'),
     ])
     def test_profits_history_edit_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # create the profits history
@@ -115,7 +115,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
     @parameterized.expand([
         ('userproduct', 1, ''),
         ('date', '00-00-00', 'Informe uma data válida'),
-        ('total_price', 10, ''),
+        ('unit_price', 10, ''),
     ])
     def test_profits_history_edit_returns_error_message_if_data_has_a_invalid_format(self, field: str, value: str | int, message: str) -> None:  # noqa: E501
         # create the profits history
@@ -156,7 +156,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
             reverse('product:fiis_manage_income_receipt'),
             {
                 'userproduct': new_user_fii.id,
-                'total_price': 10,
+                'unit_price': 10,
                 'date': '2023-07-02',
             }
             )
@@ -165,7 +165,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         history_data = {
             'userproduct': new_user_fii.id,
             'date': '2024-12-31',
-            'total_price': 14,
+            'unit_price': 14,
         }
 
         # make post request
@@ -209,7 +209,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
             reverse('product:fiis_manage_income_receipt'),
             {
                 'userproduct': another_userfii.id,
-                'total_price': 50,
+                'unit_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,
@@ -218,7 +218,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         # checks if the history has been created
         self.assertEqual(
             r_post.content.decode('utf-8'),
-            '{"success": "success request"}',
+            '{"data": "success request"}',
         )
 
         # get the history id
@@ -262,7 +262,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
             data={
                 'userproduct': u['user_fii'].id,
                 'date': '2024-12-31',
-                'total_price': 14,
+                'unit_price': 14,
             },
             follow=True,
             )
@@ -298,7 +298,7 @@ class FIIsProfitsHistoryEditTests(TestCaseWithLogin):
         history_data = {
             'userproduct': new_user_fii.id,
             'date': '2024-12-31',
-            'total_price': 14,
+            'unit_price': 14,
         }
 
         # make post request

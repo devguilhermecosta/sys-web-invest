@@ -61,7 +61,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         data = {
             'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'total_price': 4.96,
+            'unit_price': 4.96,
         }
 
         # make post request for save the profits
@@ -103,7 +103,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
             reverse('product:fiis_manage_income_receipt'),
             {
                 'userproduct': another_userfii.id,
-                'total_price': 50,
+                'unit_price': 50,
                 'date': '2023-07-02',
             },
             follow=True,
@@ -112,7 +112,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         # checks if the history has been created
         self.assertEqual(
             r_post.content.decode('utf-8'),
-            '{"success": "success request"}',
+            '{"data": "success request"}',
         )
 
         # make get request with another_user
@@ -149,7 +149,7 @@ class FIISProfitsHistoryTests(TestCaseWithLogin):
         data = {
             'userproduct': user_fii.pk,
             'date': '2023-07-02',
-            'total_price': 4.96,
+            'unit_price': 4.96,
         }
 
         # make post request for save the profits

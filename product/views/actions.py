@@ -1,79 +1,30 @@
-from typing import Any, Dict
-from django.views import View
-from django.views.generic import ListView
-from django.http import HttpResponse, Http404, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.http import Http404, JsonResponse
 from product.forms import ActionBuyAndSellForm, ActionsReceivProfitsForm
 from product.models import Action, UserAction, ActionHistory
 from .base_views.variable_income import (
+    BaseView,
+    ListView,
     Buy,
     Sell,
     Delete,
     History,
     HistoryDelete,
+    ReceiveProfits,
+    ReceiveProfitsEdit,
+    ReceiveProfitsDelete,
     )
 
 
-login_url = '/'
+class ActionsView(BaseView):
+    model = UserAction
+    template_path = 'product/pages/actions/actions.html'
+    reverse_url_back_to_page = 'dashboard:user_dashboard'
 
 
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url=login_url,
-    ),
-    name='dispatch',
-)
-class ActionsView(View):
-    def get(self, *args, **kwargs) -> HttpResponse:
-        user = self.request.user
-
-        total_applied = UserAction.get_total_amount_invested(user)
-        total_profits = UserAction.get_total_profits(user)
-        total_tax = UserAction.get_total_tax(user)
-
-        return render(
-            self.request,
-            'product/pages/actions/actions.html',
-            context={
-                'total_applied': total_applied,
-                'total_received_in_profits': total_profits,
-                'total_tax': total_tax,
-                'back_to_page': reverse('dashboard:user_dashboard'),
-            }
-        )
-
-
-@method_decorator(
-    login_required(
-        redirect_field_name='next',
-        login_url=login_url,
-    ),
-    name='dispatch',
-)
 class AllActionsView(ListView):
     model = UserAction
-    template_name = 'product/pages/actions/actions_list.html'
-    ordering = ['-id']
-    context_object_name = 'actions'
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        return {
-            **context,
-            'back_to_page': reverse('product:actions'),
-        }
-
-    def get_queryset(self, *args, **kwargs):
-        query_set = super().get_queryset(*args, **kwargs)
-        user = self.request.user
-        query_set = query_set.filter(user=user)
-
-        return query_set
+    template_path = 'product/pages/actions/actions_list.html'
+    reverse_url_back_to_page = 'product:actions'
 
 
 class ActionsDeleteView(Delete):
@@ -116,72 +67,15 @@ class ActionsHistoryDeleteView(HistoryDelete):
     reverse_url_response = 'product:action_history'
 
 
-class ActionsManageProfitsView(ActionsView):
-    def choices(self) -> tuple:
-        choices = [('---', '---')]
-
-        objects = UserAction.objects.filter(
-            user=self.request.user
-        )
-
-        for user_action in objects:
-            choices.append(
-                (user_action.id, user_action.product.code.upper())
-            )
-
-        return choices
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        form = ActionsReceivProfitsForm()
-        form.fields.get('userproduct').widget.choices = self.choices()
-
-        return render(
-            self.request,
-            'product/pages/actions/actions_profits.html',
-            context={
-                'form': form,
-                'form_title': 'lançar rendimento',
-                'custom_id': 'actions-receive-profits-form',
-                'button_submit_value': 'salvar',
-                'url_history_profits': reverse(
-                    'product:action_history_json'
-                ),
-                'url_receive_profits': reverse(
-                    'product:actions_manage_profits',
-                ),
-                'url_total_profits': reverse(
-                    'product:action_total_profits_json',
-                ),
-                'is_main_page': True,
-                'back_to_page': reverse('product:actions'),
-            }
-        )
-
-    def post(self, *args, **kwargs) -> JsonResponse:
-        post = self.request.POST
-        form = ActionsReceivProfitsForm(post)
-
-        if form.is_valid():
-            data = form.cleaned_data
-
-            user_action = get_object_or_404(
-                UserAction,
-                pk=data['userproduct'],
-            )
-
-            if user_action.user != self.request.user:
-                raise Http404()
-
-            user_action.receiv_profits(
-                handler=data['handler'],
-                date=data['date'],
-                total_price=data['total_price'],
-                tax_and_irpf=data['tax_and_irpf'],
-            )
-
-            return JsonResponse({'data': 'success request'})
-
-        return JsonResponse({'error': 'form errors'})
+class ActionsManageProfitsView(ReceiveProfits):
+    user_product_model = UserAction
+    profits_form = ActionsReceivProfitsForm
+    template_path = 'product/pages/actions/actions_profits.html'
+    form_custom_id = 'actions-receive-profits-form'
+    reverse_url_history_profits = 'product:action_history_json'
+    reverse_url_receive_profits = 'product:actions_manage_profits'
+    reverse_url_total_profits = 'product:action_total_profits_json'
+    reverse_url_back_to_page = 'product:actions'
 
 
 class ActionsManageProfitsHistoryView(ActionsView):
@@ -195,99 +89,20 @@ class ActionsManageProfitsHistoryView(ActionsView):
         raise Http404()
 
 
-class ActionsManageProfitsHistoryDeleteView(ActionsView):
-    def get(self, *args, **kwargs) -> None:
-        raise Http404()
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        history = get_object_or_404(
-            ActionHistory,
-            pk=kwargs.get('id', None)
-        )
-
-        if history.userproduct.user != self.request.user:
-            raise Http404()
-
-        history.delete()
-
-        return redirect(
-            reverse('product:actions_manage_profits')
-        )
+class ActionsManageProfitsHistoryDeleteView(ReceiveProfitsDelete):
+    user_product_model = UserAction
+    history_model = ActionHistory
+    reverse_url_success_response = 'product:actions_manage_profits'
 
 
-class ActionsManageProfitsHistoryEditView(ActionsManageProfitsView):
-    def get_product_history_or_404(self, id: int) -> ActionHistory:
-        history = get_object_or_404(
-            ActionHistory,
-            pk=id
-        )
-
-        if history.userproduct.user != self.request.user:
-            raise Http404()
-
-        return history
-
-    def get(self, *args, **kwargs) -> HttpResponse:
-        history = self.get_product_history_or_404(kwargs.get('id', None))
-        session = self.request.session.get('actions-profits-edit', None)
-        form = ActionsReceivProfitsForm(
-            session,
-            initial={
-                'userproduct': history.userproduct.id,
-                'handler': history.handler,
-                'date': history.date,
-                'tax_and_irpf': abs(history.tax_and_irpf),
-                'total_price': history.get_gross_value(),
-            }
-            )
-        form.fields.get('userproduct').widget.choices = self.choices()
-
-        return render(
-            self.request,
-            'product/pages/actions/actions_profits.html',
-            context={
-                'form': form,
-                'form_title': 'editar rendimento',
-                'custom_id': 'actions-receive-profits-edit-form',
-                'button_submit_value': 'salvar',
-                'is_main_page': False,
-                'back_to_page': reverse('product:actions_manage_profits'),
-            }
-        )
-
-    def post(self, *args, **kwargs) -> HttpResponse:
-        history = self.get_product_history_or_404(kwargs.get('id', None))
-        post = self.request.POST
-        self.request.session['actions-profits-edit'] = post
-        form = ActionsReceivProfitsForm(post)
-
-        if form.is_valid():
-            data = form.cleaned_data
-            tax = data['tax_and_irpf'] if data['tax_and_irpf'] != 0 else 0
-            user_action = UserAction.objects.get(pk=data['userproduct'])
-
-            history.userproduct = user_action
-            history.handler = data['handler']
-            history.date = data['date']
-            history.tax_and_irpf = tax
-            history.unit_price = data['total_price']
-
-            history.save()
-
-            messages.success(
-                self.request,
-                'rendimento salvo com sucesso'
-            )
-
-            del self.request.session['actions-profits-edit']
-
-            return redirect(
-                reverse('product:actions_manage_profits'),
-            )
-
-        return redirect(
-            reverse('product:action_manage_profits_edit', args=(history.id,))
-        )
+class ActionsManageProfitsHistoryEditView(ReceiveProfitsEdit):
+    user_product_model = UserAction
+    history_model = ActionHistory
+    profits_form = ActionsReceivProfitsForm
+    template_path = 'product/pages/actions/actions_profits.html'
+    reverse_url_back_to_page = 'product:actions_manage_profits'
+    reverse_url_success_response = 'product:actions_manage_profits'
+    reverse_url_invalid_form = 'product:action_manage_profits_edit'
 
 
 class ActionsGetTotalProfitsView(ActionsView):

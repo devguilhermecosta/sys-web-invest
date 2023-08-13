@@ -91,7 +91,7 @@ class ActionsProfitsGetTotalProfitsTests(TestCaseWithLogin):
                 'handler': 'dividends',
                 'date': '2023-07-02',
                 'tax_and_irpf': 1,
-                'total_price': 1500,
+                'unit_price': 1500,
             },
             follow=True,
         )
