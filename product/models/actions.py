@@ -29,17 +29,7 @@ class Action(models.Model):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        self.clean()
         self.save()
-
-    def clean(self) -> None:
-        if self.id is not None:
-            code = Action.objects.filter(code=self.code)
-            if len(code) != 0 and code.first().id != self.id:
-                raise ValidationError(
-                    ('Este código já está em uso'),
-                    code='invalid'
-                )
 
 
 class UserAction(models.Model):

@@ -45,17 +45,7 @@ class Edit(Register):
 
         if form.is_valid():
             data = form.cleaned_data
-            try:
-                product.update(**data)
-            except ValidationError:
-                messages.error(
-                    self.request,
-                    'existem erros no formulário',
-                )
-
-                return redirect(
-                    reverse(self.reverse_url_invalid_form, args=(code,))
-                    )
+            product.update(**data)
 
             messages.success(
                 self.request,

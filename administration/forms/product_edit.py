@@ -1,4 +1,6 @@
+from typing import Any, Dict
 from django import forms
+from django.core.exceptions import ValidationError
 from product.models import Action, FII
 from utils.forms.style import add_css_class
 
@@ -16,10 +18,25 @@ class ActionEditForm(forms.ModelForm):
     class Meta:
         model = Action
         fields = [
+            'id',
             'code',
             'description',
             'cnpj',
         ]
+
+    def clean_code(self) -> Dict[str, Any]:
+        code = self.cleaned_data['code']
+        pk = self.fields.get('id')
+        i_code = Action.objects.filter(code=code).first()
+        for key, value in self.fields.items():
+            print(key, value)
+
+        if i_code and i_code.id != pk and i_code.code == code:
+            raise ValidationError(
+                ('Este código já está em uso'),
+                code='invalid'
+                )
+        return code
 
 
 class FIIEditForm(ActionEditForm):
