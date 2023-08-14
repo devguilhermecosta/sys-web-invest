@@ -87,6 +87,19 @@ class ActionsRegisterTests(TestCaseWithLogin):
             content,
         )
 
+    def test_action_register_loads_default_message_if_no_registered_product(self) -> None:  # noqa: E501
+        # make login with a user staff
+        self.make_login(is_staff=True)
+
+        # make get request without an registered product
+        response = self.client.get(self.url)
+        content = response.content.decode('utf-8')
+
+        self.assertIn(
+            'nenhum produto cadastrado',
+            content,
+        )
+
     @parameterized.expand([
         'bbas3',
         'banco do brasil',
