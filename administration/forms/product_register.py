@@ -116,8 +116,37 @@ class ActionRegisterForm(FIIRegisterForm):
 
         if product.exists():
             raise ValidationError(
-                ('Ação já registrado'),
+                ('Ação já registrada'),
                 code='invalid'
             )
 
         return code
+
+    def clean_cnpj(self):
+        cnpj = self.cleaned_data["cnpj"]
+        validate_cnpj = c2.validate(cnpj)
+
+        if not cnpj:
+            raise ValidationError(
+                ('Campo obrigatório'),
+                code='required'
+            )
+
+        if not validate_cnpj.is_valid():
+            raise ValidationError(
+                ('Cnpj inválido'),
+                code='invalid'
+            )
+
+        cpf_valid = validate_cnpj.formatted(punctuation=True)
+        product = Action.objects.filter(
+            cnpj=cpf_valid
+        )
+
+        if product.exists():
+            raise ValidationError(
+                ('CNPJ já registrado'),
+                code='invalid'
+            )
+
+        return cpf_valid
