@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 from product.models import FII, Action
 from .register import Register
 from administration.forms import ActionEditForm, FIIEditForm
@@ -44,7 +45,17 @@ class Edit(Register):
 
         if form.is_valid():
             data = form.cleaned_data
-            product.update(**data)
+            try:
+                product.update(**data)
+            except ValidationError:
+                messages.error(
+                    self.request,
+                    'existem erros no formulário',
+                )
+
+                return redirect(
+                    reverse(self.reverse_url_invalid_form, args=(code,))
+                    )
 
             messages.success(
                 self.request,

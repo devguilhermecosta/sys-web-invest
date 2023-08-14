@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from typing import Collection, Optional, TypeVar, List
+from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
 from decimal import Decimal
@@ -29,27 +29,17 @@ class Action(models.Model):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
-        # self.clean()
+        self.clean()
         self.save()
 
-    def save(self, *args, **kwargs) -> None:
-        instance_code = Action.objects.filter(code=self.code)
-        instance_cnpj = Action.objects.filter(cnpj=self.cnpj)
-
-        if self.id:
-            if instance_code.first().id != self.id:
+    def clean(self) -> None:
+        if self.id is not None:
+            code = Action.objects.filter(code=self.code)
+            if len(code) != 0 and code.first().id != self.id:
                 raise ValidationError(
-                    ('Código já cadastrado'),
+                    ('Este código já está em uso'),
                     code='invalid'
                 )
-
-            if instance_cnpj.first().id != self.id:
-                raise ValidationError(
-                    ('CNPJ já cadastrado'),
-                    code='invalid'
-                )
-
-        return super().clean(*args, **kwargs)
 
 
 class UserAction(models.Model):
