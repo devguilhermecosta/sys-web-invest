@@ -81,6 +81,18 @@ def make_fii(code: str, desc: str, cnpj: str = None) -> FII:
     return new_fii
 
 
+def make_fii_in_batch(num_of_fiis: int) -> None:
+    chars = st.ascii_letters
+    for i in range(num_of_fiis):
+        code = SystemRandom().choices(chars, k=6)
+        desc = SystemRandom().choices(chars, k=10)
+        make_fii(
+            code=code,
+            desc=desc,
+            cnpj=c2.create_cnpj(),
+        )
+
+
 def make_user_fii(user: User,
                   code: str,
                   desc: str,

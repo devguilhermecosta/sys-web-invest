@@ -3,8 +3,9 @@
 from .base_test import (
     make_action,
     make_action_in_batch,
-    make_fii,
     make_user_action,
+    make_fii,
+    make_fii_in_batch,
     make_user_fii,
     make_simple_file,
     make_fixed_income_product,
