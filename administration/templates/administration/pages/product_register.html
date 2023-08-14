@@ -20,12 +20,27 @@
           <th>código</th>
           <th>nome</th>
           <th>cnpj</th>
+          <th>editar</th>
+          <th>deletar</th>
         </tr>
       {% for product in products %}
         <tr>
           <td>{{ product.code }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.cnpj }}</td>
+          <td>
+            <a href="">
+              <span class="material-symbols-outlined icon_edit">edit</span>
+            </a>
+          </td>
+          <td>
+            <form 
+              action=""
+              method="POST">
+              {% csrf_token %}
+              <span class="material-symbols-outlined icon_delete fi_h_delete">delete_forever</span>
+            </form>
+          </td>
         </tr>
       {% endfor %}
       </table>
