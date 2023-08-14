@@ -15,9 +15,13 @@ QuerySet = TypeVar('QuerySet', list, None)
 
 
 class Action(models.Model):
-    code = models.CharField(max_length=5)
+    code = models.CharField(max_length=5,
+                            unique=True,
+                            error_messages={
+                                'unique': 'Este código já está em uso',
+                            })
     description = models.CharField(max_length=50)
-    cnpj = models.CharField(max_length=18)
+    cnpj = models.CharField(max_length=18, unique=True)
 
     def __str__(self) -> str:
         return self.description

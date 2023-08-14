@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
-from django.core.exceptions import ValidationError
 from product.models import FII, Action
 from .register import Register
 from administration.forms import ActionEditForm, FIIEditForm
@@ -41,11 +40,10 @@ class Edit(Register):
         product = self.get_product_or_404(code)
         post = self.request.POST
         self.request.session['admin-product-edit'] = post
-        form = self.form(post)
+        form = self.form(post, instance=product)
 
         if form.is_valid():
-            data = form.cleaned_data
-            product.update(**data)
+            form.save()
 
             messages.success(
                 self.request,
