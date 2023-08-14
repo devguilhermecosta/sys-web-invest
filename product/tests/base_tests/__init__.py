@@ -2,6 +2,7 @@
 
 from .base_test import (
     make_action,
+    make_action_in_batch,
     make_fii,
     make_user_action,
     make_user_fii,

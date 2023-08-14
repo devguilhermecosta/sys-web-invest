@@ -15,7 +15,9 @@ from product.models import (
     DirectTreasure,
     )
 from typing import NewType, Dict
+from random import SystemRandom
 import c2validator as c2
+import string as st
 
 
 LoginFunction = NewType('LoginFunction', HttpRequest)
@@ -31,6 +33,18 @@ def make_action(code: str, desc: str, cnpj: str = None) -> Action:
     new_action.save()
 
     return new_action
+
+
+def make_action_in_batch(num_of_actions: int) -> None:
+    chars = st.ascii_letters
+    for i in range(num_of_actions):
+        code = SystemRandom().choices(chars, k=5)
+        desc = SystemRandom().choices(chars, k=10)
+        make_action(
+            code=code,
+            desc=desc,
+            cnpj=c2.create_cnpj(),
+        )
 
 
 def make_user_action(user: User,
