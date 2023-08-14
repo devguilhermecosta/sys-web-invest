@@ -21,6 +21,12 @@ class FII(models.Model):
     def __str__(self) -> str:
         return self.code
 
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        self.save()
+
 
 class UserFII(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

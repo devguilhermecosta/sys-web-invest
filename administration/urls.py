@@ -12,4 +12,8 @@ urlpatterns = [
          views.ActionRegister.as_view(),
          name='action_register',
          ),
+    path('cadastrar/acao/<str:code>/editar/',
+         views.ActionEdit.as_view(),
+         name='action_edit',
+         ),
 ]

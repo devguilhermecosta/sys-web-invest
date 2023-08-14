@@ -20,7 +20,7 @@ from product.models import FII, Action
 class Register(TemplateView):
     model: FII | Action
     form: FIIRegisterForm | ActionRegisterForm
-    form_title: str
+    form_title: str = ''
     template_name = 'administration/pages/product_register.html'
     success_message: str
     reverse_url_redirect_response: str
@@ -37,6 +37,7 @@ class Register(TemplateView):
             'button_submit_value': 'registrar',
             'products': products,
             'default_message': 'nenhum produto cadastrado',
+            'is_main_page': True,
         })
 
         return context_data

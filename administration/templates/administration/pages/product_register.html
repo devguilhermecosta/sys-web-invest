@@ -12,9 +12,11 @@
   {% include 'global/partials/_messages.html' %}
 
   <section class="C-dashboard_table_details">
-    {% if products|length == 0 %}
+    {% if products|length == 0%}
       <p class="C-dashboard_table_empty_message">{{ default_message }}</p>
-    {% else %}
+    {% endif %}
+
+    {% if products|length != 0 and is_main_page %}
       <table class="C-dashboard_table">
         <tr>
           <th>código</th>
@@ -29,7 +31,7 @@
           <td>{{ product.description }}</td>
           <td>{{ product.cnpj }}</td>
           <td>
-            <a href="">
+            <a href="{{ product.get_url_update }}">
               <span class="material-symbols-outlined icon_edit">edit</span>
             </a>
           </td>

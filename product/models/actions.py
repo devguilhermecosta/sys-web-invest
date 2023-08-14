@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from typing import TypeVar, List
+from typing import Collection, Optional, TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
 from decimal import Decimal
@@ -15,12 +15,41 @@ QuerySet = TypeVar('QuerySet', list, None)
 
 
 class Action(models.Model):
-    code = models.CharField(max_length=5, unique=True)
+    code = models.CharField(max_length=5)
     description = models.CharField(max_length=50)
-    cnpj = models.CharField(max_length=18, unique=True)
+    cnpj = models.CharField(max_length=18)
 
     def __str__(self) -> str:
         return self.description
+
+    def get_url_update(self) -> str:
+        return reverse('admin:action_edit', args=(self.code,))
+
+    def update(self, **kwargs) -> None:
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        # self.clean()
+        self.save()
+
+    def save(self, *args, **kwargs) -> None:
+        instance_code = Action.objects.filter(code=self.code)
+        instance_cnpj = Action.objects.filter(cnpj=self.cnpj)
+
+        if self.id:
+            if instance_code.first().id != self.id:
+                raise ValidationError(
+                    ('Código já cadastrado'),
+                    code='invalid'
+                )
+
+            if instance_cnpj.first().id != self.id:
+                raise ValidationError(
+                    ('CNPJ já cadastrado'),
+                    code='invalid'
+                )
+
+        return super().clean(*args, **kwargs)
 
 
 class UserAction(models.Model):
