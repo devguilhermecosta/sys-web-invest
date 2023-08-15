@@ -32,6 +32,9 @@ class FII(models.Model):
     def get_url_update(self) -> str:
         return reverse('admin:fii_edit', args=(self.code,))
 
+    def get_url_delete(self) -> str:
+        return reverse('admin:fii_delete', args=(self.code,))
+
 
 class UserFII(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

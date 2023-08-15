@@ -33,6 +33,9 @@ class Action(models.Model):
     def get_url_update(self) -> str:
         return reverse('admin:action_edit', args=(self.code,))
 
+    def get_url_delete(self) -> str:
+        return reverse('admin:action_delete', args=(self.code,))
+
 
 class UserAction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -236,7 +239,8 @@ class ActionHistory(models.Model):
 
     def get_final_value(self) -> Decimal:
         quantity = abs(self.quantity) if self.quantity != 0 else 1
-        total = (quantity * self.unit_price) - abs(self.tax_and_irpf)
+        tax = abs(self.tax_and_irpf) if self.tax_and_irpf else 0
+        total = (quantity * self.unit_price) - tax
         return Decimal(total)
 
     def get_url_delete(self) -> str:
