@@ -51,6 +51,7 @@ def make_user_action(user: User,
                      code: str,
                      desc: str,
                      create_history: bool = False,
+                     create_profits: bool = False,
                      **kwargs,
                      ) -> UserAction:
     new_obj = UserAction.objects.create(
@@ -64,6 +65,14 @@ def make_user_action(user: User,
             '2023-07-02',
             1,
             unit_price=kwargs.get('unit_price', 1),
+        )
+
+    if create_profits:
+        new_obj.receive_profits(
+            handler='jscp',
+            date='2023-07-02',
+            unit_price=kwargs.get('profits_value', 1),
+            tax_and_irpf=kwargs.get('tax_and_irpf', 0),
         )
 
     return new_obj
@@ -97,6 +106,7 @@ def make_user_fii(user: User,
                   code: str,
                   desc: str,
                   create_history: bool = False,
+                  create_profits: bool = False,
                   **kwargs,
                   ) -> UserFII:
     new_obj = UserFII.objects.create(
@@ -109,7 +119,13 @@ def make_user_fii(user: User,
         new_obj.buy(
             date='2023-07-02',
             quantity=1,
-            unit_price=1,
+            unit_price=kwargs.get('value', 1),
+        )
+
+    if create_profits:
+        new_obj.receive_profits(
+            unit_price=kwargs.get('profits_value', 1),
+            date='2023-07-02',
         )
 
     return new_obj
