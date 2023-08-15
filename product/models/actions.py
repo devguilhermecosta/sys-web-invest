@@ -33,12 +33,6 @@ class Action(models.Model):
     def get_url_update(self) -> str:
         return reverse('admin:action_edit', args=(self.code,))
 
-    def update(self, **kwargs) -> None:
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.save()
-
 
 class UserAction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

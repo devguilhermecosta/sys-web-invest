@@ -29,11 +29,8 @@ class FII(models.Model):
     def __str__(self) -> str:
         return self.code
 
-    def update(self, **kwargs) -> None:
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.save()
+    def get_url_update(self) -> str:
+        return reverse('admin:fii_edit', args=(self.code,))
 
 
 class UserFII(models.Model):
