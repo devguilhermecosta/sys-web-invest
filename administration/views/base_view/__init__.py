@@ -2,3 +2,4 @@
 
 from .register import Register
 from .update import Update
+from .delete import Delete

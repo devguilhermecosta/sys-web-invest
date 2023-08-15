@@ -9,40 +9,6 @@ import { cleanDataTable } from "./src/modules.js";
 import { createHistoryLinkEdit , createHistoryLinkDelete, confirmationBoxDeleteHistory } from "./src/utils.js";
 import { getTotalProfits } from "./src/utils.js";
 import { createGoogleIcon } from "./src/modules.js";
-import { createFormSubmit } from "./src/utils.js";
-
-
-// function for delete objects
-function deleteObject(css_class_btn_action, message) {
-  const spanDelete = document.querySelectorAll(`.${css_class_btn_action}`);
-  if (spanDelete) {
-    spanDelete.forEach((el) => {
-      el.addEventListener("click", function() {
-        const parentForm = el.parentElement;
-        createFormSubmit(
-          parentForm,
-          message,
-          );
-      })
-    })
-  }
-}
-
-
-// delete the actions objects
-deleteObject(
-  'span_vi_delete',
-  `Deseja realmente deletar este ativo?
-  Se você deletá-lo, todo seu histórico de compra, venda
-  e recebimento de proventos será deletado também.`,
-);
-
-
-// delete the history objects
-deleteObject(
-  'span_vihist_delete',
-  'Deseja realmente deletar este histórico?',
-);
 
 
   // function for receive profits

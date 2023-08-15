@@ -61,6 +61,18 @@
     actions.setAttribute('type', 'module');
     actions.setAttribute('src', '{% static "global/js/actions.js" %}');
     body.appendChild(actions);
+
+    // create script for actions and fiss
+    const ac_and_fii = window.document.createElement('script');
+    ac_and_fii.setAttribute('type', 'module');
+    ac_and_fii.setAttribute('src', '{% static "global/js/action_and_fiis.js" %}');
+    body.appendChild(ac_and_fii);
+
+    // create script for admin area
+    const admin = window.document.createElement('script');
+    admin.setAttribute('type', 'module');
+    admin.setAttribute('src', '{% static "global/js/admin.js" %}');
+    body.appendChild(admin);
   </script>
     
 </body>

@@ -37,10 +37,10 @@
           </td>
           <td>
             <form 
-              action=""
+              action="{{ product.get_url_delete }}"
               method="POST">
               {% csrf_token %}
-              <span class="material-symbols-outlined icon_delete fi_h_delete">delete_forever</span>
+              <span class="material-symbols-outlined icon_delete span_ac_fii_delete">delete_forever</span>
             </form>
           </td>
         </tr>

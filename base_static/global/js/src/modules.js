@@ -1,3 +1,5 @@
+import { createFormSubmit } from './utils.js';
+
 // functions for create html elements
 export function createDefaultContainer() {
   const divContainer = document.createElement('div');
@@ -119,5 +121,21 @@ export function makeHandler(handler) {
       return 'aluguel'
     case _:
       return ''
+  }
+}
+
+// function for delete objects
+export function deleteObject(css_class_btn_action, message) {
+  const spanDelete = document.querySelectorAll(`.${css_class_btn_action}`);
+  if (spanDelete) {
+    spanDelete.forEach((el) => {
+      el.addEventListener("click", function() {
+        const parentForm = el.parentElement;
+        createFormSubmit(
+          parentForm,
+          message,
+          );
+      })
+    })
   }
 }
