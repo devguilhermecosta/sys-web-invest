@@ -131,9 +131,9 @@ class ActionsRegisterTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('code', 'Campo obrigatório'),
-        ('description', 'Campo obrigatório'),
-        ('cnpj', 'Campo obrigatório'),
+        ('code', 'O código deve ter 5 caracteres'),
+        ('description', 'A descrição deve ter pelo menos 3 caracteres'),
+        ('cnpj', 'CNPJ inválido'),
     ])
     def test_action_register_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # make login with user staff
@@ -165,7 +165,7 @@ class ActionsRegisterTests(TestCaseWithLogin):
     @parameterized.expand([
         ('code', '123', 'O código deve ter 5 caracteres'),
         ('description', '', 'A descrição deve ter pelo menos 3 caracteres'),
-        ('cnpj', '00.000.000/0001', 'Cnpj inválido'),
+        ('cnpj', '00.000.000/0001', 'CNPJ inválido'),
     ])
     def test_action_register_returns_error_messages_if_any_field_is_invalid(self, field: str, value: str, message: str) -> None:  # noqa: E501
         # make login with user staff
@@ -195,9 +195,9 @@ class ActionsRegisterTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('code', 'bbas3', 'Ação já registrada'),
+        ('code', 'bbas3', 'Este código já está em uso'),
         ('description', 'banco do brasil', ''),
-        ('cnpj', '00.000.000/0001-91', 'CNPJ já registrado'),
+        ('cnpj', '00.000.000/0001-91', 'Este CNPJ já está em uso'),
     ])
     def test_action_register_returns_error_messages_if_any_data_is_already_in_use(self, field: str, value: str, message: str) -> None:  # noqa: E501
         # make login with user staff

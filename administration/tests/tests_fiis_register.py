@@ -1,9 +1,11 @@
 from django.urls import resolve, reverse
 from parameterized import parameterized
-from utils.mixins.auth import TestCaseWithLogin
-from .. import views
-from product.tests.base_tests import make_fii_in_batch, make_fii
+
 from product.models import FII
+from product.tests.base_tests import make_fii, make_fii_in_batch
+from utils.mixins.auth import TestCaseWithLogin
+
+from .. import views
 
 
 class FIIsRegisterTests(TestCaseWithLogin):
@@ -131,9 +133,9 @@ class FIIsRegisterTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('code', 'Campo obrigatório'),
-        ('description', 'Campo obrigatório'),
-        ('cnpj', 'Campo obrigatório'),
+        ('code', 'O código deve ter 6 caracteres'),
+        ('description', 'A descrição deve ter pelo menos 3 caracteres'),
+        ('cnpj', 'CNPJ inválido'),
     ])
     def test_fii_register_returns_error_messages_if_any_field_is_empty(self, field: str, message: str) -> None:  # noqa: E501
         # make login with user staff
@@ -165,7 +167,7 @@ class FIIsRegisterTests(TestCaseWithLogin):
     @parameterized.expand([
         ('code', '123', 'O código deve ter 6 caracteres'),
         ('description', '', 'A descrição deve ter pelo menos 3 caracteres'),
-        ('cnpj', '97.521.225/0001', 'Cnpj inválido'),
+        ('cnpj', '97.521.225/0001', 'CNPJ inválido'),
     ])
     def test_fii_register_returns_error_messages_if_any_field_is_invalid(self, field: str, value: str, message: str) -> None:  # noqa: E501
         # make login with user staff
@@ -195,9 +197,9 @@ class FIIsRegisterTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('code', 'mxrf11', 'FII já registrado'),
+        ('code', 'mxrf11', 'Este código já está em uso'),
         ('description', 'maxi renda', ''),
-        ('cnpj', '97.521.225/0001-25', 'CNPJ já registrado'),
+        ('cnpj', '97.521.225/0001-25', 'Este CNPJ já está em uso'),
     ])
     def test_fii_register_returns_error_messages_if_any_data_is_already_in_use(self, field: str, value: str, message: str) -> None:  # noqa: E501
         # make login with user staff
