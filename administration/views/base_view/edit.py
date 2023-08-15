@@ -5,11 +5,9 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from product.models import FII, Action
 from .register import Register
-from administration.forms import ActionEditForm, FIIEditForm
 
 
 class Edit(Register):
-    form: ActionEditForm | FIIEditForm
     reverse_url_success_response: str
     reverse_url_invalid_form: str
     reverse_url_back_to_page: str

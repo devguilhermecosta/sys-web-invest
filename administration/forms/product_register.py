@@ -38,14 +38,6 @@ class FIIRegisterForm(forms.ModelForm):
                 code='invalid'
             )
 
-        product = FII.objects.filter(code=code)
-
-        if product.exists():
-            raise ValidationError(
-                ('FII já registrado'),
-                code='invalid'
-            )
-
         return code
 
     def clean_description(self):
@@ -59,33 +51,14 @@ class FIIRegisterForm(forms.ModelForm):
         return description
 
     def clean_cnpj(self):
-        cnpj = self.cleaned_data["cnpj"]
-        validate_cnpj = c2.validate(cnpj)
+        cnpj = c2.validate(self.cleaned_data['cnpj'])
 
-        if not cnpj:
+        if not cnpj.is_valid():
             raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
+                ('CNPJ inválido'),
+                code='invalid',
             )
-
-        if not validate_cnpj.is_valid():
-            raise ValidationError(
-                ('Cnpj inválido'),
-                code='invalid'
-            )
-
-        cpf_valid = validate_cnpj.formatted(punctuation=True)
-        product = FII.objects.filter(
-            cnpj=cpf_valid
-        )
-
-        if product.exists():
-            raise ValidationError(
-                ('CNPJ já registrado'),
-                code='invalid'
-            )
-
-        return cpf_valid
+        return cnpj.formatted(punctuation=True)
 
 
 class ActionRegisterForm(FIIRegisterForm):
@@ -112,41 +85,4 @@ class ActionRegisterForm(FIIRegisterForm):
                 code='invalid'
             )
 
-        product = Action.objects.filter(code=code)
-
-        if product.exists():
-            raise ValidationError(
-                ('Ação já registrada'),
-                code='invalid'
-            )
-
         return code
-
-    def clean_cnpj(self):
-        cnpj = self.cleaned_data["cnpj"]
-        validate_cnpj = c2.validate(cnpj)
-
-        if not cnpj:
-            raise ValidationError(
-                ('Campo obrigatório'),
-                code='required'
-            )
-
-        if not validate_cnpj.is_valid():
-            raise ValidationError(
-                ('Cnpj inválido'),
-                code='invalid'
-            )
-
-        cpf_valid = validate_cnpj.formatted(punctuation=True)
-        product = Action.objects.filter(
-            cnpj=cpf_valid
-        )
-
-        if product.exists():
-            raise ValidationError(
-                ('CNPJ já registrado'),
-                code='invalid'
-            )
-
-        return cpf_valid
