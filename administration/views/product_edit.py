@@ -1,9 +1,9 @@
-from .base_view import Edit
+from .base_view import Update
 from product.models import Action, FII
 from administration.forms import ActionRegisterForm, FIIRegisterForm
 
 
-class ActionEdit(Edit):
+class ActionUpdate(Update):
     model = Action
     form = ActionRegisterForm
     reverse_url_success_response = 'admin:action_register'
@@ -11,7 +11,7 @@ class ActionEdit(Edit):
     reverse_url_back_to_page = 'admin:action_register'
 
 
-class FIIEdit(Edit):
+class FIIUpdate(Update):
     model = FII
     form = FIIRegisterForm
     reverse_url_success_response = 'admin:fii_register'

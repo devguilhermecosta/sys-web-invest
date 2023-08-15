@@ -19,7 +19,7 @@ class FIIEditTests(TestCaseWithLogin):
         response = resolve(self.url)
         self.assertIs(
             response.func.view_class,
-            views.FIIEdit,
+            views.FIIUpdate,
         )
 
     def test_fiis_edit_is_not_allowed_if_the_user_is_not_authenticated(self) -> None:  # noqa: E501

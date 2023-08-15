@@ -7,7 +7,7 @@ from product.models import FII, Action
 from .register import Register
 
 
-class Edit(Register):
+class Update(Register):
     reverse_url_success_response: str
     reverse_url_invalid_form: str
     reverse_url_back_to_page: str

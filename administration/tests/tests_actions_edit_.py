@@ -19,7 +19,7 @@ class ActionEditTests(TestCaseWithLogin):
         response = resolve(self.url)
         self.assertIs(
             response.func.view_class,
-            views.ActionEdit,
+            views.ActionUpdate,
         )
 
     def test_actions_edit_is_not_allowed_if_the_user_is_not_authenticated(self) -> None:  # noqa: E501
