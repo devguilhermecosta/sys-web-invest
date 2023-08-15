@@ -21,7 +21,11 @@ class Action(models.Model):
                                 'unique': 'Este código já está em uso',
                             })
     description = models.CharField(max_length=50)
-    cnpj = models.CharField(max_length=18, unique=True)
+    cnpj = models.CharField(max_length=18,
+                            unique=True,
+                            error_messages={
+                                'unique': 'Este CNPJ já está em uso',
+                            })
 
     def __str__(self) -> str:
         return self.description
