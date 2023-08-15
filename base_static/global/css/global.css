@@ -636,8 +636,9 @@ textarea.C-login_input {
 
 .C-dashboard_summary_item,
 .C-dashboard_summary_hidden {
-  position: fixed;
-  transition: opacity 150ms ease;
+  position: absolute;
+  top: 0;
+  transition: all 150ms ease;
   white-space: nowrap;
 }
 
@@ -683,8 +684,9 @@ textarea.C-login_input {
 }
 
 .total {
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-weight: 500;
+  font-size: 16px;
 }
 
 .total::before {

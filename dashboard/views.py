@@ -95,25 +95,31 @@ class LogoutView(View):
 )
 class DashboardView(View):
     def get(self, *args, **kwargs) -> HttpResponse:
-        actions = UserAction.objects.filter(user=self.request.user)
+        user = self.request.user
+
+        actions = UserAction.objects.filter(user=user)
         total_actions = sum(
             [action.get_current_value_invested() for action in actions]
             )
+        profits_actions = UserAction.get_total_profits(user)
+        actions_tax = UserAction.get_total_tax(user)
 
-        fiis = UserFII.objects.filter(user=self.request.user)
+        fiis = UserFII.objects.filter(user=user)
         total_fiis = sum([fii.get_current_value_invested() for fii in fiis])
+        profits_fiis = UserFII.get_total_profits(user)
 
-        fixed_income = ProductFixedIncome.objects.filter(
-            user=self.request.user,
-            )
+        fixed_income = ProductFixedIncome.objects.filter(user=user)
         total_f_inc = sum([finc.get_current_value() for finc in fixed_income])
+        profits_f_inc = ProductFixedIncome.get_total_profits(user)
+        fixed_inc_tax = ProductFixedIncome.get_total_tax(user)
 
-        direct_treasure = DirectTreasure.objects.filter(
-            user=self.request.user,
-        )
+        direct_treasure = DirectTreasure.objects.filter(user=user)
         total_d_t = sum([dt.get_current_value() for dt in direct_treasure])
+        profits_d_t = DirectTreasure.get_total_profits(user)
+        direct_t_tax = DirectTreasure.get_total_tax(user)
 
         grand_total = total_actions + total_fiis + total_f_inc + total_d_t
+        total_tax = actions_tax + fixed_inc_tax + direct_t_tax
 
         return render(
             self.request,
@@ -124,5 +130,13 @@ class DashboardView(View):
                 'total_fixed_income': total_f_inc,
                 'total_direct_treasure': total_d_t,
                 'grand_total': grand_total,
+                'profits_fiis': profits_fiis,
+                'profits_actions': profits_actions,
+                'profits_fixed_income': profits_f_inc,
+                'profits_direct_treasue': profits_d_t,
+                'total_tax': total_tax,
             }
         )
+
+
+TODO = 'verificar se pode-se melhorar as consultas SQL'

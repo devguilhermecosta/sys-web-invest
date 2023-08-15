@@ -20,6 +20,7 @@
     </label>
   </div>
   <section class="C-dashboard_summary">
+    <!-- titles -->
     <div>
       <div class="C-dashboard_summary_title">
         <a href="{% url 'product:actions' %}">ações</a>
@@ -33,8 +34,9 @@
       <div class="C-dashboard_summary_title">
         <a href="{% url 'product:fiis' %}">FIIs</a>
       </div>
-      <div class="C-dashboard_summary_title total">total</div>
     </div>
+
+    <!-- titles -->
     <div class="C-dashboard_summary_values">
       <div class="C-dashboard_summary_container">
         <div class="C-dashboard_summary_item">{{ total_actions|real_brl }}</div>
@@ -55,10 +57,98 @@
         <div class="C-dashboard_summary_item">{{ total_fiis|real_brl }}</div>
         <div class="C-dashboard_summary_hidden">R$ --------</div>
       </div>
+    </div>
+  </section>
 
+  <!-- total invested -->
+  <section 
+    class="C-dashboard_summary"
+    style="margin: 25px 0;
+          border-top: 1px solid #CCC;
+          border-bottom: 1px solid #CCC;
+          padding: 15px 0;">
+  <!-- titles -->
+    <div>
+      <div class="C-dashboard_summary_title total">total investido</div>
+    </div>
+
+    <!-- titles -->
+    <div class="C-dashboard_summary_values">
       <div class="C-dashboard_summary_container">
-        <div class="C-dashboard_summary_item total">{{ grand_total|real_brl }}</div>
+        <div class="C-dashboard_summary_item">{{ grand_total|real_brl }}</div>
         <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- total received in profits -->
+  <h2
+    style="text-align: center;
+          padding: 8px 5px;
+          font-size: 22px;
+          font-weight: 600;
+          ">
+    Total recebido em provetos
+  </h2>
+  <section class="C-dashboard_summary">
+  <!-- titles -->
+    <div>
+      <div class="C-dashboard_summary_title total">Ações</div>
+      <div class="C-dashboard_summary_title total">FIIs</div>
+      <div class="C-dashboard_summary_title total">renda fixa</div>
+      <div class="C-dashboard_summary_title total">tesouro direto</div>
+    </div>
+
+    <!-- titles -->
+    <div class="C-dashboard_summary_values">
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ profits_actions|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ profits_fiis|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ profits_fixed_income|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+      <div class="C-dashboard_summary_container">
+        <div class="C-dashboard_summary_item">{{ profits_direct_treasue|real_brl }}</div>
+        <div class="C-dashboard_summary_hidden">R$ --------</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tax and irpf -->
+  <section 
+    class="C-dashboard_summary"
+    style="margin: 25px 0;
+          border-top: 1px solid #CCC;
+          border-bottom: 1px solid #CCC;
+          padding: 15px 0;">
+  <!-- titles -->
+    <div>
+      <div
+        class="C-dashboard_summary_title total"
+        style="font-size: 14px;">
+        taxas e impostos pagos</div>
+    </div>
+
+    <!-- titles -->
+    <div class="C-dashboard_summary_values">
+      <div class="C-dashboard_summary_container">
+        <div
+          class="C-dashboard_summary_item"
+          style="font-size: 14px;"
+          >
+          {{ total_tax|real_brl }}</div>
+        <div
+          class="C-dashboard_summary_hidden"
+          style="font-size: 14px;"
+          >
+          R$ --------
+        </div>
       </div>
     </div>
   </section>
