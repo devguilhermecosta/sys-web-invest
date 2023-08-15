@@ -21,7 +21,7 @@ class ActionEditForm(ActionRegisterForm):
 
         if len(code) != 5:
             raise ValidationError(
-                ('O código deve ter 5 catactered'),
+                ('O código deve ter 5 caracteres'),
                 code='invalid'
             )
         return code
