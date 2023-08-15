@@ -9,7 +9,7 @@ class ActionEditTests(TestCaseWithLogin):
     def test_actions_edit_url_is_correct(self) -> None:
         self.assertEqual(
             self.url,
-            '/cadastrar/acao/1/editar/',
+            '/cadastrar/acao/mxrf11/editar/',
         )
 
     def test_actions_edit_uses_correct_view(self) -> None:
@@ -17,4 +17,14 @@ class ActionEditTests(TestCaseWithLogin):
         self.assertIs(
             response.func.view_class,
             views.ActionEdit,
+        )
+
+    def test_actions_edit_is_not_allowed_if_the_user_is_not_authenticated(self) -> None:  # noqa: E501
+        # make get request without make login
+        response = self.client.get(self.url)
+
+        self.assertRedirects(
+            response,
+            '/?next=/painel-de-controle/cadastrar/acao/mxrf11/editar/',
+            302,
         )

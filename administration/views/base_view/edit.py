@@ -12,6 +12,7 @@ class Edit(Register):
     form: ActionEditForm | FIIEditForm
     reverse_url_success_response: str
     reverse_url_invalid_form: str
+    reverse_url_back_to_page: str
 
     def get_product_or_404(self, code: str) -> FII | Action:
         product = get_object_or_404(
@@ -31,6 +32,7 @@ class Edit(Register):
             'form_title': self.form_title or product.description,
             'button_submit_value': 'salvar',
             'is_main_page': False,
+            'back_to_page': reverse(self.reverse_url_back_to_page),
         })
 
         return context_data
