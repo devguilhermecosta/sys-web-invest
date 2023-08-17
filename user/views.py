@@ -28,34 +28,28 @@ def email_activation(request, user, to_email):
             'domain': get_current_site(request).domain,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
-            'protocol': 'http',
+            'protocol': 'https' if request.is_secure() else 'http',
         },
         )
-    try:
-        email = EmailMessage(mail_subject, message, to=[to_email])
-        if email.send():
-            messages.success(
-                request,
-                (
-                    f'Prezado(a) {str(user.first_name).capitalize()}. '
-                    f'Um email de confirmação foi enviado para '
-                    f'{to_email}. '
-                    'Acesse o link para ativar sua conta. Caso não tenha recebido '
-                    'o email, verifique sua caixa de spam.'
-                )
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    if email.send():
+        messages.success(
+            request,
+            (
+                f'Prezado(a) {str(user.first_name).capitalize()}. '
+                f'Um email de confirmação foi enviado para '
+                f'{to_email}. '
+                'Acesse o link para ativar sua conta. Caso não tenha recebido '
+                'o email, verifique sua caixa de spam.'
             )
-        else:
-            messages.error(
-                request,
-                (
-                    'Houve um problema ao enviar o email de ativação '
-                    f'para {to_email}. '
-                    'Verifique se digitou o email corretamente.')
-            )
-    except Exception as e:
+        )
+    else:
         messages.error(
             request,
-            f'error: {e}'
+            (
+                'Houve um problema ao enviar o email de ativação '
+                f'para {to_email}. '
+                'Verifique se digitou o email corretamente.')
         )
 
 
