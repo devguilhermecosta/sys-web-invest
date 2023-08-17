@@ -32,7 +32,8 @@ def email_activation(request, user, to_email):
         },
         )
     email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
+    try:
+        email.send(fail_silently=False)
         messages.success(
             request,
             (
@@ -43,11 +44,11 @@ def email_activation(request, user, to_email):
                 'o email, verifique sua caixa de spam.'
             )
         )
-    else:
+    except Exception as e:
         messages.error(
             request,
             (
-                'Houve um problema ao enviar o email de ativação '
+                f'{e}: Houve um problema ao enviar o email de ativação '
                 f'para {to_email}. '
                 'Verifique se digitou o email corretamente.')
         )
