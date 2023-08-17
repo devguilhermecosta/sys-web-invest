@@ -35,3 +35,11 @@ AUTH_PASSWORD_VALIDATORS = [
 PASSWORD_RESET_TIMEOUT = os.environ.get('PASSWORD_RESET_TIMEOUT')
 
 CSRF_TRUSTED_ORIGINS = convert_to_string('CSRF_TRUSTED_ORIGINS')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'guilherme.partic@gmail.com'
+EMAIL_HOST_PASSWORD = 'slatnkhovazmjkev'
+EMAIL_SSL_CERTFILE = '~/etc/letsencrypt/live/euinvestidor.devguilhermecosta.com/fullchain.pem'
