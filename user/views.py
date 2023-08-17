@@ -18,11 +18,13 @@ from user.forms.profile_form import ProfileForm
 from user.forms.user_register_form import UserFormRegister
 from user.models import Profile
 
+from django.conf import settings
+
 
 def email_activation(request, user, to_email):
     mail_subject = 'Ativação de conta'
     message = render_to_string(
-        '/user/pages/template_activate_account.html',
+        settings.BASE_DIR + 'user/templates/user/pages/template_activate_account.html',
         {
             'user': str(user.first_name).capitalize(),
             'domain': get_current_site(request).domain,
