@@ -10,9 +10,6 @@ ALLOWED_HOSTS = ''
 # for subdomain
 CSRF_TRUSTED_ORIGINS = ''
 
-# password reset timeout - milliseconds default 14400
-PASSWORD_RESET_TIMEOUT = ''
-
 # 1 True, 0 False
 SECURE_SSL_REDIRECT = True
 
@@ -38,7 +35,7 @@ DB_HOST = ''
 DB_PORT = ''
 
 # ---- SEND EMAIL ----
-EMAIL_BACKEND = ''
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = ''
 EMAIL_PORT = ''
 EMAIL_HOST_USER = ''

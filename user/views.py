@@ -18,6 +18,8 @@ from user.forms.profile_form import ProfileForm
 from user.forms.user_register_form import UserFormRegister
 from user.models import Profile
 
+from django.conf import settings as s
+
 
 def email_activation(request, user, to_email):
     mail_subject = 'Ativação de conta'
@@ -31,27 +33,29 @@ def email_activation(request, user, to_email):
             'protocol': 'https' if request.is_secure() else 'http',
         },
         )
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    try:
-        email.send(fail_silently=False)
-        messages.success(
-            request,
-            (
-                f'Prezado(a) {str(user.first_name).capitalize()}. '
-                f'Um email de confirmação foi enviado para '
-                f'{to_email}. '
-                'Acesse o link para ativar sua conta. Caso não tenha recebido '
-                'o email, verifique sua caixa de spam.'
-            )
+    email = EmailMessage(mail_subject,
+                         message,
+                         s.EMAIL_HOST_USER,
+                         [to_email],
+                         )
+    email.send(fail_silently=False)
+    messages.success(
+        request,
+        (
+            f'Prezado(a) {str(user.first_name).capitalize()}. '
+            f'Um email de confirmação foi enviado para '
+            f'{to_email}. '
+            'Acesse o link para ativar sua conta. Caso não tenha recebido '
+            'o email, verifique sua caixa de spam.'
         )
-    except Exception as e:
-        messages.error(
-            request,
-            (
-                f'{e}: Houve um problema ao enviar o email de ativação '
-                f'para {to_email}. '
-                'Verifique se digitou o email corretamente.')
-        )
+    )
+    # messages.error(
+    #     request,
+    #     (
+    #         f'{e}: Houve um problema ao enviar o email de ativação '
+    #         f'para {to_email}. '
+    #         'Verifique se digitou o email corretamente.')
+    # )
 
 
 def activate(request, uidb64, token):
