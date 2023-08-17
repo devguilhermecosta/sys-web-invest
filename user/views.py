@@ -11,12 +11,14 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
+from django.core.mail import send_mail
 from utils.tokens.token_generate import account_activation_token
 
 from user.forms.profile_form import ProfileForm
 from user.forms.user_register_form import UserFormRegister
 from user.models import Profile
+
+from django.conf import settings
 
 
 def email_activation(request, user, to_email):
@@ -31,8 +33,8 @@ def email_activation(request, user, to_email):
             'protocol': 'https' if request.is_secure() else 'http',
         },
         )
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
+    try:
+        send_mail(mail_subject, message, to=[to_email], auth_user=settings.EMAIL_HOST_USER)
         messages.success(
             request,
             (
@@ -43,11 +45,11 @@ def email_activation(request, user, to_email):
                 'o email, verifique sua caixa de spam.'
             )
         )
-    else:
+    except Exception as e:
         messages.error(
             request,
             (
-                'Houve um problema ao enviar o email de ativação '
+                f'{e}. Houve um problema ao enviar o email de ativação '
                 f'para {to_email}. '
                 'Verifique se digitou o email corretamente.')
         )
