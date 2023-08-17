@@ -117,14 +117,8 @@ class UserRegister(View):
             user.set_password(password)
             user.is_active = False
             user.save()
-            try:
-                email_activation(
-                    self.request, user, form.cleaned_data.get('email')
-                    )
-            except Exception as e:
-                messages.error(
-                    self.request,
-                    f'erro durante o envio do email: {e}'
+            email_activation(
+                self.request, user, form.cleaned_data.get('email')
                 )
 
             del self.request.session['register_form_data']
