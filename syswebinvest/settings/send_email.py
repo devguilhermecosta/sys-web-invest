@@ -1,8 +1,4 @@
 import os
-from dotenv import load_dotenv
-
-
-load_dotenv()
 
 
 tls = os.environ.get('EMAIL_USE_TLS')

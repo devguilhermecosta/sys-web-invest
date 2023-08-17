@@ -1,9 +1,5 @@
 from .environemente import BASE_DIR
 import os
-from dotenv import load_dotenv
-
-
-load_dotenv()
 
 
 # Database
