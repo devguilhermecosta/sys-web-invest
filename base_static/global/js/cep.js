@@ -27,11 +27,11 @@
           uf.classList.remove(defaulClass);
           return;
         } else {
-          const json = JSON.parse(request.responseText);
+          const r = JSON.parse(request.responseText);
 
-          adress.innerHTML = adress.value = json.logradouro || '';
-          city.value = city.innerHTML = json.localidade || '';
-          uf.value = uf.innerHTML = json.uf || '';
+          adress.innerHTML = adress.value = r.logradouro || '';
+          city.value = city.innerHTML = r.localidade || '';
+          uf.value = uf.innerHTML = r.uf || '';
           
           city.classList.add(defaulClass);
           adress.classList.add(defaulClass);
