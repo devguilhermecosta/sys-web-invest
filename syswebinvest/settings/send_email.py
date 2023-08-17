@@ -1,20 +1,17 @@
-import os
-from dotenv import load_dotenv
+from decouple import config
 
 
-load_dotenv()
-
-use_ssl = True if os.environ.get('EMAIL_USE_SSL') == '1' else False
-key_file = os.environ.get('EMAIL_SSL_KEYFILE', None)
-cert_file = os.environ.get('EMAIL_SSL_CERTFILE', None)
+key_file = config('EMAIL_SSL_KEYFILE')
+cert_file = config('EMAIL_SSL_CERTFILE')
 
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = 'guilherme.partic@gmail.com'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TSL = True
-EMAIL_USE_SSL = use_ssl
+EMAIL_USE_SSL = True
 EMAIL_SSL_KEYFILE = key_file
 EMAIL_SSL_CERTFILE = cert_file
