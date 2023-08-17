@@ -31,25 +31,31 @@ def email_activation(request, user, to_email):
             'protocol': 'https' if request.is_secure() else 'http',
         },
         )
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    if email.send():
-        messages.success(
-            request,
-            (
-                f'Prezado(a) {str(user.first_name).capitalize()}. '
-                f'Um email de confirmação foi enviado para '
-                f'{to_email}. '
-                'Acesse o link para ativar sua conta. Caso não tenha recebido '
-                'o email, verifique sua caixa de spam.'
+    try:
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        if email.send():
+            messages.success(
+                request,
+                (
+                    f'Prezado(a) {str(user.first_name).capitalize()}. '
+                    f'Um email de confirmação foi enviado para '
+                    f'{to_email}. '
+                    'Acesse o link para ativar sua conta. Caso não tenha recebido '
+                    'o email, verifique sua caixa de spam.'
+                )
             )
-        )
-    else:
+        else:
+            messages.error(
+                request,
+                (
+                    'Houve um problema ao enviar o email de ativação '
+                    f'para {to_email}. '
+                    'Verifique se digitou o email corretamente.')
+            )
+    except Exception as e:
         messages.error(
             request,
-            (
-                'Houve um problema ao enviar o email de ativação '
-                f'para {to_email}. '
-                'Verifique se digitou o email corretamente.')
+            f'error: {e}'
         )
 
 
@@ -111,8 +117,14 @@ class UserRegister(View):
             user.set_password(password)
             user.is_active = False
             user.save()
-            email_activation(
-                self.request, user, form.cleaned_data.get('email')
+            try:
+                email_activation(
+                    self.request, user, form.cleaned_data.get('email')
+                    )
+            except Exception as e:
+                messages.error(
+                    self.request,
+                    f'erro durante o envio do email: {e}'
                 )
 
             del self.request.session['register_form_data']
