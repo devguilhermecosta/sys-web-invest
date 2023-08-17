@@ -7,8 +7,20 @@ DEBUG = ''  # 1 True, 0 False
 # allowed hosts
 ALLOWED_HOSTS = ''
 
+# for subdomain
+CSRF_TRUSTED_ORIGINS = ''
+
 # password reset timeout - milliseconds default 14400
 PASSWORD_RESET_TIMEOUT = ''
+
+# 1 True, 0 False
+SECURE_SSL_REDIRECT = True
+
+# 1 True, 0 False
+SESSION_COOKIE_SECURE = True
+
+# 1 True, 0 False
+CSRF_COOKIE_SECURE = True
 
 # 1 True, 0 False
 SELENIUM_HEADLESS = ''
@@ -29,6 +41,8 @@ DB_PORT = ''
 EMAIL_BACKEND = ''
 EMAIL_HOST = ''
 EMAIL_PORT = ''
-EMAIL_USE_TLS = ''  # 1 True, 0 False
+EMAIL_USE_SSL = ''  # 1 True, 0 False
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+EMAIL_SSL_KEYFILE = ''
+EMAIL_SSL_CERTFILE = ''

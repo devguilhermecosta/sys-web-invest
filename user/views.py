@@ -28,7 +28,7 @@ def email_activation(request, user, to_email):
             'domain': get_current_site(request).domain,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
-            'protocol': 'https' if request.is_secure() else 'http',
+            'protocol': 'http',
         },
         )
     try:
