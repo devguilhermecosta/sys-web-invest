@@ -34,7 +34,7 @@ def email_activation(request, user, to_email):
         },
         )
     try:
-        send_mail(mail_subject, message, to_email, auth_user=settings.EMAIL_HOST_USER)
+        send_mail(mail_subject, message, recipient_list=[to_email], auth_user=settings.EMAIL_HOST_USER)
         messages.success(
             request,
             (
