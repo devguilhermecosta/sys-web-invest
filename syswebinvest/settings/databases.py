@@ -12,7 +12,7 @@ load_dotenv()
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE'),
-        'NAME': BASE_DIR / str(os.environ.get('DB_NAME')),
+        'NAME': str(os.environ.get('DB_NAME')),
         'USER': os.environ.get('DB_USER', ''),
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': os.environ.get('DB_HOST', ''),
