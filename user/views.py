@@ -38,24 +38,26 @@ def email_activation(request, user, to_email):
                          s.EMAIL_HOST_USER,
                          [to_email],
                          )
-    email.send(fail_silently=False)
-    messages.success(
-        request,
-        (
-            f'Prezado(a) {str(user.first_name).capitalize()}. '
-            f'Um email de confirmação foi enviado para '
-            f'{to_email}. '
-            'Acesse o link para ativar sua conta. Caso não tenha recebido '
-            'o email, verifique sua caixa de spam.'
+    try:
+        email.send(fail_silently=False)
+        messages.success(
+            request,
+            (
+                f'Prezado(a) {str(user.first_name).capitalize()}. '
+                f'Um email de confirmação foi enviado para '
+                f'{to_email}. '
+                'Acesse o link para ativar sua conta. Caso não tenha recebido '
+                'o email, verifique sua caixa de spam.'
+            )
         )
-    )
-    # messages.error(
-    #     request,
-    #     (
-    #         f'{e}: Houve um problema ao enviar o email de ativação '
-    #         f'para {to_email}. '
-    #         'Verifique se digitou o email corretamente.')
-    # )
+    except Exception as e:
+        messages.error(
+            request,
+            (
+                f'{e}: Houve um problema ao enviar o email de ativação '
+                f'para {to_email}. '
+                )
+        )
 
 
 def activate(request, uidb64, token):
