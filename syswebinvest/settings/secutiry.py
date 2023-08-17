@@ -3,6 +3,9 @@ from utils.string import convert_to_string
 from dotenv import load_dotenv
 
 
+load_dotenv()
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
