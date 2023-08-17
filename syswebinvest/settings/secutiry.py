@@ -1,5 +1,9 @@
 import os
 from utils.string import convert_to_string
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
