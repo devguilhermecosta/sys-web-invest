@@ -20,18 +20,18 @@ from user.models import Profile
 
 
 def email_activation(request, user, to_email):
-    mail_subject = 'Ativação de conta'
-    message = render_to_string(
-        'user/pages/template_activate_account.html',
-        {
-            'user': str(user.first_name).capitalize(),
-            'domain': get_current_site(request).domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-            'protocol': 'https' if request.is_secure() else 'http',
-        },
-        )
     try:
+        mail_subject = 'Ativação de conta'
+        message = render_to_string(
+            '/home/guilherme_windows/app_repo/user/templates/user/pages/template_activate_account.html',
+            {
+                'user': str(user.first_name).capitalize(),
+                'domain': get_current_site(request).domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+                'protocol': 'https' if request.is_secure() else 'http',
+            },
+            )
         email = EmailMessage(mail_subject, message, to=[to_email])
         if email.send():
             messages.success(
