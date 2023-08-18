@@ -10,7 +10,7 @@
     function searchCep() {
       let cep = inputCep.value.replace('-', '');
   
-      let url = `http://viacep.com.br/ws/${cep}/json`;
+      let url = `https://viacep.com.br/ws/${cep}/json`;
   
       const request = new XMLHttpRequest();
     
