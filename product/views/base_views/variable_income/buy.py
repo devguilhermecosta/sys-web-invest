@@ -69,7 +69,7 @@ class Buy(BaseView):
             trading_note = data.get('trading_note', None)
             user = self.request.user
             product = self.product_model.objects.filter(
-                code=data['code']
+                code=data['code'].lower()
                 ).first()
 
             user_product = self.user_product_model.objects.filter(

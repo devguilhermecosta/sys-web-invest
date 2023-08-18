@@ -38,7 +38,7 @@ class FIIRegisterForm(forms.ModelForm):
                 code='invalid'
             )
 
-        return code
+        return str(code).lower()
 
     def clean_description(self):
         description = self.cleaned_data["description"]
@@ -48,7 +48,7 @@ class FIIRegisterForm(forms.ModelForm):
                 ('A descrição deve ter pelo menos 3 caracteres'),
                 code='invalid'
             )
-        return description
+        return str(description).lower()
 
     def clean_cnpj(self):
         cnpj = c2.validate(self.cleaned_data['cnpj'])
@@ -85,4 +85,4 @@ class ActionRegisterForm(FIIRegisterForm):
                 code='invalid'
             )
 
-        return code
+        return str(code).lower()

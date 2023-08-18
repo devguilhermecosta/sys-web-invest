@@ -76,7 +76,7 @@ class Sell(View):
                 'trading_note': data.get('trading_note', None),
             }
             product = self.product_model.objects.filter(
-                code=data['code']
+                code=data['code'].lower()
                 ).first()
 
             user_product_exists = self.user_product_model.objects.filter(
