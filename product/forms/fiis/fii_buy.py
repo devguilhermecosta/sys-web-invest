@@ -9,7 +9,7 @@ default_input_class = 'C-login_input'
 class FIIBuyForm(ActionBuyAndSellForm):
     def clean_code(self):
         code = self.cleaned_data["code"]
-        fii = FII.objects.filter(code=code).exists()
+        fii = FII.objects.filter(code=str(code).lower()).exists()
 
         if not code or code == '':
             raise ValidationError(

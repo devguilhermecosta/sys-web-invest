@@ -52,7 +52,7 @@ class ActionBuyAndSellForm(forms.Form):
 
     def clean_code(self):
         code = self.cleaned_data["code"]
-        action = Action.objects.filter(code=code).exists()
+        action = Action.objects.filter(code=code.lower()).exists()
 
         if not code or code == '':
             raise ValidationError(
