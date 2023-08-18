@@ -15,7 +15,7 @@ QuerySet = TypeVar('QuerySet', list, None)
 
 
 class Action(models.Model):
-    code = models.CharField(max_length=5,
+    code = models.CharField(max_length=6,
                             unique=True,
                             error_messages={
                                 'unique': 'Este código já está em uso',

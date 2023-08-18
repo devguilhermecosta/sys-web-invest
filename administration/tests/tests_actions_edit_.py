@@ -106,7 +106,7 @@ class ActionEditTests(TestCaseWithLogin):
     # post request
 
     @parameterized.expand([
-        ('code', 'O código deve ter 5 caracteres'),
+        ('code', 'O código deve ter entre 5 e 6 caracteres'),
         ('description', 'A descrição deve ter pelo menos 3 caracteres'),
         ('cnpj', 'CNPJ inválido'),
     ])

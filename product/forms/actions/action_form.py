@@ -69,9 +69,9 @@ class ActionBuyAndSellForm(forms.Form):
                 code='invalid',
             )
 
-        if len(code) != 5:
+        if len(code) < 5 or len(code) > 6:
             raise ValidationError(
-                ('O código deve ter 5 caracteres'),
+                ('O código deve ter entre 5 e 6 caracteres'),
                 code='invalid',
             )
 

@@ -79,9 +79,9 @@ class ActionRegisterForm(FIIRegisterForm):
     def clean_code(self):
         code = self.cleaned_data["code"]
 
-        if not code or len(code) != 5:
+        if not code or len(code) < 5 or len(code) > 6:
             raise ValidationError(
-                ('O código deve ter 5 caracteres'),
+                ('O código deve ter entre 5 e 6 caracteres'),
                 code='invalid'
             )
 
