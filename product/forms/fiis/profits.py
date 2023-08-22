@@ -26,7 +26,8 @@ class FIIReceiptProfitsForm(forms.Form):
         label='valor',
         widget=forms.NumberInput(
             {
-                'min': 1,
+                'min': 0.01,
+                'step': 0.01,
             }
         )
     )
