@@ -6,7 +6,7 @@ from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
 from decimal import Decimal
-import yfinance as yf
+import requests as r
 
 
 date = '2023-07-04'
@@ -103,17 +103,22 @@ class UserAction(models.Model):
         total = sum([h.unit_price for h in history])
         return Decimal(total / len(history)) if total != 0 else 0
 
+    def get_ticker(self) -> str:
+        code = self.product.code
+        token = 'sCy5wX1Lmq1cKgYmqt35gd'
+        request = r.get(f'https://brapi.dev/api/quote/{code}?token={token}')
+        response = request.json()
+        product = response.get('results')[0]
+        return product
+
     def previous_close(self) -> Decimal:
-        get_ticker = yf.Ticker(f'{self.product.code}.sa')
-        ticker_info = get_ticker.info
-        last_value = ticker_info['previousClose']
-        return Decimal(last_value)
+        product = self.get_ticker()
+        previous_close = product.get('regularMarketPreviousClose')
+        return Decimal(previous_close)
 
     def get_current_value_invested(self) -> Decimal:
-        get_ticker = yf.Ticker(f'{self.product.code}.sa')
-        ticker_info = get_ticker.info
-        last_value = ticker_info['previousClose']
-        total = self.get_quantity() * last_value
+        previous_close = self.previous_close()
+        total = self.get_quantity() * previous_close
         return Decimal(total) if total >= 0 else 0
 
     def get_history(self) -> QuerySet | None:
