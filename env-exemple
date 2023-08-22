@@ -22,6 +22,9 @@ CSRF_COOKIE_SECURE = True
 # 1 True, 0 False
 SELENIUM_HEADLESS = ''
 
+# Token Brapi API
+BRAPI_API_TOKEN = ''
+
 # ---- SQLITE - DATABASE CONFIG ----
 DB_ENGINE = 'django.db.backends.sqlite3'
 DB_NAME = './db.sqlite3'

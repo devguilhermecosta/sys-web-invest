@@ -5,7 +5,12 @@ from django.urls import reverse
 from typing import TypeVar, List
 from datetime import datetime as dt
 from decimal import Decimal
+from dotenv import load_dotenv
 import requests as r
+import os
+
+
+load_dotenv()
 
 
 date = '2023-07-04'
@@ -97,7 +102,7 @@ class UserFII(models.Model):
 
     def get_ticker(self) -> str:
         code = self.product.code
-        token = 'sCy5wX1Lmq1cKgYmqt35gd'
+        token = os.environ.get('BRAPI_API_TOKEN')
         request = r.get(f'https://brapi.dev/api/quote/{code}?token={token}')
         response = request.json()
         product = response.get('results')[0]
