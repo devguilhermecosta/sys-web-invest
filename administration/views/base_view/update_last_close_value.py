@@ -45,22 +45,46 @@ class UpdateLastClose(View):
         )
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        try:
-            for p in self.model.objects.all():
+        upgrade = 0
+        not_upgrade = 0
+        list_not_updagre = []
+        error_list = []
+
+        for p in self.model.objects.all():
+            try:
                 previous_close = self.previous_close(p.code)
                 p.update_last_close(previous_close)
+                upgrade += 1
 
-            messages.success(
-                self.request,
-                'Preços atualizados com sucesso',
-            )
+            except Exception as e:
+                not_upgrade += 1
+                list_not_updagre.append(p.code)
+                error_list.append(e)
 
-        except Exception as e:
+        message = (
+            self.request,
+            f'{upgrade} ativo(s) foram atualizados. '
+            f'{not_upgrade} ativo(s) não puderam ser atualizados. '
+            'Ativos que não foram atualizados: '
+            f'{[a for a in list_not_updagre]}. '
+            f'Erros: {error_list}',
+        )
+
+        if error_list:
             messages.error(
                 self.request,
-                f'{e}: Erro ao atualizar os valores',
+                message,
             )
+
+            return redirect(
+                reverse(self.reverse_url_response)
+                )
+
+        messages.success(
+            self.request,
+            message,
+        )
 
         return redirect(
             reverse(self.reverse_url_response)
-        )
+            )
