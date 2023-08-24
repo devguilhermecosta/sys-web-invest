@@ -41,6 +41,13 @@ export function createTextElement(color, message) {
 }
 
 
+export function createAnimationBall() {
+  const spanBall = document.createElement('span');
+  spanBall.classList.add('animation_ball');
+  return spanBall;
+}
+
+
 // Google Icon
 export function createGoogleIcon(innerHTML, aditionalCssClass='') {
   let span = document.createElement('span');

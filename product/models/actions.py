@@ -6,12 +6,6 @@ from typing import TypeVar, List
 from datetime import datetime as dt
 from functools import reduce
 from decimal import Decimal
-from dotenv import load_dotenv
-import requests as r
-import os
-
-
-load_dotenv()
 
 
 date = '2023-07-04'
@@ -31,6 +25,12 @@ class Action(models.Model):
                             error_messages={
                                 'unique': 'Este CNPJ já está em uso',
                             })
+    last_close = models.DecimalField(blank=True,
+                                     null=True,
+                                     default=1,
+                                     max_digits=15,
+                                     decimal_places=2,
+                                     )
 
     def __str__(self) -> str:
         return self.description
@@ -40,6 +40,10 @@ class Action(models.Model):
 
     def get_url_delete(self) -> str:
         return reverse('admin:action_delete', args=(self.code,))
+
+    def update_last_close(self, last_close: Decimal) -> None:
+        self.last_close = last_close
+        self.save()
 
 
 class UserAction(models.Model):
@@ -108,22 +112,11 @@ class UserAction(models.Model):
         total = sum([h.unit_price for h in history])
         return Decimal(total / len(history)) if total != 0 else 0
 
-    def get_ticker(self) -> str:
-        code = self.product.code
-        token = os.environ.get('BRAPI_API_TOKEN')
-        request = r.get(f'https://brapi.dev/api/quote/{code}?token={token}')
-        response = request.json()
-        product = response.get('results')[0]
-        return product
-
     def previous_close(self) -> Decimal:
-        product = self.get_ticker()
-        previous_close = product.get('regularMarketPreviousClose')
-        return Decimal(previous_close)
+        return self.product.last_close
 
     def get_current_value_invested(self) -> Decimal:
-        previous_close = self.previous_close()
-        total = self.get_quantity() * previous_close
+        total = self.get_quantity() * self.previous_close()
         return Decimal(total) if total >= 0 else 0
 
     def get_history(self) -> QuerySet | None:

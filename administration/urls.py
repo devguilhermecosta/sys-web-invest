@@ -28,4 +28,12 @@ urlpatterns = [
          views.ActionDelete.as_view(),
          name='action_delete',
          ),
+    path('atualizar/precos/acoes/',
+         views.ActionsUpdateLastCloseView.as_view(),
+         name='update_actions_prices',
+         ),
+    path('atualizar/precos/fiis/',
+         views.FIIsUpdateLastCloseView.as_view(),
+         name='update_fiis_prices',
+         ),
 ]

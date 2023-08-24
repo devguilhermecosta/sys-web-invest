@@ -1,0 +1,18 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Atualizar a última cotação das ações
+{% endblock title %}
+
+{% block content %}
+  {% include 'global/partials/_messages.html' %}
+  <section class="C-actions center_x_y_flex">
+    <form
+      id="form-update-price"
+      method="POST"
+      action="{{ url_update }}">
+      {% csrf_token %}
+      <button id="btn-update" type="submit">Atualizar valores</button>
+    </form>
+  </section>
+{% endblock content %}

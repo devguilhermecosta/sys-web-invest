@@ -1070,6 +1070,28 @@ textarea.C-login_input {
 .C-fixed_income_button:hover {
   background-color: var(--orange_2);
 }
+
+#btn-update {
+  width: 150px;
+  height: 40px;
+  border: none;
+  outline: none;
+  background-color: var(--turquoise_6);
+  transition: background 300ms ease-in-out;
+  color: var(--white);
+  padding: 10px 8px;
+  border-radius: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#btn-update:hover {
+  background-color: var(--blue_1);
+}
+
+#btn-update:disabled {
+  background-color: var(--gray_2);
+}
 /* end dashboard - actions */
 
 /* Google material icons */
@@ -1083,6 +1105,19 @@ textarea.C-login_input {
   cursor: pointer;
 }
 /* end Google material icons */
+
+
+/* animation elements */
+.animation_ball {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 4px dotted var(--turquoise_5);
+  animation: rotate 2s ease infinite;
+  margin: 0 auto;
+}
+/* end animation elements*/
 
 /* start animation */
 @keyframes open-form-container {
@@ -1105,6 +1140,10 @@ textarea.C-login_input {
   to {
     max-height: 500px;
   }
+}
+
+@keyframes rotate {
+  to {transform: rotate(360deg);}
 }
 /* end animation */
 
