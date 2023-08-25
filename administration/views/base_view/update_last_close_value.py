@@ -9,6 +9,7 @@ from product.models import Action, FII
 from decimal import Decimal
 import requests as r
 import os
+import re
 
 
 @method_decorator(
@@ -62,18 +63,19 @@ class UpdateLastClose(View):
                 error_list.append(e)
 
         message = (
-            self.request,
             f'{upgrade} ativo(s) foram atualizados. '
             f'{not_upgrade} ativo(s) não puderam ser atualizados. '
             'Ativos que não foram atualizados: '
             f'{[a for a in list_not_updagre]}. '
-            f'Erros: {error_list}',
-        )
+            f'Erros: {error_list}'
+        ),
+
+        message_f = re.sub(r"[()']", '', str(message))
 
         if error_list:
             messages.error(
                 self.request,
-                message,
+                message_f,
             )
 
             return redirect(
@@ -82,7 +84,7 @@ class UpdateLastClose(View):
 
         messages.success(
             self.request,
-            message,
+            message_f,
         )
 
         return redirect(
