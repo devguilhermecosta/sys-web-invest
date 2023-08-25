@@ -10,8 +10,10 @@
     <form class="C-login_form" method="POST" action="{% url 'dashboard:logout' %}">
       {% csrf_token %}
       <p style="text-align: center;">Você está logado como <strong>{{ user|title }}</strong>.</p>
-      <a href="{% url 'dashboard:user_dashboard' %}" class="C-login_button C-login_sign_in">painel</a>
-      <input class="C-login_button C-login_sign_in" type="submit" value="sair">
+      <button class="C-login_button C-login_sign_in">
+        <a class="C-login_sign_in_link" href="{% url 'dashboard:user_dashboard' %}">painel</a>
+      </button>
+      <button class="C-login_button C-login_sign_in" type="submit">sair</button>
     </form>
   {% else %}
     <form method="POST" action="" class="C-login_form">
@@ -28,9 +30,11 @@
       <a href="{% url 'password_reset' %}" class="C-login_forgot_password">
         esqueci minha senha
       </a>
-      <input id="btn-login" class="C-login_button C-login_sign_in" type="submit" value="entrar">
+      <button id="btn-login" class="C-login_button C-login_sign_in" type="submit" value="entrar">entrar</button>
       <p>ou</p>
-      <a href="{% url 'user:register' %}" class="C-login_button C-login_sing_up">registrar</a>
+      <button class="C-login_button C-login_sing_up">
+        <a href="{% url 'user:register' %}">registrar</a>
+      </button>
     </form>
   {% endif %}
 </section>

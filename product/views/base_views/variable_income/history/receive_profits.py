@@ -59,6 +59,7 @@ class ReceiveProfits(Buy):
                 ),
                 'is_main_page': True,
                 'back_to_page': reverse(self.reverse_url_back_to_page),
+                'data_profits': 'profits',
             }
         )
 

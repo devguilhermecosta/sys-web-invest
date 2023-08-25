@@ -384,12 +384,23 @@ textarea.C-login_input {
 
 .C-login_button {
   width: 100%;
+  height: 40px;
   padding: 10px 0;
   text-align: center;
   text-transform: capitalize;
+  border: none;
   border-radius: 30px;
   transition: background 150ms linear,
               border 200ms linear;
+  outline: none;
+}
+
+.C-login_button a {
+  text-decoration: none;
+  color: var(--white);
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .C-login_sign_in {
@@ -408,6 +419,10 @@ textarea.C-login_input {
 
 .C-login_sign_in:focus {
   outline: none;
+}
+
+.C-login_sign_in_link {
+  color: var(--turquoise_6) !important;
 }
 
 .C-login_sing_up {
@@ -452,7 +467,7 @@ textarea.C-login_input {
 
 .C-menu_logout {
   font-size: 12px !important;
-  width: fit-content;
+  width: 80px;
   padding: 5px 10px;
 }
 /* end home */
@@ -1074,6 +1089,7 @@ textarea.C-login_input {
 #btn-update {
   width: 150px;
   height: 40px;
+  font-size: 16px;
   border: none;
   outline: none;
   background-color: var(--turquoise_6);

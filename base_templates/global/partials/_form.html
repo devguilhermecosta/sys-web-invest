@@ -3,8 +3,8 @@ method="POST"
 action="{{ form_action }}"
 class="C-login_form"
 id="{{ custom_id }}"
-enctype="multipart/form-data">
-
+enctype="multipart/form-data"
+data-profits="{{ data_profits }}">
   {% csrf_token %}
   <h1 class="C-login_title">{{ form_title }}</h1>
   {% for field in form %}
@@ -17,5 +17,5 @@ enctype="multipart/form-data">
       {% endif %}
     </div>
   {% endfor %}
-  <input class="C-login_button C-login_sign_in" type="submit" value="{{ button_submit_value }}">
+  <button class="C-login_button C-login_sign_in" type="submit">{{ button_submit_value }}</button>
 </form>

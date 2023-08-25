@@ -18,21 +18,21 @@ deleteObject(
 
 
 // preventdefault form update prices
-(() => {
-  const form = document.querySelector('#form-update-price');
+// (() => {
+//   const form = document.querySelector('#form-update-price');
 
-  if (form) {
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
+//   if (form) {
+//     form.addEventListener("submit", function(e) {
+//       e.preventDefault();
       
-      let btnSubmit = form.querySelector('#btn-update');
-      let animationBall = createAnimationBall();
+//       let btnSubmit = form.querySelector('#btn-update');
+//       let animationBall = createAnimationBall();
 
-      btnSubmit.innerHTML = '';
-      btnSubmit.setAttribute('disabled', true);
-      btnSubmit.appendChild(animationBall);
+//       btnSubmit.innerHTML = '';
+//       btnSubmit.setAttribute('disabled', true);
+//       btnSubmit.appendChild(animationBall);
 
-      form.submit();
-    })
-  }
-})();
+//       form.submit();
+//     })
+//   }
+// })();

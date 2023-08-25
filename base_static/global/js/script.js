@@ -1,3 +1,6 @@
+import { createAnimationBall } from './src/modules.js'
+
+
 // function for quit the suMenu
 function closeMenu(id_submenu) {
   const menuMobile = document.querySelectorAll('.C-menu_mobile')[0];
@@ -60,46 +63,27 @@ closeMenu('C-menu_admin_checkox');
 })();
 
 
-// Function for change btn value into login page
+// add the animation button into all buttons
 (() => {
-  try {
-    const loginForm = document.querySelector('.C-login_form');
-    let btnLogin = document.querySelector('#btn-login');
-    btnLogin.addEventListener('click', function(event) {
-      event.preventDefault();
-    
-      btnLogin.value = 'entrando...';
-      loginForm.submit();
+  const buttons = document.querySelectorAll('.C-login_button');
+
+  if (buttons) {
+    buttons.forEach((button) => {
+      const link = button.querySelector('a');
+      const parentForm = button.parentElement;
+      const dataSet = parentForm.dataset.profits;
+      const isFormProfits = dataSet;
+
+      if (isFormProfits) {return;}
+      
+      button.addEventListener("click", () => {
+        button.innerHTML = '';
+        button.setAttribute('disabled', true);
+        button.appendChild(createAnimationBall());
+        
+        if (link) {link.style.display = 'none';}
+        parentForm.submit();
+      })
     })
-  } catch(e){};
-})();
-
-
-// Function for change btn value into register page
-(() => {
-  try {
-    const registerForm = document.querySelector('.C-form_register_form');
-    let btnRegister = document.querySelector('#btn-register');
-    btnRegister.addEventListener('click', function(event) {
-      event.preventDefault();
-    
-      btnRegister.value = 'registrando...';
-      registerForm.submit();
-    })
-  } catch(e){};
-})();
-
-
-// Function for change btn value into register page
-(() => {
-  try {
-    const registerProfileForm = document.querySelector('.C-login_form');
-    let btnCreateProfile = document.querySelector('.C-login_button[value=finalizar]');
-    btnCreateProfile.addEventListener('click', function(event) {
-      event.preventDefault();
-    
-      btnCreateProfile.value = 'criando perfil...';
-      registerProfileForm.submit();
-    })
-  } catch(e){};
+  } 
 })();

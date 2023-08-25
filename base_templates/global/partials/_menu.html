@@ -43,7 +43,7 @@
       <li class="C-menu_li">
         <form action="{% url 'dashboard:logout' %}" method="POST">
           {% csrf_token %}
-          <input class="C-login_button C-login_sign_in C-menu_logout" type="submit" value='sair'>
+          <button class="C-login_button C-login_sign_in C-menu_logout" type="submit">sair</button>
         </form>
       </li>
     {% endif %}
