@@ -334,6 +334,19 @@ body {
   z-index: 10000;
 }
 
+/* 
+Remove the background on autocomplete;
+this does not remove en effect the background color, 
+this add a 5000s in the transition property.
+*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000s ease;
+  background: red;
+}
+
 .C-login_input:focus, .C-login_input:required:valid {
   background-color: var(--white);
   border: 1px solid var(--blue_4);
