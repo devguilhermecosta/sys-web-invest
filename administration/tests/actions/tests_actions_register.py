@@ -1,9 +1,10 @@
 from django.urls import resolve, reverse
 from parameterized import parameterized
-from utils.mixins.auth import TestCaseWithLogin
-from .. import views
-from product.tests.base_tests import make_action_in_batch, make_action
+
+from administration import views
 from product.models import Action
+from product.tests.base_tests import make_action, make_action_in_batch
+from utils.mixins.auth import TestCaseWithLogin
 
 
 class ActionsRegisterTests(TestCaseWithLogin):
@@ -163,7 +164,7 @@ class ActionsRegisterTests(TestCaseWithLogin):
         )
 
     @parameterized.expand([
-        ('code', '123', 'O código deve ter 5 caracteres'),
+        ('code', '123', 'O código deve ter entre 5 e 6 caracteres'),
         ('description', '', 'A descrição deve ter pelo menos 3 caracteres'),
         ('cnpj', '00.000.000/0001', 'CNPJ inválido'),
     ])

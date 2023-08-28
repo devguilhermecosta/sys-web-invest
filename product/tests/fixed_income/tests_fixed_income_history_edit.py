@@ -126,7 +126,7 @@ class FixedIncomeHistoryEditTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertNotIn(
-            'profits',
+            '<option value="profits"',
             content,
         )
         self.assertIn(

@@ -1,6 +1,6 @@
 from django.urls import reverse, resolve
 from utils.mixins.auth import TestCaseWithLogin
-from .. import views
+from administration import views
 from product.tests.base_tests import make_fii
 from product.models import FII
 from parameterized import parameterized

@@ -5,7 +5,7 @@ from product.models import FII
 from product.tests.base_tests import make_fii, make_fii_in_batch
 from utils.mixins.auth import TestCaseWithLogin
 
-from .. import views
+from administration import views
 
 
 class FIIsRegisterTests(TestCaseWithLogin):

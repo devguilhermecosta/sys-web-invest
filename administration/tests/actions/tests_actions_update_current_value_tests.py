@@ -1,5 +1,3 @@
-from time import sleep
-
 import pytest
 from django.urls import resolve, reverse
 from selenium.webdriver.common.by import By
