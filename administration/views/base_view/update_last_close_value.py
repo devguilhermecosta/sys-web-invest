@@ -1,5 +1,5 @@
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -37,6 +37,11 @@ class UpdateLastClose(View):
         return Decimal(previous_close)
 
     def get(self, *args, **kwargs) -> HttpResponse:
+        user = self.request.user
+
+        if not user.is_staff:
+            raise Http404()
+
         return render(
             self.request,
             self.template_name,
@@ -46,6 +51,11 @@ class UpdateLastClose(View):
         )
 
     def post(self, *args, **kwargs) -> HttpResponse:
+        user = self.request.user
+
+        if not user.is_staff:
+            raise Http404()
+
         upgrade = 0
         not_upgrade = 0
         list_not_updagre = []
