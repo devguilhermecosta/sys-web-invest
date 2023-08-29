@@ -53,7 +53,7 @@ class ActionsCurrentValueUpdateTests(TestCaseWithLogin):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_actions_update_loads_the_correct_tempalte(self) -> None:
+    def test_actions_update_loads_the_correct_template(self) -> None:
         # make login with a user staff
         self.make_login(is_staff=True)
 
