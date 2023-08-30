@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.contrib.auth.models import User
 from dashboard.forms.login_form import LoginForm
 from user.models import Profile
 from product.models import (
@@ -35,10 +36,21 @@ class LoginView(View):
         form = LoginForm(post)
 
         if form.is_valid():
+            # tries sign in with the username
+            query = User.objects.filter(username=post.get('user'))
+
+            # if the user post the email, tries sign in with the email
+            if not query.exists():
+                query = User.objects.filter(email=post.get('user'))
+
+            user_auth = query.first()
+            username = user_auth.username if user_auth else ''
+            password = post.get('password')
+
             user = authenticate(
                 self.request,
-                username=post.get('user'),
-                password=post.get('password'),
+                username=username,
+                password=password,
                 )
 
             if user is not None:
@@ -46,6 +58,8 @@ class LoginView(View):
                 profile = Profile.objects.filter(user=user).exists()
                 login(self.request, user)
 
+                # if the user does not have a profile, he will be
+                # redirected to the profile registration page
                 if not profile:
                     return redirect(
                         reverse('user:create_profile')
@@ -62,9 +76,6 @@ class LoginView(View):
             messages.error(
                 self.request,
                 'Usuário ou senha incorretos',
-            )
-            return redirect(
-                reverse('dashboard:home')
             )
 
         return redirect(
