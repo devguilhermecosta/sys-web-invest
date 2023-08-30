@@ -5,3 +5,4 @@ from .secutiry import *
 from .staticfiles import *
 from .timezone import *
 from .send_email import *
+from .jobs import *
