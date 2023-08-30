@@ -34,12 +34,33 @@ class LoginViewTests(TestCase):
         self.assertIn(message, response.content.decode('utf-8'))
         self.assertRedirects(response, '/', 302)
 
-    def test_login_view_returns_invalid_user_if_the_credentials_are_incorrects(self) -> None:  # noqa: E501
+    def test_login_view_returns_invalid_user_if_the_password_is_incorrect(self) -> None:  # noqa: E501
+        user = User.objects.create_user(**self.user_data)
+        Profile.objects.create(user=user)
+
         response = self.c.post(
             reverse('dashboard:home'),
             {
                 'user': self.user_data['username'],
                 'password': 'any',
+            },
+            follow=True,
+        )
+        self.assertIn(
+            'Usuário ou senha incorretos',
+            response.content.decode('utf-8'),
+        )
+        self.assertRedirects(response, '/', 302)
+
+    def test_login_view_returns_invalid_user_if_the_username_is_incorrect(self) -> None:  # noqa: E501
+        user = User.objects.create_user(**self.user_data)
+        Profile.objects.create(user=user)
+
+        response = self.c.post(
+            reverse('dashboard:home'),
+            {
+                'user': 'another',
+                'password': self.user_data['password'],
             },
             follow=True,
         )
@@ -77,3 +98,47 @@ class LoginViewTests(TestCase):
                              reverse('dashboard:user_dashboard'),
                              302,
                              )
+
+    def test_login_view_is_allowed_make_login_with_email(self) -> None:  # noqa: E501
+        '''
+            This test create a new user and make login with the email.
+        '''
+
+        user = User.objects.create_user(
+            **self.user_data
+        )
+
+        Profile.objects.create(user=user)
+
+        response = self.c.post(
+            reverse('dashboard:home'),
+            {
+                'user': self.user_data['email'],
+                'password': self.user_data['password'],
+            },
+            follow=True,
+        )
+
+        self.assertIn('login realizado com sucesso',
+                      response.content.decode('utf-8'),
+                      )
+        self.assertRedirects(response,
+                             reverse('dashboard:user_dashboard'),
+                             302,
+                             )
+
+    def test_login_view_with_email_returns_error_message_if_the_user_not_found(self) -> None:  # noqa: E501
+        """ tries make login without an existing user """
+        response = self.c.post(
+            reverse('dashboard:home'),
+            {
+                'user': self.user_data['email'],
+                'password': self.user_data['password'],
+            },
+            follow=True,
+        )
+        self.assertIn(
+            'Usuário ou senha incorretos',
+            response.content.decode('utf-8'),
+        )
+        self.assertRedirects(response, '/', 302)
