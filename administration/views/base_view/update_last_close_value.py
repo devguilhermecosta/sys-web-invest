@@ -56,6 +56,29 @@ class UpdateLastClose(View):
         if not user.is_staff:
             raise Http404()
 
+        up = self.update_all()
+
+        if up['error_list']:
+            messages.error(
+                self.request,
+                up['message_f'],
+            )
+
+            return redirect(
+                reverse(self.reverse_url_response)
+                )
+
+        messages.success(
+            self.request,
+            up['message_f'],
+        )
+
+        return redirect(
+            reverse(self.reverse_url_response)
+            )
+
+    def update_all(self) -> dict:
+        ''' return dict with attrs: message_f, error_list '''
         upgrade = 0
         not_upgrade = 0
         list_not_updagre = []
@@ -82,21 +105,7 @@ class UpdateLastClose(View):
 
         message_f = re.sub(r"[()']", '', str(message))
 
-        if error_list:
-            messages.error(
-                self.request,
-                message_f,
-            )
-
-            return redirect(
-                reverse(self.reverse_url_response)
-                )
-
-        messages.success(
-            self.request,
-            message_f,
-        )
-
-        return redirect(
-            reverse(self.reverse_url_response)
-            )
+        return {
+            'message_f': message_f,
+            'error_list': error_list,
+        }
