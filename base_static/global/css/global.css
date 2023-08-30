@@ -303,7 +303,6 @@ body {
 }
 
 .C-login_label {
-  text-transform: capitalize;
   text-align: left;
   color: var(--gray_1);
   width: calc(100% - 8px);
@@ -406,6 +405,7 @@ textarea.C-login_input {
   transition: background 150ms linear,
               border 200ms linear;
   outline: none;
+  cursor: pointer;
 }
 
 .C-login_button a {
@@ -525,12 +525,6 @@ textarea.C-login_input {
 
 .C-login_form > .errorlist {
   align-self: flex-start;
-}
-
-.C-form_button {
-  border: none;
-  outline: none;
-  cursor: pointer;
 }
 /* end user register */
 
@@ -1142,7 +1136,7 @@ textarea.C-login_input {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 4px dotted var(--turquoise_5);
+  border: 4px dotted var(--turquoise_1);
   animation: rotate 2s ease infinite;
   margin: 0 auto;
 }
