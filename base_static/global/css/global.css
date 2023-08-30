@@ -1136,7 +1136,7 @@ textarea.C-login_input {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 4px dotted var(--turquoise_1);
+  border: 4px dotted var(--turquoise_3);
   animation: rotate 2s ease infinite;
   margin: 0 auto;
 }
