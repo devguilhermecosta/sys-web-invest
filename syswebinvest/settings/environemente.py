@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'django_apscheduler',
     'resetpassword.apps.ResetpasswordConfig',
     'dashboard.apps.DashboardConfig',
     'user.apps.UserConfig',
@@ -83,7 +82,3 @@ MESSAGE_TAGS = {
     message.SUCCESS: 'message_success',
     message.WARNING: 'message_warning',
 }
-
-APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
-
-APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
