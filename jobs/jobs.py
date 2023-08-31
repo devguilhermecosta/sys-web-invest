@@ -12,6 +12,7 @@ def update_stocks():
     fr = settings.EMAIL_HOST_USER
     to = [settings.EMAIL_HOST_USER]
     send_mail(subject, message, fr, to)
+    print('email enviado')
 
 
 def update_fiis():
