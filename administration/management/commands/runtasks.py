@@ -7,3 +7,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options) -> None:
         jobs.update_stocks()
+        jobs.update_fiis()
