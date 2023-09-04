@@ -11,7 +11,9 @@
   {% include 'global/partials/_messages.html' %}
   <h1>{{ product.code }}</h1>
   <h2>{{ product.description }}</h2>
-  <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
+  {% if product.cnpj %}
+    <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
+  {% endif %}
   <table class="C-dashboard_table">
     <thead>
       <th>data</th>
