@@ -9,6 +9,10 @@ import re
 
 
 class AutoRegister(Register):
+    # I chose to create the request in a class variable because
+    # this was the only way to test possible failures
+    resp = requests.get('https://brapi.dev/api/quote/list')
+
     def format_response(self, message: str) -> str:
         return re.sub(r"[\[\]'\"]", '', str(message))
 
@@ -40,7 +44,7 @@ class AutoRegister(Register):
                     list_of_fiis.append(f'{code.upper()} - {name.capitalize()}')  # noqa: E501
                     tot += 1
 
-            tags = ['fiis', 'registradas'] if tot > 1 else ['fii', 'registrada']  # noqa: E501
+            tags = ['fiis', 'registrados'] if tot > 1 else ['fii', 'registrado']  # noqa: E501
             formated_list = self.format_response(list_of_fiis)
 
             message_success = (
@@ -55,7 +59,7 @@ class AutoRegister(Register):
                 self.request,
                 message_success,
             )
-        except Exception as error:
+        except AttributeError as error:
             message_error = f'Erro ao cadastras os FIIs: {error}'
             messages.error(
                 self.request,
@@ -110,7 +114,7 @@ class AutoRegister(Register):
                 self.request,
                 message_success,
             )
-        except Exception as error:
+        except AttributeError as error:
             message_error = f'Erro ao cadastras as ações: {error}'
             messages.error(
                 self.request,
@@ -125,12 +129,27 @@ class AutoRegister(Register):
         raise Http404()
 
     def post(self, *args, **kwargs) -> HttpResponse:
+        if not self.request.user.is_staff:
+            raise Http404()
+
         codes = [obj.code for obj in self.model.objects.all()]
-        request = requests.get('https://brapi.dev/api/quote/list')
-        data = request.json()['stocks']
 
-        if self.model == Action:
-            return self.auto_register_stocks(codes, data)
+        try:
+            data = self.resp.json()['stocks']
 
-        if self.model == FII:
-            return self.auto_register_fiis(codes, data)
+            if self.model == Action:
+                return self.auto_register_stocks(codes, data)
+
+            if self.model == FII:
+                return self.auto_register_fiis(codes, data)
+
+        except AttributeError as error:
+            messages.error(
+                self.request,
+                'Erro ao atualizar a lista de ativos.'
+                f'Erro: {error}',
+                )
+
+            return redirect(
+                reverse(self.reverse_url_redirect_response)
+                )
