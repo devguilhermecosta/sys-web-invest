@@ -8,7 +8,7 @@ urlpatterns = [
          views.FIIRegister.as_view(),
          name='fii_register',
          ),
-    path('cadastrar/auto/fii/',
+    path('cadastrar/auto/fiis/',
          views.FIIAutoRegister.as_view(),
          name='fii_auto_register',
          ),
