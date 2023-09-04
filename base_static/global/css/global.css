@@ -749,7 +749,29 @@ textarea.C-login_input {
 /* dashboard - actions */
 .C-actions {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 30px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
 }
+
+.C-actions_form_auto_register {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.C-btn_auto_register {
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 380px;
+}
+
 .C-dashboard_title {
   margin: 0 auto;
   margin-bottom: 10px;
@@ -1171,6 +1193,12 @@ textarea.C-login_input {
 /* end animation */
 
 /* media queries */
+@media screen and (max-width: 270px) {
+  .C-btn_auto_register {
+    font-size: 12px;
+    height: auto;
+  }
+}
 @media screen and (min-width: 500px) {
   .C-dashboard_table {
     white-space: nowrap;

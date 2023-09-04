@@ -5,8 +5,20 @@
 {% endblock title %}
 
 {% block content %}
-  <section class="C-actions center_x_y_flex">
+  <section class="C-actions">
     {% include 'global/partials/_form.html' %}
+
+    <!-- Auto register -->
+    <form
+      class="C-actions_form_auto_register"
+      method="POST"
+      action="{{ url_obj_auto_register }}">
+      {% csrf_token %}
+      <button type="submit" class="C-login_button C-login_sign_in C-btn_auto_register">
+        cadastro automático / atualização
+      </button>
+    </form>
+
   </section>
 
   {% include 'global/partials/_messages.html' %}
