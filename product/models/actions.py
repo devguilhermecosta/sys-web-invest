@@ -21,7 +21,10 @@ class Action(models.Model):
                             })
     description = models.CharField(max_length=50)
     cnpj = models.CharField(max_length=18,
-                            unique=True,
+                            unique=False,
+                            blank=True,
+                            null=True,
+                            default='',
                             error_messages={
                                 'unique': 'Este CNPJ já está em uso',
                             })

@@ -24,6 +24,7 @@ class Register(TemplateView):
     template_name = 'administration/pages/product_register.html'
     success_message: str
     reverse_url_redirect_response: str
+    reverse_url_obj_auto_register: str
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context_data = super().get_context_data(**kwargs)
@@ -38,6 +39,9 @@ class Register(TemplateView):
             'products': products,
             'default_message': 'nenhum produto cadastrado',
             'is_main_page': True,
+            'url_obj_auto_register': reverse(
+                self.reverse_url_obj_auto_register
+                )
         })
 
         return context_data
