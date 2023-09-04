@@ -58,6 +58,15 @@ class FIIRegisterForm(forms.ModelForm):
                 ('CNPJ inválido'),
                 code='invalid',
             )
+
+        fii_e = FII.objects.filter(cnpj=cnpj.formatted(punctuation=False))
+
+        if fii_e.exists():
+            raise ValidationError(
+                ('Este cnpj já está em uso'),
+                code='unique',
+            )
+
         return cnpj.formatted(punctuation=True)
 
 
@@ -86,3 +95,24 @@ class ActionRegisterForm(FIIRegisterForm):
             )
 
         return str(code).lower()
+
+    def clean_cnpj(self):
+        cnpj = c2.validate(self.cleaned_data['cnpj'])
+
+        if not cnpj.is_valid():
+            raise ValidationError(
+                ('CNPJ inválido'),
+                code='invalid',
+            )
+
+        action_e = Action.objects.filter(
+            cnpj=cnpj.formatted(punctuation=False)
+            )
+
+        if action_e.exists():
+            raise ValidationError(
+                ('Este cnpj já está em uso'),
+                code='unique',
+            )
+
+        return cnpj.formatted(punctuation=True)
