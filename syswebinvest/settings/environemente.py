@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'product.apps.ProductConfig',
     'administration.apps.AdministrationConfig',
+    'improvement.apps.ImprovementConfig',
 ]
 
 MIDDLEWARE = [
