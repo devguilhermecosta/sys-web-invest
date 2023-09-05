@@ -82,7 +82,7 @@ class AutoRegister(Register):
                 code, name, logo = self.get_api_data(data)
 
                 # excludes the fracionary market
-                if code in registered_objs or '3f' in code or '4f' in code:
+                if code in registered_objs or '3f' in code or '4f' in code or '11f' in code:  # noqa: E501
                     continue
 
                 # the api does not have groups to separate fii and stocks.
