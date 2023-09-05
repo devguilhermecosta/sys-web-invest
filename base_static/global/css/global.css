@@ -126,6 +126,13 @@ body {
   transition: left 300ms ease;
 }
 
+.C-menu__link,
+.C-menu_label,
+.C-menu_submenu_label,
+.C-menu_label a {
+  font-size: 13px;
+}
+
 #menu-mobile:checked ~ .C-menu_ul {
   width: 50%;
 }
@@ -413,7 +420,6 @@ textarea.C-login_input {
   color: var(--white);
   display: block;
   width: 100%;
-  height: 100%;
 }
 
 .C-login_sign_in {
@@ -1199,6 +1205,7 @@ textarea.C-login_input {
     height: auto;
   }
 }
+
 @media screen and (min-width: 500px) {
   .C-dashboard_table {
     white-space: nowrap;
@@ -1212,6 +1219,13 @@ textarea.C-login_input {
 @media screen and (min-width: 600px) {
   #menu-mobile:checked ~ .C-menu_ul > .C-menu_label {
     left: 265px;
+  }
+
+  .C-menu__link,
+  .C-menu_label,
+  .C-menu_submenu_label,
+  .C-menu_label a {
+    font-size: 16px;
   }
 
   .C-dashboard_table_details_fi_value {
