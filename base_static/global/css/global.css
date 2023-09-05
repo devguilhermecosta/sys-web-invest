@@ -740,16 +740,125 @@ textarea.C-login_input {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  cursor: pointer;
+  text-align: right;
 }
 
-.C-upgrade_box p {
+.C-upgrade_box > label:nth-of-type(1),
+.C-upgrade_box > label:nth-of-type(2) {
   font-size: 9px;
   background-color: var(--turquoise_6);
   color: var(--white);
   width: fit-content;
   padding: 10px 5px;
+  cursor: pointer;
+  user-select: none;
 }
+
+.C-upgrade_box > label:nth-of-type(1) {
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+.C-upgrade_box > label:nth-of-type(2) {
+  display: inline-block;
+  max-width: 1px;
+  margin-right: -20px;
+  transition: max-width 600ms linear,
+              margin-right 150ms linear;
+}
+
+#upgrade_box {
+  display: none;
+}
+
+.C-upgrade_box_form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+
+.C-upgrade_box_container {
+  background-color: var(--white);
+  border: 1px solid var(--turquoise_6);
+  opacity: 0;
+  max-height: 0px;
+  transition: max-height 300ms linear,
+              opacity 350ms ease,
+              margin-bottom 300ms linear;
+  padding: 5px;
+  margin-bottom: -20px;
+}
+
+#upgrade_box:checked ~ .C-upgrade_box_container {
+  opacity: 1;
+  max-height: 600px;
+  margin-bottom: 1px;
+}
+
+#upgrade_box:checked ~ label:nth-of-type(1) {
+  opacity: 0;
+  cursor: auto;
+}
+
+#upgrade_box:checked ~ label:nth-of-type(2) {
+  max-width: 60px;
+  margin-right: 0px;
+}
+
+.C-upgrade_box_form > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.C-upgrade_box_form > div > label,
+.C-upgrade_box_form > div > input {
+  font-size: 12px;
+}
+
+.C-upgrade_box_form > div > label {
+  font-weight: 600;
+}
+
+.C-upgrade_box_form > div > input,
+.C-upgrade_box_form > div > textarea {
+  padding: 8px 5px;
+  width: 100%;
+  text-align: justify;
+  border: 1px solid var(--gray_1);
+}
+
+.C-upgrade_box_form > div > input {
+  outline: none;
+}
+
+.C-upgrade_box_form > div > textarea {
+  resize: none;
+}
+
+.C-upgrade_box_form > div > input:focus,
+.C-upgrade_box_form > div > textarea:focus {
+  outline: none;
+  border: 1px solid var(--gray_1);
+}
+
+.C-upgrade_box_form > button[type=submit] {
+  margin-top: -12px;
+  cursor: pointer;
+  padding: 10px 5px;
+  border: none;
+  outline: none;
+  background-color: var(--turquoise_6);
+  color: var(--white);
+  transition: background-color 300ms linear;
+}
+
+.C-upgrade_box_form > button[type=submit]:hover {
+  background-color: var(--turquoise_5);
+  color: var(--white);
+}
+
+
 /* end upgrade box */
 
 /* dashboard - actions */
@@ -1247,7 +1356,7 @@ textarea.C-login_input {
     font-size: 20px;
   }
 
-  .C-upgrade_box p {
+  .C-upgrade_box label {
     font-size: 12px;
   }
 

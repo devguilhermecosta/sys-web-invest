@@ -156,6 +156,60 @@
 
 <!-- upgrade box -->
 <div class="C-upgrade_box">
-  <p>Sugestão de melhoria / Reportar bug</p>
+  <input type="checkbox" name="upgrade_box" id="upgrade_box">
+  <label for="upgrade_box">Sugestão de melhoria / Reportar bug</label>
+  <label for="upgrade_box" id="cancel ">Cancelar</label>
+
+  <section class="C-upgrade_box_container">
+    <form method="POST" class="C-upgrade_box_form">
+      {% csrf_token %}
+      <div>
+        <label for="user_name">Usuário</label>
+        <input
+          type="text"
+          name="user_name"
+          id="user_name"
+          style="text-transform: capitalize;"
+          value="{{ user.first_name }} {{ user.last_name }}" disabled
+        >
+      </div>
+
+      <div>
+        <label for="user_email">Email</label>
+        <input
+          type="email"
+          name="user_email"
+          id="user_email"
+          value="{{ user.email }}"
+          disabled
+        >
+      </div>
+
+      <div>
+        <label for="subject">Assunto</label>
+        <input
+          type="text"
+          name="subject"
+          id="subject"
+          placeholder="Digite o assunto..."
+          required
+        >
+      </div>
+
+      <div>
+        <label for="content">Mensagem</label>
+        <textarea
+          name="content"
+          id="content"
+          cols="30"
+          rows="10"
+          placeholder="Digite sua mensagem..."
+          required
+        ></textarea>
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
 </div>
 {% endblock content %}
