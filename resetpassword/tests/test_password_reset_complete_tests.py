@@ -88,7 +88,7 @@ class PasswordResetCompletTests(TestCase):
         self.assertIn(
             (
                 'Você receberá as instruções necessárias para '
-                'a redefinição de sua senha. Se você não recer '
+                'a redefinição de sua senha. Se você não receber '
                 'o e-mail de recuperação de senha, por favor, '
                 'verifique se digitou o e-mail correto e verifique '
                 'seu spam.'
