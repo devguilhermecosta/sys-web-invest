@@ -25,6 +25,7 @@ urlpatterns = [
     path('usuario/', include('user.urls')),
     path('password/', include('resetpassword.urls')),
     path('ativos/', include('product.urls')),
+    path('melhorias/', include('improvement.urls')),
     path('', include('dashboard.urls')),
 ]
 

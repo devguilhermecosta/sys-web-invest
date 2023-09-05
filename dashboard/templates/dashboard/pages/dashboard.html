@@ -161,7 +161,7 @@
   <label for="upgrade_box" id="cancel ">Cancelar</label>
 
   <section class="C-upgrade_box_container">
-    <form method="POST" class="C-upgrade_box_form">
+    <form action="{% url 'improvement:send_email' %}" method="POST" class="C-upgrade_box_form">
       {% csrf_token %}
       <div>
         <label for="user_name">Usuário</label>
