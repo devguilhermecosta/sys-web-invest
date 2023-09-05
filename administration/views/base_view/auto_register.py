@@ -59,7 +59,7 @@ class AutoRegister(Register):
                 self.request,
                 message_success,
             )
-        except AttributeError as error:
+        except Exception as error:
             message_error = f'Erro ao cadastras os FIIs: {error}'
             messages.error(
                 self.request,
@@ -114,7 +114,7 @@ class AutoRegister(Register):
                 self.request,
                 message_success,
             )
-        except AttributeError as error:
+        except Exception as error:
             message_error = f'Erro ao cadastras as ações: {error}'
             messages.error(
                 self.request,
