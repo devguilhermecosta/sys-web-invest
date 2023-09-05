@@ -59,11 +59,11 @@ class FIIRegisterForm(forms.ModelForm):
                 code='invalid',
             )
 
-        fii_e = FII.objects.filter(cnpj=cnpj.formatted(punctuation=False))
+        fii_e = FII.objects.filter(cnpj=cnpj.formatted(punctuation=True))
 
         if fii_e.exists():
             raise ValidationError(
-                ('Este cnpj já está em uso'),
+                ('Este CNPJ já está em uso'),
                 code='unique',
             )
 
@@ -106,12 +106,12 @@ class ActionRegisterForm(FIIRegisterForm):
             )
 
         action_e = Action.objects.filter(
-            cnpj=cnpj.formatted(punctuation=False)
+            cnpj=cnpj.formatted(punctuation=True)
             )
 
         if action_e.exists():
             raise ValidationError(
-                ('Este cnpj já está em uso'),
+                ('Este CNPJ já está em uso'),
                 code='unique',
             )
 
