@@ -13,7 +13,7 @@ QuerySet = TypeVar('QuerySet', list, None)
 
 
 class FII(models.Model):
-    code = models.CharField(max_length=6,
+    code = models.CharField(max_length=8,
                             unique=True,
                             error_messages={
                                 'unique': 'Este código já está em uso',

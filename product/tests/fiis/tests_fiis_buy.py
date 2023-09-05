@@ -111,7 +111,7 @@ class FIIsBuyTests(TestCaseWithLogin):
         content = response.content.decode('utf-8')
 
         self.assertIn(
-            'O código deve ter 6 caracteres',
+            'O código deve ter entre 6 e 8 caracteres',
             content
         )
         self.assertRedirects(

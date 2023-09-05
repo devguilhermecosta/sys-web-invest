@@ -17,9 +17,9 @@ class FIIBuyForm(ActionBuyAndSellForm):
                 code='required'
             )
 
-        if len(code) != 6:
+        if len(code) < 6 or len(code) > 8:
             raise ValidationError(
-                ('O código deve ter 6 caracteres'),
+                ('O código deve ter entre 6 e 8 caracteres'),
                 code='invalid',
             )
 
