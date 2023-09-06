@@ -834,6 +834,7 @@ textarea.C-login_input {
 
 .C-upgrade_box_form > div > textarea {
   resize: none;
+  font-family: sans-serif;
 }
 
 .C-upgrade_box_form > div > input:focus,

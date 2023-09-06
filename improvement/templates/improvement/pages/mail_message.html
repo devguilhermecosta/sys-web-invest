@@ -1,0 +1,12 @@
+{% autoescape on %}
+
+Novo ticket criado por "{{ username }}".
+
+Ticket: {{ ticket_name }}.
+Usuário: {{ user_full_name }}.
+Email: {{ user_email }}.
+
+Descrição da solicitação: 
+{{ ticket_description }}
+
+{% endautoescape %}
