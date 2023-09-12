@@ -847,6 +847,7 @@ textarea.C-login_input {
   margin-top: -12px;
   cursor: pointer;
   padding: 10px 5px;
+  height: 40px;
   border: none;
   outline: none;
   background-color: var(--turquoise_6);

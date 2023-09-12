@@ -87,3 +87,23 @@ closeMenu('C-menu_admin_checkox');
     })
   } 
 })();
+
+
+// add the animation button into button upgrade box
+(() => {
+  const form = document.querySelector("#upgrade_box_form");
+
+  if (form) {
+    form.addEventListener("submit", function() {
+      const subject = form.querySelector("#subject");
+      const message = form.querySelector("#content");
+      const button = form.querySelector("#upgrade_box_button");
+
+      if (!subject || !message) {return}
+
+      button.innerHTML = '';
+      button.appendChild(createAnimationBall());
+      button.style.setAttribute('disabled', true);
+    })
+  }
+})();
