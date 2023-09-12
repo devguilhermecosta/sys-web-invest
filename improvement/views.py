@@ -1,6 +1,6 @@
 from django.views import View
 from django.http import Http404, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
@@ -15,7 +15,21 @@ from .models import Improvement
     login_required(redirect_field_name='next', login_url='/'),
     name='dispatch',
 )
-class SendEmailView(View):
+class ImprovementList(View):
+    def get(self, *args, **kwargs) -> HttpResponse:
+        improvements = Improvement.objects.filter(user=self.request.user)
+
+        return render(
+            self.request,
+            'improvement/pages/improvements.html',
+            context={
+                'improvements': improvements,
+                'back_to_page': reverse('dashboard:user_dashboard'),
+            }
+        )
+
+
+class SendEmailView(ImprovementList):
     def get(self, *args, **kwargs) -> None:
         raise Http404()
 

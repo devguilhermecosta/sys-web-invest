@@ -1256,6 +1256,68 @@ textarea.C-login_input {
 }
 /* end dashboard - actions */
 
+/* Improvements */
+.C-improvements {
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.C-improvements_title {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.C-improvemente_default_message {
+  text-align: center;
+}
+
+.C-improvements_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.C-improvements_table thead {
+  background-color: var(--gray_1);
+  color: var(--gray_0);
+}
+
+.C-improvements_table thead > tr > th {
+  text-transform: capitalize;
+  padding: 10px 5px;
+}
+
+.C-improvements_table tbody tr {
+  margin: 10px 0;
+  border-top: 5px solid var(--white);
+  border-bottom: 5px solid var(--white);
+}
+
+.C-improvements_table tbody tr:nth-of-type(odd) {
+  background-color: #f3f0f0;
+}
+
+.C-improvements_table tr,
+.C-improvements_table td {
+  text-align: center;
+}
+
+.C-improvements_table details > summary {
+  color: var(--blue_1);
+  cursor: pointer;
+}
+
+.C-improvements_table details > p {
+  font-size: 12px;
+  text-align: justify;
+  padding: 0 0 0 8px;
+}
+
+/* end Improvements */
+
 /* Google material icons */
 .icon_edit:hover {
   color: var(--turquoise_6);
@@ -1314,6 +1376,48 @@ textarea.C-login_input {
   .C-btn_auto_register {
     font-size: 12px;
     height: auto;
+  }
+}
+
+@media screen and (max-width: 778px) {
+  .C-improvements_table thead {
+    display: none;
+  }
+
+  .C-improvements_table tbody tr:not(:first-child) {
+    background-color: #f3f0f0;
+    display: block;
+    margin-top: 10px;
+  }
+
+  .C-improvements_table tbody > tr > td::before {
+    content: attr(data-label);
+    font-weight: 600;
+  }
+
+  .C-improvements_table tbody > tr > td {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px 4px 4px 4px;
+  }
+  
+  .C-improvements_table tbody > tr > td:not(:first-of-type) {
+    border-top: 1px solid var(--white);
+  }
+
+  .C-improvements_table tbody > tr > td[data-label="título"] > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .C-improvements_table tbody > tr > td details {
+    text-align: right;
   }
 }
 

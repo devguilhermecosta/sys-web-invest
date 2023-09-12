@@ -6,4 +6,5 @@ app_name = 'improvement'
 
 urlpatterns = [
     path('', views.SendEmailView.as_view(), name='send_email'),
+    path('minha-lista/', views.ImprovementList.as_view(), name='list'),
 ]

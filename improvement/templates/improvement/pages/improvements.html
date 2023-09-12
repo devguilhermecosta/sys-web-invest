@@ -1,0 +1,45 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Solicitações
+{% endblock title %}
+
+{% block content %}
+  <section class="C-improvements">
+    <h1 class="C-improvements_title">Minhas solicitações</h1>
+    {% if improvements %}
+      <table class="C-improvements_table">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>abertura</th>
+            <th>título</th>
+            <th>status</th>
+            <th>atualizado em</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for improvement in improvements %}
+            <tr>
+              <td data-label="id">{{ improvement.id }}</td>
+              <td data-label="abertura">{{ improvement.created_at|date:"SHORT_DATE_FORMAT" }}</td>
+              <td data-label="título">
+                <div>
+                  {{ improvement.title }}
+                  <details>
+                    <summary>descrição...</summary>
+                    <p>{{ improvement.description }}</p>
+                  </details>
+                </div>
+              </td>
+              <td data-label="status">{{ improvement.status }}</td>
+              <td data-label="atualizado em">{{ improvement.updated_at|date:"SHORT_DATE_FORMAT" }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="C-improvemente_default_message">nenhuma solicitação até o momento.</p>
+    {% endif %}
+  </section>
+{% endblock content %}
