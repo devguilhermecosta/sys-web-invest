@@ -29,7 +29,7 @@ class ImprovementList(View):
         )
 
 
-class SendEmailView(ImprovementList):
+class ImprovementCreate(ImprovementList):
     def get(self, *args, **kwargs) -> None:
         raise Http404()
 
@@ -72,5 +72,14 @@ class SendEmailView(ImprovementList):
             )
 
             return redirect(
-                reverse('dashboard:user_dashboard')
+                reverse('improvement:list')
             )
+
+        messages.error(
+            self.request,
+            'preencha todos os campos do formulário'
+        )
+
+        return redirect(
+            reverse('dashboard:user_dashboard')
+        )
