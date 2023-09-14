@@ -7,6 +7,9 @@
 {% block content %}
   <section class="C-improvements">
     <h1 class="C-improvements_title">Minhas solicitações</h1>
+
+    {% include 'global/partials/_messages.html' %}
+    
     {% if improvements %}
       <table class="C-improvements_table">
         <thead>
