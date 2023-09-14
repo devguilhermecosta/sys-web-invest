@@ -7,6 +7,7 @@ from user.models import Profile
 from utils.browser import make_chrome_browser
 from selenium.webdriver.common.by import By
 from product.models import Action
+from time import sleep
 import c2validator as c2
 
 
@@ -95,6 +96,9 @@ class TestCaseWithLogin(UserMixin, TestCase):
 
 
 class StaticTestCaseWithLogin(StaticLiveServerTestCase):
+    def wait(self, time: float) -> None:
+        return sleep(time)
+
     def create_superuser(self) -> User:
         '''
             Create a new superuser Object.
