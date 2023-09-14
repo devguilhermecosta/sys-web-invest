@@ -55,6 +55,8 @@ class DashboardTests(TestCaseWithLogin):
         'fiis',
         'total',
         'R$',
+        'Total recebido em proventos',
+        'taxas e impostos pagos',
     ])
     def test_dashboard_loads_correct_content(self, text: str) -> None:
         # make login
@@ -73,7 +75,7 @@ class DashboardTests(TestCaseWithLogin):
 
     @parameterized.expand([
         'total investido',
-        'Total recebido em provetos',
+        'Total recebido em proventos',
         'taxas e impostos pagos',
         'R$ 140,00',  # total actions profits
         'R$ 50,00',  # total fiis profits
