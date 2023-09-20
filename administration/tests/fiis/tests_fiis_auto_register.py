@@ -109,7 +109,7 @@ class FIIsAutoRegisterTests(TestCaseWithLogin):
         # create an incorrect url to make request
         new_url = 'https://brapi.dev/api/quote/list/my_error'
 
-        with patch('administration.views.base_view.auto_register.AutoRegister.resp',  # noqa: E501
+        with patch('administration.views.products.base_view.auto_register.AutoRegister.resp',  # noqa: E501
                    new=new_url):
 
             # tries update the data base

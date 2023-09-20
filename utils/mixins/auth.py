@@ -81,6 +81,7 @@ class TestCaseWithLogin(UserMixin, TestCase):
             user = self.create_user(
                 with_profile=True,
                 is_staff=kwargs.get('is_staff', False),
+                username=kwargs.get('username', 'user'),
                 )
 
         # make login

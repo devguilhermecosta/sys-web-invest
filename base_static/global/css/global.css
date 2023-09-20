@@ -1318,6 +1318,63 @@ textarea.C-login_input {
 
 /* end Improvements */
 
+/* admin improvements */
+.C-admin_improvements {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 30px;
+}
+
+.C-admin_improvements > h1 {
+  text-transform: capitalize;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.C-admin_improvements_table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-transform: uppercase;
+}
+
+.C-admin_improvements_table tr,
+.C-admin_improvements_table td {
+  text-align: center;
+}
+
+.C-admin_improvements_table > thead {
+  background-color: var(--gray_1);
+  color: var(--gray_0);
+}
+
+.C-admin_improvements_table > thead > tr {
+  border-top: 15px solid var(--gray_1);
+  border-bottom: 15px solid var(--gray_1);
+  font-size: 14px;
+}
+
+.C-admin_improvements_table > tbody > tr {
+  border-top: 10px solid var(--white);
+  border-bottom: 10px solid var(--white);
+}
+
+.C-admin_improvements_table > tbody > tr:nth-of-type(even) {
+  background-color: #f3f0f0;
+}
+
+.C-admin_improvements_table > tbody > tr > td {
+  font-size: 14px;
+  padding: 5px;
+}
+/* end admin improvements */
+
 /* Google material icons */
 .icon_edit:hover {
   color: var(--turquoise_6);
@@ -1379,6 +1436,16 @@ textarea.C-login_input {
   }
 }
 
+@media screen and (max-width: 400px) {
+  .C-admin_improvements > h1 {
+    font-size: 16px;
+  }
+
+  .C-admin_improvements_table tbody > tr > td {
+    font-size: 10px;
+  }
+}
+
 @media screen and (max-width: 778px) {
   .C-improvements_table thead {
     display: none;
@@ -1418,6 +1485,39 @@ textarea.C-login_input {
 
   .C-improvements_table tbody > tr > td details {
     text-align: right;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .C-admin_improvements {
+    max-width: 600px;
+  }
+
+  .C-admin_improvements_table > thead {
+    display: none;
+  }
+
+  .C-admin_improvements_table > tbody > tr {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    row-gap: 10px;
+    padding: 10px 5px;
+  }
+
+  .C-admin_improvements_table > tbody > tr > td::before {
+    content: attr(data-label);
+    font-weight: 600;
+  }
+
+  .C-admin_improvements_table > tbody > tr > td {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: right;
+    text-transform: lowercase;
   }
 }
 

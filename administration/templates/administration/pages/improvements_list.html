@@ -1,0 +1,36 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Sugestões e Reclamações
+{% endblock title %}
+
+{% block content %}
+  <section class="C-admin_improvements">
+    <h1>sugestões e reclamações</h1>
+
+    <table class="C-admin_improvements_table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>usuário</th>
+          <th>data</th>
+          <th>título</th>
+          <th>status</th>
+          <th>última movimentação</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for improvement in improvements %}
+          <tr>
+            <td data-label="id">{{ improvement.id }}</td>
+            <td data-label="usuário">{{ improvement.user.username }}</td>
+            <td data-label="data">{{ improvement.created_at|date:"d/m/Y" }}</td>
+            <td data-label="título">{{ improvement.title }}</td>
+            <td data-label="status">{{ improvement.status }}</td>
+            <td data-label="ultima mov.">{{ improvement.updated_at|date:"d/m/Y" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endblock content %}

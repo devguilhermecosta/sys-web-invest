@@ -1,5 +1,5 @@
 from django.urls import path
-from administration import views
+from . import views
 
 app_name = 'admin'
 
@@ -44,4 +44,7 @@ urlpatterns = [
          views.FIIsUpdateLastCloseView.as_view(),
          name='update_fiis_prices',
          ),
+    path('melhorias/lista/',
+         views.ImprovementsList.as_view(),
+         name='improvements_list'),
 ]

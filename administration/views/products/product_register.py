@@ -1,6 +1,6 @@
 from product.models import FII, Action
 from administration.forms import FIIRegisterForm, ActionRegisterForm
-from .base_view import Register, AutoRegister
+from . base_view import Register, AutoRegister
 
 
 class FIIRegister(Register):
