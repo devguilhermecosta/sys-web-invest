@@ -1,0 +1,15 @@
+{% extends 'global/pages/base.html' %}
+
+{% block title %}
+  Gerenciar Solicitação
+{% endblock title %}
+
+{% block content %}
+  <section class="C-admin_improvement_manager">
+    <div class="C-admin_improvement_manager_details">
+      <p>data: {{ improvement.created_at|date:"d/m/Y" }}</p>
+      <p>última atualização: {{ improvement.updated_at|date:"d/m/Y" }}</p>
+    </div>
+    {% include 'global/partials/_form.html' %}
+  </section>
+{% endblock content %}

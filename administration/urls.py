@@ -47,4 +47,7 @@ urlpatterns = [
     path('melhorias/lista/',
          views.ImprovementsList.as_view(),
          name='improvements_list'),
+    path('melhorias/gerenciar/<int:id>/',
+         views.ImprovementMaganer.as_view(),
+         name='improvements_manager'),
 ]
