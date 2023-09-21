@@ -52,6 +52,8 @@ class ImprovementMaganer(ImprovementsList):
         if form.is_valid():
             form.save()
 
+            del self.request.session['improvement-manager']
+
             messages.success(
                 self.request,
                 'alteração salva com sucesso',
