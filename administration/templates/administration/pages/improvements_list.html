@@ -22,10 +22,18 @@
       <tbody>
         {% for improvement in improvements %}
           <tr>
-            <td data-label="id">{{ improvement.id }}</td>
+            <td data-label="id">
+              <a href="{% url 'admin:improvements_manager' improvement.id %}">
+                {{ improvement.id }}
+              </a>
+            </td>
             <td data-label="usuário">{{ improvement.user.username }}</td>
             <td data-label="data">{{ improvement.created_at|date:"d/m/Y" }}</td>
-            <td data-label="título">{{ improvement.title }}</td>
+            <td data-label="título">
+              <a href="{% url 'admin:improvements_manager' improvement.id %}">
+                {{ improvement.title }}
+              </a>
+            </td>
             <td data-label="status">{{ improvement.status }}</td>
             <td data-label="ultima mov.">{{ improvement.updated_at|date:"d/m/Y" }}</td>
           </tr>

@@ -74,6 +74,7 @@ class AdminImprovementsTests(TestCaseWithLogin):
         'i have a suggestion',
         'enviado',
         date.today().strftime("%d/%m/%Y"),
+        '/painel-de-controle/melhorias/gerenciar/1/',  # link edit
     ])
     def test_improvements_list_loads_correct_content(self, text: str) -> None:
         # make login with a user staff

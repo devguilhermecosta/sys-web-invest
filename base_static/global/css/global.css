@@ -1374,6 +1374,17 @@ textarea.C-login_input {
   padding: 5px;
 }
 
+.C-admin_improvements_table a {
+  text-decoration: underline transparent;
+  color: #000;
+  font-weight: 600;
+  transition: all 300ms ease;
+}
+
+.C-admin_improvements_table a:hover {
+  text-decoration: underline #000;
+}
+
 .C-admin_improvement_manager {
   width: 100%;
   max-width: 600px;
