@@ -6,9 +6,14 @@
 
 {% block content %}
   <section class="C-admin_improvement_manager">
+    {% include 'global/partials/_messages.html' %}
     <div class="C-admin_improvement_manager_details">
-      <p>data: {{ improvement.created_at|date:"d/m/Y" }}</p>
-      <p>última atualização: {{ improvement.updated_at|date:"d/m/Y" }}</p>
+      <p>id: <span>{{ improvement.id }}</span></p>
+      <p>usuário: <span>{{ improvement.user.username }}</span></p>
+      <p>título: <span>{{ improvement.title }}</span></p>
+      <p>descrição: <span>{{ improvement.description }}</span></p>
+      <p>data: <span>{{ improvement.created_at|date:"d/m/Y" }}</span></p>
+      <p>última atualização: <span>{{ improvement.updated_at|date:"d/m/Y" }}</span></p>
     </div>
     {% include 'global/partials/_form.html' %}
   </section>

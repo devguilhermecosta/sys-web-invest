@@ -1373,6 +1373,38 @@ textarea.C-login_input {
   font-size: 14px;
   padding: 5px;
 }
+
+.C-admin_improvement_manager {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.C-admin_improvement_manager form {
+  width: 100%;
+  max-width: 600px;
+  border: none;
+  padding: 0;
+  margin: 0
+}
+
+.C-admin_improvement_manager_details {
+  width: 100%;
+}
+
+.C-admin_improvement_manager_details > p {
+  margin: 3px 0;
+  font-weight: 600;
+}
+
+.C-admin_improvement_manager_details > p > span {
+  font-weight: 300;
+}
 /* end admin improvements */
 
 /* Google material icons */
@@ -1443,6 +1475,10 @@ textarea.C-login_input {
 
   .C-admin_improvements_table tbody > tr > td {
     font-size: 10px;
+  }
+
+  .C-admin_improvement_manager {
+    font-size: 12px;
   }
 }
 
