@@ -17,7 +17,9 @@ from .models import Improvement
 )
 class ImprovementList(View):
     def get(self, *args, **kwargs) -> HttpResponse:
-        improvements = Improvement.objects.filter(user=self.request.user)
+        improvements = Improvement.objects.filter(
+            user=self.request.user
+            ).order_by('-id')
 
         return render(
             self.request,
