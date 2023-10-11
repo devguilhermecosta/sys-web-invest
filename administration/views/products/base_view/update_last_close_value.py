@@ -7,8 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from product.models import Action, FII
 from decimal import Decimal
-import requests as r
-import os
+from requests.exceptions import HTTPError
+from typing import Dict
+import yfinance as yf
 import re
 
 
@@ -24,16 +25,19 @@ class UpdateLastClose(View):
     template_name: str = 'administration/pages/update_prices.html'
     reverse_url_response: str
 
-    def get_ticker(self, symbol: str) -> str:
-        token = os.environ.get('BRAPI_API_TOKEN')
-        request = r.get(f'https://brapi.dev/api/quote/{symbol}?token={token}')
-        response = request.json()
-        product = response.get('results')[0]
-        return product
+    def get_ticker(self, symbol: str) -> Dict[str, str] | None:
+        try:
+            ticker = yf.Ticker(f'{symbol}.sa')
+            return ticker.info
+        except HTTPError:
+            return None
 
-    def previous_close(self, symbol: str) -> Decimal:
+    def previous_close(self, symbol: str) -> Decimal | None:
         product = self.get_ticker(symbol)
-        previous_close = product.get('regularMarketPreviousClose')
+        if not product:
+            return None
+
+        previous_close = product.get('previousClose', 0)
         return Decimal(previous_close)
 
     def get(self, *args, **kwargs) -> HttpResponse:
@@ -77,35 +81,33 @@ class UpdateLastClose(View):
             reverse(self.reverse_url_response)
             )
 
-    def update_all(self) -> dict:
+    def update_all(self) -> Dict[str, str]:
         ''' return dict with attrs: message_f, error_list '''
         upgrade = 0
         not_upgrade = 0
         list_not_updagre = []
-        error_list = []
+        error_message = ''
 
         for p in self.model.objects.all():
-            try:
-                previous_close = self.previous_close(p.code)
-                p.update_last_close(previous_close)
-                upgrade += 1
+            previous_close = self.previous_close(p.code)
 
-            except Exception as e:
-                not_upgrade += 1
-                list_not_updagre.append(p.code)
-                error_list.append(e)
+            if not previous_close:
+                list_not_updagre.append(p)
+                error_message = 'alguns ativos não foram atualizados'
+
+            p.update_last_close(previous_close)
+            upgrade += 1
 
         message = (
             f'{upgrade} ativo(s) foram atualizados. '
             f'{not_upgrade} ativo(s) não puderam ser atualizados. '
             'Ativos que não foram atualizados: '
             f'{[a for a in list_not_updagre]}. '
-            f'Erros: {error_list}'
         ),
 
         message_f = re.sub(r"[()']", '', str(message))
 
         return {
             'message_f': message_f,
-            'error_list': error_list,
+            'error_list':  error_message,
         }
