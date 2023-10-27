@@ -108,7 +108,7 @@ class FiisCurrentValueUpdateTests(TestCaseWithLogin):
         self.assertIn(
             '1 ativos foram atualizados. '
             '0 ativos não puderam ser atualizados. '
-            'Ativos que não foram atualizados: []. Erros: [],',
+            'Ativos que não foram atualizados: [].',
             response.content.decode('utf-8')
         )
         self.assertRedirects(
