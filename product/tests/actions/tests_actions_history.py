@@ -199,15 +199,17 @@ class ActionHistoryTests(TestCaseWithLogin):
             )
 
     @parameterized.expand([
-        ('bbas3'),
-        ('banco do brasil'),
-        ('cnpj: 82.794.638/9586-01'),
-        ('R$ 50,00'),
-        ('R$ 100,00'),
-        ('compra'),
-        ('venda'),
-        ('deletar'),
-        ('/ativos/acoes/1/historico/1/deletar/')
+        'bbas3',
+        'banco do brasil',
+        'cnpj: 82.794.638/9586-01',
+        'total acumulado em proventos',
+        'R$ 129,00',
+        'R$ 50,00',
+        'R$ 100,00',
+        'compra',
+        'venda',
+        'deletar',
+        '/ativos/acoes/1/historico/1/deletar/'
     ])
     def test_action_history_loads_correct_content(self, text) -> None:
         '''
@@ -216,10 +218,15 @@ class ActionHistoryTests(TestCaseWithLogin):
             not found will be raised.
         '''
         # make login
-        self.make_login()
+        _, user = self.make_login()
 
         # make new action
         make_action('bbas3', 'banco do brasil', '82794638958601')
+
+        # get the user action
+        user_action = UserAction.objects.filter(
+            user=user,
+        )
 
         # action data
         action_data = {
@@ -246,6 +253,14 @@ class ActionHistoryTests(TestCaseWithLogin):
             reverse('product:actions_sell'),
             action_data,
             follow=True,
+        )
+
+        # Try receve profits
+        user_action[0].receive_profits(
+            'dividends',
+            '2023-10-27',
+            129,
+            0,
         )
 
         # access bbas3 action history

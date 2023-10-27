@@ -14,6 +14,7 @@
   {% if product.cnpj %}
     <h3>cnpj: {{ product.cnpj|fomated_cnpj }}</h3>
   {% endif %}
+  <h2>total acumulado em proventos: {{ profits|real_brl }}</h2>
   <table class="C-dashboard_table">
     <thead>
       <th>data</th>

@@ -9,7 +9,6 @@ from decimal import Decimal
 
 date = '2023-07-04'
 PDF = TypeVar('PDF', bytes, None)
-QuerySet = TypeVar('QuerySet', list, None)
 
 
 class FII(models.Model):
@@ -58,7 +57,7 @@ class UserFII(models.Model):
     def get_url_delete(self) -> str:
         return reverse('product:fiis_delete', args=(self.id,))
 
-    def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
+    def buy(self, date: str, quantity: int, unit_price: float, trading_note: PDF | None = None) -> None:  # noqa: E501
         """ create the new history """
         new_history = FiiHistory.objects.create(
             userproduct=self,
@@ -70,7 +69,7 @@ class UserFII(models.Model):
         )
         new_history.save()
 
-    def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF = None) -> None:  # noqa: E501
+    def sell(self, date: str, quantity: int, unit_price: float, trading_note: PDF | None = None) -> None:  # noqa: E501
         if quantity > self.get_quantity():
             raise ValidationError(
                 {'quantity': 'quantidade insuficiente para venda'},
@@ -102,7 +101,7 @@ class UserFII(models.Model):
         total = sum([h.quantity for h in history if h.handler in handler])
         return total
 
-    def get_middle_price(self) -> Decimal:
+    def get_middle_price(self) -> Decimal | int:
         history = FiiHistory.objects.filter(userproduct=self, handler='buy')
         total = sum([h.unit_price for h in history])
         return Decimal(total / len(history)) if total != 0 else 0
@@ -110,11 +109,11 @@ class UserFII(models.Model):
     def previous_close(self) -> Decimal:
         return self.product.last_close
 
-    def get_current_value_invested(self) -> Decimal:
+    def get_current_value_invested(self) -> Decimal | int:
         total = self.get_quantity() * self.previous_close()
         return Decimal(total) if total >= 0 else 0
 
-    def get_partial_history(self, handler: str) -> QuerySet:
+    def get_partial_history(self, handler: str) -> list:
         history = FiiHistory.objects.filter(
             userproduct=self,
             handler=handler,

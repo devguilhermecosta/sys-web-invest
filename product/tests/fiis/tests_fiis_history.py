@@ -191,22 +191,26 @@ class FIIsHistoryTests(TestCaseWithLogin):
             )
 
     @parameterized.expand([
-        ('maxi renda'),
-        ('cnpj: 94.961.154/4045-29'),
-        ('02/07/23'),
-        ('compra'),
-        ('R$ 9,50'),
-        ('26/01/24'),
-        ('venda'),
-        ('R$ 10,75'),
-        ('nota.pdf'),
+        'maxi renda',
+        'cnpj: 94.961.154/4045-29',
+        'total acumulado em proventos: R$ 14,50',
+        '02/07/23',
+        'compra',
+        'R$ 9,50',
+        '26/01/24',
+        'venda',
+        'R$ 10,75',
+        'nota.pdf',
     ])
     def test_fiis_history_loads_correct_content(self, text: str) -> None:  # noqa: E501
         # make login
         self.make_login()
 
         # create the fii
-        make_fii('mxrf11', 'maxi renda', cnpj='94961154404529')
+        fii = make_fii('mxrf11', 'maxi renda', cnpj='94961154404529')
+
+        # user_fii
+        user_fii = UserFII.objects.filter(product=fii)
 
         # buy the fii
         self.client.post(
@@ -233,6 +237,9 @@ class FIIsHistoryTests(TestCaseWithLogin):
             },
             follow=True
         )
+
+        # receive profits
+        user_fii[0].receive_profits(14.50, '2023-10-27')
 
         # make get request into fiis history
         response = self.client.get(self.url)

@@ -44,7 +44,15 @@ class AdminImprovementManagerTests(TestCaseWithLogin):
 
     def test_improvements_manager_returns_status_code_200_if_the_user_is_authenticated_and_is_a_staff(self) -> None:  # noqa: E501
         # make login with a user staff
-        self.make_login(is_staff=True)
+        _, user = self.make_login(is_staff=True)
+
+        # make the improvement
+        make_improvement(
+            user=user,
+            title='this is the title',
+            description='this is the description',
+            status='enviado',
+        )
 
         # make get request
         response = self.client.get(self.url)

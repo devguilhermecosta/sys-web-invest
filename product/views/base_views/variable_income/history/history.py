@@ -23,10 +23,10 @@ from product.models import (
     name='dispatch',
 )
 class History(View):
-    template_to_render_response: str = ''
-    product_model: Action | FII = ''
-    user_product_model: UserAction | UserFII = ''
-    history_model: ActionHistory | FiiHistory = ''
+    template_to_render_response: str
+    product_model: Action | FII
+    user_product_model: UserAction | UserFII
+    history_model: ActionHistory | FiiHistory
     reverse_url_back_to_page: str
 
     def get(self, *args, **kwargs) -> HttpResponse:
@@ -51,6 +51,8 @@ class History(View):
             userproduct=user_product,
             ).order_by('-date')
 
+        profits = user_product.get_partial_profits()
+
         return render(
             self.request,
             self.template_to_render_response,
@@ -58,5 +60,6 @@ class History(View):
                 'history': product_history,
                 'product': product,
                 'back_to_page': reverse(self.reverse_url_back_to_page),
+                'profits': profits,
             }
         )
