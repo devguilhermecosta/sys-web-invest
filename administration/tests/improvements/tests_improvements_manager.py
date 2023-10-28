@@ -59,9 +59,17 @@ class AdminImprovementManagerTests(TestCaseWithLogin):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_improvements_manager_user_the_corret_template(self) -> None:
+    def test_improvements_manager_uses_the_corret_template(self) -> None:
         # make login with a user staff
-        self.make_login(is_staff=True)
+        _, user = self.make_login(is_staff=True)
+
+        # make the improvement
+        make_improvement(
+            user=user,
+            title='this is the title',
+            description='this is the description',
+            status='enviado',
+        )
 
         # make get request
         response = self.client.get(self.url)
