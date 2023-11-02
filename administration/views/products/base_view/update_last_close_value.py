@@ -27,7 +27,7 @@ class UpdateLastClose(View):
 
     def get_ticker(self, symbol: str) -> yf.Ticker | None:
         try:
-            ticker = yf.Ticker(f'{symbol}.sa')
+            ticker = yf.Ticker(symbol)
             return ticker
         except HTTPError:
             return None
