@@ -25,10 +25,10 @@ class UpdateLastClose(View):
     template_name: str = 'administration/pages/update_prices.html'
     reverse_url_response: str
 
-    def get_ticker(self, symbol: str) -> Dict[str, str] | None:
+    def get_ticker(self, symbol: str) -> yf.Ticker | None:
         try:
             ticker = yf.Ticker(f'{symbol}.sa')
-            return ticker.info
+            return ticker
         except HTTPError:
             return None
 
@@ -37,7 +37,7 @@ class UpdateLastClose(View):
         if not product:
             return None
 
-        previous_close = product.get('previousClose', 0)
+        previous_close = product.fast_info.get('previousClose', 0)
         return Decimal(previous_close)
 
     def get(self, *args, **kwargs) -> HttpResponse:
@@ -86,17 +86,17 @@ class UpdateLastClose(View):
         upgrade = 0
         not_upgrade = 0
         list_not_updagre = []
-        error_message = ''
 
         for p in self.model.objects.all():
             previous_close = self.previous_close(p.code)
 
-            if not previous_close:
-                list_not_updagre.append(p)
-                error_message = 'alguns ativos não foram atualizados'
+            if previous_close:
+                p.update_last_close(previous_close)
+                upgrade += 1
 
-            p.update_last_close(previous_close)
-            upgrade += 1
+            else:
+                not_upgrade += 1
+                list_not_updagre.append(p)
 
         message = (
             f'{upgrade} ativo(s) foram atualizados. '
@@ -109,5 +109,5 @@ class UpdateLastClose(View):
 
         return {
             'message_f': message_f,
-            'error_list':  error_message,
+            'error_list':  'alguns ativos não foram atualizados',
         }
