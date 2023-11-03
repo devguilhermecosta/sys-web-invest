@@ -29,13 +29,15 @@ class UpdateLastClose(View):
         ticker = yf.Ticker(symbol)
         return ticker
 
-    def previous_close(self, symbol: str) -> Decimal | None:
+    def previous_close(self, symbol: str) -> Decimal | int:
         try:
             product = self.get_ticker(f'{symbol}.sa')
-            previous_close = product.fast_info.get('previousClose', 0)
+            previous_close = product.fast_info.get('previousClose')
             return Decimal(previous_close)
         except HTTPError:
-            return None
+            return 0
+        except IndexError:
+            return 0
 
     def get(self, *args, **kwargs) -> HttpResponse:
         user = self.request.user
