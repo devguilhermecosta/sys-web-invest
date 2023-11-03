@@ -33,7 +33,7 @@ class UpdateLastClose(View):
             return None
 
     def previous_close(self, symbol: str) -> Decimal | None:
-        product = self.get_ticker(symbol)
+        product = self.get_ticker(f'{symbol}.sa')
         if not product:
             return None
 
