@@ -25,20 +25,17 @@ class UpdateLastClose(View):
     template_name: str = 'administration/pages/update_prices.html'
     reverse_url_response: str
 
-    def get_ticker(self, symbol: str) -> yf.Ticker | None:
-        try:
-            ticker = yf.Ticker(symbol)
-            return ticker
-        except HTTPError:
-            return None
+    def get_ticker(self, symbol: str) -> yf.Ticker:
+        ticker = yf.Ticker(symbol)
+        return ticker
 
     def previous_close(self, symbol: str) -> Decimal | None:
-        product = self.get_ticker(f'{symbol}.sa')
-        if not product:
+        try:
+            product = self.get_ticker(f'{symbol}.sa')
+            previous_close = product.fast_info.get('previousClose', 0)
+            return Decimal(previous_close)
+        except HTTPError:
             return None
-
-        previous_close = product.fast_info.get('previousClose', 0)
-        return Decimal(previous_close)
 
     def get(self, *args, **kwargs) -> HttpResponse:
         user = self.request.user
