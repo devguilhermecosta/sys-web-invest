@@ -18,6 +18,6 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",  # noqa: E501
-    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",  # noqa: E501
+    # "TOKEN_OBTAIN_SERIALIZER": "utils.serializers.simplejwt.CustomTokenObtainPairSerializer",  # noqa: E501
+    "TOKEN_REFRESH_SERIALIZER": "utils.serializers.simplejwt.CustomTokenRefreshSerializer",  # noqa: E501
 }
