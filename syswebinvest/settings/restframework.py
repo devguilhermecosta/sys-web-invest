@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from utils.string import convert_to_string
 from datetime import timedelta
+import os
 
 
 load_dotenv()
@@ -15,7 +16,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=float(os.environ.get('ACCESS_TOKEN_LIFETIME'))),  # type: ignore # noqa: E501
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 
     # "TOKEN_OBTAIN_SERIALIZER": "utils.serializers.simplejwt.CustomTokenObtainPairSerializer",  # noqa: E501
