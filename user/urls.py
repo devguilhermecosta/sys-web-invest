@@ -6,6 +6,18 @@ app_name: str = 'user'
 
 
 urlpatterns: list = [
+    path('api/register/',
+         views.UserRegisterAPIVire.as_view(),
+         name='api-register',
+         ),
+    path('api/list/',
+         views.UserListAPIView.as_view(),
+         name='api-list',
+         ),
+    path('api/<int:pk>/',
+         views.UserDetailsAPIView.as_view(),
+         name='api-details',
+         ),
     path('registrar/',
          views.UserRegister.as_view(),
          name='register'),
