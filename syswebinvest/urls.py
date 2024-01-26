@@ -18,6 +18,11 @@ Including another URLconf
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
@@ -26,8 +31,13 @@ urlpatterns = [
     path('password/', include('resetpassword.urls')),
     path('ativos/', include('product.urls')),
     path('melhorias/', include('improvement.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # noqa: E501
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # noqa: E501
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('', include('dashboard.urls')),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(

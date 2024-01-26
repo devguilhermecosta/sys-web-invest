@@ -6,3 +6,4 @@ from .staticfiles import *
 from .timezone import *
 from .send_email import *
 from .jobs import *
+from .restframework import *
