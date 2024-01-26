@@ -26,6 +26,9 @@ SELENIUM_HEADLESS = ''
 ######### restframework ########
 CORS_ALLOWED_ORIGINS = ''
 
+# time in minutes
+ACCESS_TOKEN_LIFETIME = ''
+
 # HOUR FOR UPDATE LAST CLOSE VALUE - STOCKS
 HOUR_UPDATE_LC_STOCKS = ''
 
