@@ -108,8 +108,8 @@ class UserRegister(View):
                       )
 
     def post(self, *args, **kwargs) -> HttpResponse:
-        post: dict = self.request.POST
-        self.request.session['register_form_data']: dict = self.request.POST
+        post = self.request.POST
+        self.request.session['register_form_data'] = self.request.POST
         form: ModelForm = UserFormRegister(post)
 
         if form.is_valid():
